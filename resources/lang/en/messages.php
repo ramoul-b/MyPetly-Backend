@@ -1,0 +1,34 @@
+<?php
+
+return [
+    'authenticated' => 'You are authenticated.',
+    'operation_failed' => 'An error occurred while processing your request.',
+    'invalid_credentials' => 'Invalid credentials.',
+    'logged_out' => 'Logged out successfully.',
+    'password_reset_link_sent' => 'Password reset link sent successfully.',
+    'password_reset_failed' => 'Failed to send password reset link.',
+    'password_reset_successful' => 'Password reset successfully.',
+    'password_updated' => 'Password updated successfully.',
+    'current_password_incorrect' => 'The current password is incorrect.',
+    'email_verified_successfully' => 'Email verified successfully.',
+    'invalid_verification_token' => 'The verification token is invalid or expired.',
+    'email_already_verified' => 'Email is already verified.',
+    'verification_email_resent' => 'Verification email resent successfully.',
+    'user_not_found' => 'User not found.',
+    'unauthenticated' => 'You are not authenticated.',
+    'account_deactivated' => 'Account deactivated successfully.',
+    'account_deleted' => 'Account deleted successfully.',
+
+    'animal_not_found' => 'Animal not found.',
+    'animal_deleted' => 'Animal deleted successfully.',
+    'animal_marked_lost' => 'Animal marked as lost.',
+    'animal_marked_found' => 'Animal marked as found.',
+    'collar_attached' => 'Collar attached successfully.',
+    'scan_success' => 'Scan successful.',
+    'operation_failed' => 'An error occurred during the operation.',
+
+    'collar_not_found' => 'Collar not found.',
+    'collar_deleted' => 'Collar deleted successfully.',
+    'collar_assigned' => 'Collar assigned to animal successfully.',
+    'operation_failed' => 'An error occurred while processing your request.',
+];
