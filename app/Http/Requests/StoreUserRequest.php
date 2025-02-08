@@ -19,6 +19,7 @@ class StoreUserRequest extends FormRequest
             'password' => 'required|string|min:6|confirmed',
             'phone'    => 'nullable|string|max:20',
             'address'  => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ];
     }
 
@@ -33,6 +34,9 @@ class StoreUserRequest extends FormRequest
             'password.min' => __('validation.password_min'),
             'phone.max' => __('validation.phone_max'),
             'address.max' => __('validation.address_max'),
+            'photo.image' => __('validation.photo_invalid'),
+            'photo.mimes' => __('validation.photo_mimes'),
+            'photo.max' => __('validation.photo_max'),    
         ];
     }
 }

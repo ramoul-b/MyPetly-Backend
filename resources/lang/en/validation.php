@@ -1,5 +1,5 @@
 <?php
-
+//validation.php
 return [
     'name_required' => 'The name field is required.',
     'email_required' => 'The email field is required.',
@@ -8,6 +8,11 @@ return [
     'password_required' => 'The password field is required.',
     'password_min' => 'The password must be at least :min characters.',
     'password_confirmed' => 'The password confirmation does not match.',
+
+    'photo_image' => 'The file must be an image.',
+    'photo_mimes' => 'The file must be in jpeg, png, or jpg format.',
+    'photo_max' => 'The image must not exceed :max kilobytes.',
+
 
     'required' => 'The :attribute field is required.',
     'image' => 'The :attribute must be an image.',

@@ -118,17 +118,17 @@
                     }
                 ]
             },
-            "put": {
+            "post": {
                 "tags": [
                     "Account"
                 ],
                 "summary": "Update account profile",
-                "description": "Update the profile information of the authenticated user.",
-                "operationId": "c7a154836cdfcc367710e50f562bdf21",
+                "description": "Update the profile information of the authenticated user, including profile photo.",
+                "operationId": "8d473728671968a602ec387bbb3b5b8c",
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "required": [
                                     "name",
@@ -151,6 +151,11 @@
                                     "address": {
                                         "type": "string",
                                         "example": "123 Street, City"
+                                    },
+                                    "photo": {
+                                        "description": "User profile photo",
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -170,38 +175,6 @@
                                             "example": "Profile updated successfully."
                                         },
                                         "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "johndoe@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "123456789"
-                                                },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "123 Street, City"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "datetime",
-                                                    "example": "2025-01-20T20:00:00Z"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "datetime",
-                                                    "example": "2025-01-20T20:00:00Z"
-                                                }
-                                            },
                                             "type": "object"
                                         }
                                     },
@@ -228,6 +201,9 @@
                                                 ],
                                                 "email": [
                                                     "The email must be a valid email address."
+                                                ],
+                                                "photo": [
+                                                    "The photo must be an image."
                                                 ]
                                             }
                                         }
@@ -1245,12 +1221,12 @@
                     "Authentication"
                 ],
                 "summary": "Register a new user",
-                "description": "Create a new user account and return an access token.",
+                "description": "Create a new user account and return an access token. Supports profile photo upload.",
                 "operationId": "5d4fa5d5607ed675ba93907e1fc94534",
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "required": [
                                     "name",
@@ -1277,6 +1253,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "password123"
+                                    },
+                                    "photo": {
+                                        "description": "User profile photo",
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -1309,10 +1290,9 @@
                                                     "type": "string",
                                                     "example": "johndoe@example.com"
                                                 },
-                                                "email_verified_at": {
+                                                "photo_url": {
                                                     "type": "string",
-                                                    "format": "datetime",
-                                                    "example": "null"
+                                                    "example": "http://example.com/storage/profiles/1.jpg"
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -1341,7 +1321,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "The provided data is invalid."
+                                            "example": "Validation error."
                                         },
                                         "errors": {
                                             "type": "object",
@@ -2391,7 +2371,7 @@
                     "Collars"
                 ],
                 "summary": "Create a new collar",
-                "description": "Add a new collar to the system",
+                "description": "Add a new collar with optional NFC ID to the system",
                 "operationId": "b73282a3f9787c41b693e1399ec379c8",
                 "requestBody": {
                     "required": true,
@@ -2399,15 +2379,16 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "nfc_id",
                                     "animal_id"
                                 ],
                                 "properties": {
                                     "nfc_id": {
+                                        "description": "Optional NFC ID of the collar",
                                         "type": "string",
                                         "example": "NFC12345"
                                     },
                                     "animal_id": {
+                                        "description": "ID of the associated animal",
                                         "type": "integer",
                                         "example": 1
                                     }
@@ -2429,14 +2410,17 @@
                                             "example": 1
                                         },
                                         "nfc_id": {
+                                            "description": "NFC ID of the collar",
                                             "type": "string",
                                             "example": "NFC12345"
                                         },
                                         "qr_code_url": {
+                                            "description": "URL of the generated QR Code",
                                             "type": "string",
-                                            "example": "http://example.com/qrcode/1.png"
+                                            "example": "http://example.com/storage/qrcodes/1.png"
                                         },
                                         "animal_id": {
+                                            "description": "ID of the associated animal",
                                             "type": "integer",
                                             "example": 1
                                         },
@@ -2470,9 +2454,29 @@
                                             "type": "object",
                                             "example": {
                                                 "nfc_id": [
-                                                    "The nfc_id field is required."
+                                                    "The nfc_id field must be unique."
                                                 ]
                                             }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detailed error message"
                                         }
                                     },
                                     "type": "object"

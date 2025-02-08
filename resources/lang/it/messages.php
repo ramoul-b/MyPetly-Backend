@@ -19,6 +19,10 @@ return [
     'account_deactivated' => 'Account disattivato con successo.',
     'account_deleted' => 'Account eliminato con successo.',
 
+    'photo_uploaded' => 'Foto del profilo caricata con successo.',
+    'photo_deleted' => 'Foto del profilo eliminata con successo.',
+    'photo_upload_failed' => 'Caricamento della foto del profilo non riuscito.',
+
 
     'animal_not_found' => 'Animale non trovato.',
     'animal_deleted' => 'Animale eliminato con successo.',

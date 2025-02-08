@@ -20,10 +20,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'photo',
         'phone',
         'address',
-        'status', // Nouveau champ pour la désactivation
-        'email_verification_token', // Nouveau champ pour le token de vérification d'email
+        'status', 
+        'email_verification_token', 
     ];
 
     /**

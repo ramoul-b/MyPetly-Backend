@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function () {
 
         // AccountController
         Route::get('/account/profile', [AccountController::class, 'getProfile']);
-        Route::put('/account/profile', [AccountController::class, 'updateProfile']);
+        Route::post('/account/profile', [AccountController::class, 'updateProfile']);
         Route::put('/account/change-password', [AccountController::class, 'changePassword']);
         Route::post('/deactivate-account', [AccountController::class, 'deactivateAccount']);
         Route::delete('/delete-account', [AccountController::class, 'deleteAccount']);

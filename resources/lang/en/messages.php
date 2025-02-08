@@ -1,5 +1,5 @@
 <?php
-
+// messages.php
 return [
     'authenticated' => 'You are authenticated.',
     'operation_failed' => 'An error occurred while processing your request.',
@@ -18,6 +18,10 @@ return [
     'unauthenticated' => 'You are not authenticated.',
     'account_deactivated' => 'Account deactivated successfully.',
     'account_deleted' => 'Account deleted successfully.',
+
+    'photo_uploaded' => 'Profile photo uploaded successfully.',
+    'photo_deleted' => 'Profile photo deleted successfully.',
+    'photo_upload_failed' => 'Failed to upload profile photo.',
 
     'animal_not_found' => 'Animal not found.',
     'animal_deleted' => 'Animal deleted successfully.',

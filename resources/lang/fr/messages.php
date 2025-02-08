@@ -19,6 +19,11 @@ return [
     'account_deactivated' => 'Compte désactivé avec succès.',
     'account_deleted' => 'Compte supprimé avec succès.',
 
+    'photo_uploaded' => 'Photo de profil téléchargée avec succès.',
+    'photo_deleted' => 'Photo de profil supprimée avec succès.',
+    'photo_upload_failed' => 'Échec du téléchargement de la photo de profil.',
+
+
 
     'animal_not_found' => 'Animal introuvable.',
     'animal_deleted' => 'Animal supprimé avec succès.',
