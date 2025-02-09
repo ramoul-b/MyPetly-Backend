@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountResource;
 use App\Services\ApiService;
+use App\Services\UserService;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 
 class AccountController extends Controller
 {
@@ -76,85 +79,79 @@ class AccountController extends Controller
     }
 
 
-    /**
-     * @OA\Put(
-     *     path="/account/profile",
-     *     tags={"Account"},
-     *     summary="Update account profile",
-     *     description="Update the profile information of the authenticated user.",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "email"},
-     *             @OA\Property(property="name", type="string", example="John Doe"),
-     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
-     *             @OA\Property(property="phone", type="string", example="123456789"),
-     *             @OA\Property(property="address", type="string", example="123 Street, City")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Profile updated successfully.",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Profile updated successfully."),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example="John Doe"),
-     *                 @OA\Property(property="email", type="string", example="johndoe@example.com"),
-     *                 @OA\Property(property="phone", type="string", example="123456789"),
-     *                 @OA\Property(property="address", type="string", example="123 Street, City"),
-     *                 @OA\Property(property="created_at", type="string", format="datetime", example="2025-01-20T20:00:00Z"),
-     *                 @OA\Property(property="updated_at", type="string", format="datetime", example="2025-01-20T20:00:00Z")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error.",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Validation error."),
-     *             @OA\Property(property="errors", type="object", example={
-     *                 "name": {"The name field is required."},
-     *                 "email": {"The email must be a valid email address."}
-     *             })
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error.",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
-     *             @OA\Property(property="error", type="string", example="Detailed error message if in debug mode")
-     *         )
-     *     )
-     * )
-     */
-    public function updateProfile(UpdateAccountRequest $request)
-    {
-        try {
-            // Récupérer l'utilisateur authentifié
-            $user = $request->user();
+/**
+ * @OA\Post(
+ *     path="/account/profile",
+ *     tags={"Account"},
+ *     summary="Update account profile",
+ *     description="Update the profile information of the authenticated user, including profile photo.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"name", "email"},
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+ *                 @OA\Property(property="phone", type="string", example="123456789"),
+ *                 @OA\Property(property="address", type="string", example="123 Street, City"),
+ *                 @OA\Property(property="photo", type="string", format="binary", description="User profile photo")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Profile updated successfully.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Profile updated successfully."),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Validation error."),
+ *             @OA\Property(property="errors", type="object", example={
+ *                 "name": {"The name field is required."},
+ *                 "email": {"The email must be a valid email address."},
+ *                 "photo": {"The photo must be an image."}
+ *             })
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
+ *             @OA\Property(property="error", type="string", example="Detailed error message if in debug mode")
+ *         )
+ *     )
+ * )
+ */
 
-            // Mettre à jour les informations
-            $user->update($request->validated());
+    public function updateProfile(UpdateUserRequest $request, UserService $userService)
+{
+    try {
+        // Récupérer l'utilisateur authentifié
+        $user = $request->user();
 
-            // Retourner la réponse avec les données mises à jour
-            return ApiService::response([
-                'message' => __('messages.profile_updated'),
-                'data' => new AccountResource($user),
-            ], 200);
+        // Mise à jour via le service
+        $updatedUser = $userService->updateUser($user, $request->validated());
 
-        } catch (\Exception $e) {
-            // Gérer les erreurs
-            return ApiService::response([
-                'message' => __('messages.operation_failed'),
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return ApiService::response([
+            'message' => __('messages.profile_updated'),
+            'data' => new UserResource($updatedUser),
+        ], 200);
+    } catch (\Exception $e) {
+        return ApiService::response([
+            'message' => __('messages.operation_failed'),
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     /**
      * @OA\Put(

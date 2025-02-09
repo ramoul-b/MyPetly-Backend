@@ -9,6 +9,10 @@ return [
     'password_min' => 'Le mot de passe doit contenir au moins :min caractères.',
     'password_confirmed' => 'La confirmation du mot de passe ne correspond pas.',
 
+    'photo_image' => 'Le fichier doit être une image.',
+    'photo_mimes' => 'Le fichier doit être au format : jpeg, png ou jpg.',
+    'photo_max' => 'L\'image ne doit pas dépasser :max kilo-octets.',
+
     'required' => 'Le champ :attribute est obligatoire.',
     'image' => 'Le champ :attribute doit être une image.',
     'mimes' => 'Le champ :attribute doit être un fichier de type : :values.',

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\ApiService;
+use App\Services\UserService;
+
 
 /**
  * @OA\Info(
@@ -45,15 +47,19 @@ class AuthController extends Controller
  *     path="/register",
  *     tags={"Authentication"},
  *     summary="Register a new user",
- *     description="Create a new user account and return an access token.",
+ *     description="Create a new user account and return an access token. Supports profile photo upload.",
  *     @OA\RequestBody(
  *         required=true,
- *         @OA\JsonContent(
- *             required={"name", "email", "password", "password_confirmation"},
- *             @OA\Property(property="name", type="string", example="John Doe"),
- *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
- *             @OA\Property(property="password", type="string", format="password", example="password123"),
- *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"name", "email", "password", "password_confirmation"},
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+ *                 @OA\Property(property="password", type="string", format="password", example="password123"),
+ *                 @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
+ *                 @OA\Property(property="photo", type="string", format="binary", description="User profile photo")
+ *             )
  *         )
  *     ),
  *     @OA\Response(
@@ -67,7 +73,7 @@ class AuthController extends Controller
  *                 @OA\Property(property="id", type="integer", example=1),
  *                 @OA\Property(property="name", type="string", example="John Doe"),
  *                 @OA\Property(property="email", type="string", example="johndoe@example.com"),
- *                 @OA\Property(property="email_verified_at", type="string", format="datetime", example="null"),
+ *                 @OA\Property(property="photo_url", type="string", example="http://example.com/storage/profiles/1.jpg"),
  *                 @OA\Property(property="created_at", type="string", format="datetime", example="2025-01-20T20:00:00Z"),
  *                 @OA\Property(property="updated_at", type="string", format="datetime", example="2025-01-20T20:00:00Z")
  *             )
@@ -77,7 +83,7 @@ class AuthController extends Controller
  *         response=422,
  *         description="Validation error",
  *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="The provided data is invalid."),
+ *             @OA\Property(property="message", type="string", example="Validation error."),
  *             @OA\Property(property="errors", type="object", example={
  *                 "email": {"The email field is required."},
  *                 "password": {"The password confirmation does not match."}
@@ -94,37 +100,25 @@ class AuthController extends Controller
  *     )
  * )
  */
-
-    public function register(StoreUserRequest $request)
-    {
-        try {
-            // Valider les données via StoreUserRequest (déjà validées automatiquement)
-            $validated = $request->validated();
-
-            // Créer l'utilisateur
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
-
-            // Générer un token pour l'utilisateur
-            $token = $user->createToken('mypetly')->plainTextToken;
-
-            // Retourner une réponse avec UserResource
-            return ApiService::response([
-                'access_token' => $token,
-                'user' => new UserResource($user),
-            ], 201);
-
-        } catch (\Exception $e) {
-            // Gérer les exceptions imprévues
-            return ApiService::response([
-                'message' => __('messages.operation_failed'),
-                'error' => $e->getMessage(), // Facultatif : Inclure l'erreur détaillée en mode debug
-            ], 500);
-        }
-    }
+ public function register(StoreUserRequest $request, UserService $userService)
+ {
+     try {
+         $user = $userService->createUser($request->validated());
+ 
+         // Générer un token
+         $token = $user->createToken('mypetly')->plainTextToken;
+ 
+         return ApiService::response([
+             'access_token' => $token,
+             'user' => new UserResource($user),
+         ], 201);
+     } catch (\Exception $e) {
+         return ApiService::response([
+             'message' => __('messages.operation_failed'),
+             'error' => $e->getMessage(),
+         ], 500);
+     }
+ }
 
     /**
  * @OA\Post(

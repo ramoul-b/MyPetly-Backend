@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('email_verification_token')->nullable(); // Ajout pour la vérification d'email
             $table->string('password');
+            $table->string('photo')->nullable(); // Ajout du champ après email
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('status')->default('active'); // Ajout pour la désactivation
@@ -52,5 +53,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        
     }
 };

@@ -12,6 +12,7 @@ class UserResource extends JsonResource
             'id' => $this->id, //Gate::allows('AG_tests_showfieldid') ? $this->id : null,
             'name' => $this->name,
             'email' => $this->email,
+            'photo_url' => $this->photo ? asset('storage/' . $this->photo) : null,
             'phone' => $this->phone,
             'address' => $this->address,
             'status' => $this->status,
