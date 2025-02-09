@@ -30,6 +30,14 @@ return [
     'collar_attached' => 'Collar attached successfully.',
     'scan_success' => 'Scan successful.',
     'operation_failed' => 'An error occurred during the operation.',
+    
+    'sex_required' => 'The animal\'s sex is required.',
+    'sex_in' => 'The sex must be either Male or Female.',
+    'color_required' => 'The animal\'s color is required.',
+    'weight_numeric' => 'The weight must be a valid number.',
+    'height_numeric' => 'The height must be a valid number.',
+    'identification_number_required' => 'The identification number is required.',
+    'identification_number_unique' => 'This identification number is already in use.',
 
     'collar_not_found' => 'Collar not found.',
     'collar_deleted' => 'Collar deleted successfully.',
