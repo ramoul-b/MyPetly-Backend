@@ -29,7 +29,7 @@ use App\Services\UserService;
  * )
  * 
  * @OA\Server(
- *     url="http://localhost:8000/api/v1",
+ *     url="/api/v1",
  *     description="Local development server"
  * )
 * @OA\SecurityScheme(
