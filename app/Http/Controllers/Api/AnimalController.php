@@ -92,6 +92,11 @@ class AnimalController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="name", type="string", example="Buddy"),
+     *             @OA\Property(property="sex", type="string", enum={"male", "female"}, example="male"),
+     *             @OA\Property(property="color", type="string", example="Brown"),
+     *             @OA\Property(property="weight", type="number", format="float", example=12.5),
+     *             @OA\Property(property="height", type="number", format="float", example=45.3),
+     *             @OA\Property(property="identification_number", type="string", example="1234567890AB"),
      *             @OA\Property(property="species", type="string", example="Dog"),
      *             @OA\Property(property="breed", type="string", example="Labrador"),
      *             @OA\Property(property="birthdate", type="string", format="date", example="2020-05-10"),

@@ -32,6 +32,15 @@ return [
     'scan_success' => 'Scansione riuscita.',
     'operation_failed' => 'Si è verificato un errore durante l\'operazione.',
 
+
+    'sex_required' => 'Il sesso dell\'animale è obbligatorio.',
+    'sex_in' => 'Il sesso deve essere Maschio o Femmina.',
+    'color_required' => 'Il colore dell\'animale è obbligatorio.',
+    'weight_numeric' => 'Il peso deve essere un numero valido.',
+    'height_numeric' => 'L\'altezza deve essere un numero valido.',
+    'identification_number_required' => 'Il numero di identificazione è obbligatorio.',
+    'identification_number_unique' => 'Questo numero di identificazione è già in uso.',
+
     'collar_not_found' => 'Collare non trovato.',
     'collar_deleted' => 'Collare eliminato con successo.',
     'collar_assigned' => 'Collare assegnato con successo all\'animale.',
