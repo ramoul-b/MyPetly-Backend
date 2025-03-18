@@ -1,0 +1,31 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Déploiement uniquement sur la branche main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: vps-88a3af89.vps.ovh.net
+          username: ubuntu
+          password: czre5Tj5DS6k
+          script: |
+            cd /var/www/MyPetly-Backend
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan queue:restart
+            echo "✅ Déploiement terminé avec succès !"
+
