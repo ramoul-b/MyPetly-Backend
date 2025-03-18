@@ -16,6 +16,9 @@
         {
             "url": "/api/v1",
             "description": "Local development server"
+        },
+        {
+            "url": "/api/v1"
         }
     ],
     "paths": {
@@ -2320,6 +2323,418 @@
                 }
             }
         },
+        "/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Liste toutes les réservations",
+                "operationId": "b89b932c131e727a3720a01899acd0a2",
+                "responses": {
+                    "200": {
+                        "description": "Liste des réservations récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Crée une nouvelle réservation",
+                "operationId": "166547aa028b063e31d6efe9c093aa88",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "appointment_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-04-20 10:00:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Préférences particulières"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Réservation créée avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/bookings/{id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Affiche une réservation spécifique",
+                "operationId": "9a7e24b15b1f9fe6c357532b3c5200a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Réservation récupérée avec succès"
+                    },
+                    "404": {
+                        "description": "Réservation introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Met à jour une réservation existante",
+                "operationId": "620746af203837311ea0dd4fca355623",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "appointment_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-04-21 11:00:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "confirmed"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Modifier les préférences"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Réservation mise à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Réservation introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Supprime une réservation",
+                "operationId": "b14ac6c3aa1a450e338f1424cc7d7168",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Réservation supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Réservation introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Liste toutes les catégories",
+                "operationId": "b1b247b2b491b0491c3c728dc33f23f0",
+                "responses": {
+                    "200": {
+                        "description": "Liste des catégories récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Crée une nouvelle catégorie",
+                "operationId": "c86cd7a85ad06a4fe905bfab62146952",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Toilettage"
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "spa"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "material"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#FF0000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Catégorie créée avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Affiche une catégorie spécifique",
+                "operationId": "486849467f411ec5e4bdf111f50ede87",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catégorie récupérée avec succès"
+                    },
+                    "404": {
+                        "description": "Catégorie introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Met à jour une catégorie existante",
+                "operationId": "b648463d94e0caf7b8d842a1008789b2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Toilettage Deluxe"
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "spa"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "material"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#00FF00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Catégorie mise à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Catégorie introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Supprime une catégorie",
+                "operationId": "491dfe5b6b58b480181690ede6550e44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catégorie supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Catégorie introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/collars": {
             "get": {
                 "tags": [
@@ -3180,6 +3595,424 @@
                 }
             }
         },
+        "/providers": {
+            "get": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Liste tous les prestataires",
+                "operationId": "6a43357b0da7e513e0f847904fd6a28e",
+                "responses": {
+                    "200": {
+                        "description": "Liste des prestataires récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Crée un nouveau prestataire",
+                "operationId": "a6fd01248d48970ee35c7d987f8894e0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Dr. John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+123456789"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Street, City"
+                                    },
+                                    "specialization": {
+                                        "type": "string",
+                                        "example": "Vet"
+                                    },
+                                    "rating": {
+                                        "type": "number",
+                                        "example": 4.8
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Prestataire créé avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/providers/{id}": {
+            "get": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Affiche un prestataire spécifique",
+                "operationId": "74a4dfd689b372976da3be9756566a70",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Prestataire récupéré avec succès"
+                    },
+                    "404": {
+                        "description": "Prestataire introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Met à jour un prestataire existant",
+                "operationId": "3d1b33b513c4c0a82453a18cd39c5e4e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Dr. John Doe Updated"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "johnupdated@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+987654321"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "456 Avenue, City"
+                                    },
+                                    "specialization": {
+                                        "type": "string",
+                                        "example": "Grooming"
+                                    },
+                                    "rating": {
+                                        "type": "number",
+                                        "example": 4.9
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Prestataire mis à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Prestataire introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Supprime un prestataire",
+                "operationId": "3819a560561b030d65eb150ffd3b203d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Prestataire supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Prestataire introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Liste tous les avis",
+                "operationId": "1977cd84258463d927b22fbdb185d50b",
+                "responses": {
+                    "200": {
+                        "description": "Liste des avis récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Crée un nouvel avis",
+                "operationId": "1a9ed3737615a28b60c78a0d05d0eb35",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "rating": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Excellent service !"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Avis créé avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Affiche un avis spécifique",
+                "operationId": "acf25d40c9352f206d9be8f3285fe724",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avis récupéré avec succès"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Met à jour un avis existant",
+                "operationId": "7975450987e8c86c41616386aea7575a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "rating": {
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Très bon, mais peut mieux faire"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avis mis à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Supprime un avis",
+                "operationId": "c6da8f2af574635e95538fb5b99a0c90",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avis supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/roles": {
             "get": {
                 "tags": [
@@ -3549,6 +4382,267 @@
                         }
                     }
                 }
+            }
+        },
+        "/services": {
+            "get": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Get all services",
+                "description": "Retrieve a list of all services",
+                "operationId": "9bc5badba49cd41fbedbf409d8da8e9c",
+                "responses": {
+                    "200": {
+                        "description": "List retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Dog Grooming"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Full grooming service"
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 49.99
+                                            },
+                                            "active": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Create a new service",
+                "description": "Add a new service",
+                "operationId": "cfbcc1164b7a56d8ad0af7f28c927ab3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "provider_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Dog Grooming"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Full grooming service"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 49.99
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Service created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/services/{id}": {
+            "get": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Get service details",
+                "description": "Retrieve details of a specific service",
+                "operationId": "86409cc308ffee739dd6a4b1fc9b81e7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service details retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Update service details",
+                "description": "Update details of an existing service",
+                "operationId": "73a90b52799c4e3a25f6e5d970be59b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "provider_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Dog Grooming Deluxe"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Enhanced grooming service"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 59.99
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Service updated successfully"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Delete a service",
+                "description": "Delete a service by ID",
+                "operationId": "061b1d1133c5bbdcad7427c1fdb76e06",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service deleted successfully"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users": {
@@ -4270,6 +5364,14 @@
             "description": "Authentication"
         },
         {
+            "name": "Bookings",
+            "description": "Bookings"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
             "name": "Collars",
             "description": "Collars"
         },
@@ -4278,8 +5380,20 @@
             "description": "Permissions"
         },
         {
+            "name": "Providers",
+            "description": "Providers"
+        },
+        {
+            "name": "Reviews",
+            "description": "Reviews"
+        },
+        {
             "name": "Roles",
             "description": "Roles"
+        },
+        {
+            "name": "Services",
+            "description": "Services"
         },
         {
             "name": "Users",
