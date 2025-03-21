@@ -20,57 +20,103 @@ class ServiceController extends Controller
         $this->serviceService = $serviceService;
     }
 
-/**
- * @OA\Get(
- *     path="/services",
- *     tags={"Services"},
- *     summary="Get all services",
- *     description="Retrieve a list of all services",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="List retrieved successfully",
- *         @OA\JsonContent(type="array", @OA\Items(
- *             @OA\Property(property="id", type="integer", example=1),
- *             @OA\Property(property="name", type="string", example="Dog Grooming"),
- *             @OA\Property(property="description", type="string", example="Full grooming service"),
- *             @OA\Property(property="price", type="number", format="float", example=49.99),
- *             @OA\Property(property="active", type="boolean", example=true)
- *         ))
- *     ),
- *     @OA\Response(response=500, description="Internal server error")
- * )
- */
-public function index(): JsonResponse
-{
-    try {
-        $services = $this->serviceService->getAll();
-        return ApiService::response(ServiceResource::collection($services), 200);
-    } catch (\Exception $e) {
-        return ApiService::response(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
+    /**
+     * @OA\Get(
+     *     path="/services",
+     *     tags={"Services"},
+     *     summary="Obtenir la liste des services",
+     *     description="Récupère une liste de tous les services avec leurs traductions",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste récupérée avec succès",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="object",
+     *                     example={"fr": "Toilettage pour chien", "en": "Dog Grooming", "es": "Aseo para perros"}
+     *                 ),
+     *                 @OA\Property(property="description", type="object",
+     *                     example={"fr": "Service complet de toilettage", "en": "Full grooming service", "es": "Servicio completo de aseo"}
+     *                 ),
+     *                 @OA\Property(property="price", type="number", format="float", example=49.99),
+     *                 @OA\Property(property="active", type="boolean", example=true),
+     *                 @OA\Property(property="category", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="object",
+     *                         example={"fr": "Toilettage", "en": "Grooming", "es": "Aseo"}
+     *                     ),
+     *                     @OA\Property(property="icon", type="string", example="icon.png"),
+     *                     @OA\Property(property="color", type="string", example="#ffcc00")
+     *                 ),
+     *                 @OA\Property(property="provider", type="object",
+     *                     @OA\Property(property="id", type="integer", example=2),
+     *                     @OA\Property(property="name", type="object",
+     *                         example={"fr": "Prestataire Pro", "en": "Pro Provider", "es": "Proveedor Profesional"}
+     *                     ),
+     *                     @OA\Property(property="photo", type="string", example="provider.png"),
+     *                     @OA\Property(property="specialization", type="string", example="Toilettage"),
+     *                     @OA\Property(property="rating", type="number", format="float", example=4.8)
+     *                 ),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-19 10:30"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-19 11:00")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
+     * )
+     */
+    public function index(): JsonResponse
+    {
+        try {
+            $services = $this->serviceService->getAll();
+            return ApiService::response(ServiceResource::collection($services), 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
+        }
     }
-}
-
-
 
     /**
      * @OA\Post(
      *     path="/services",
      *     tags={"Services"},
-     *     summary="Create a new service",
-     *     description="Add a new service",
+     *     summary="Créer un nouveau service",
+     *     description="Ajoute un nouveau service avec support multilingue",
      *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="category_id", type="integer", example=1),
-     *         @OA\Property(property="provider_id", type="integer", example=2),
-     *         @OA\Property(property="name", type="string", example="Dog Grooming"),
-     *         @OA\Property(property="description", type="string", example="Full grooming service"),
-     *         @OA\Property(property="price", type="number", format="float", example=49.99),
-     *         @OA\Property(property="active", type="boolean", example=true)
-     *     )),
-     *     @OA\Response(response=201, description="Service created successfully"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=500, description="Internal server error")
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="category_id", type="integer", example=1),
+     *             @OA\Property(property="provider_id", type="integer", example=2),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage pour chien", "en": "Dog Grooming", "es": "Aseo para perros"}
+     *             ),
+     *             @OA\Property(property="description", type="object",
+     *                 example={"fr": "Service complet de toilettage", "en": "Full grooming service", "es": "Servicio completo de aseo"}
+     *             ),
+     *             @OA\Property(property="price", type="number", format="float", example=49.99),
+     *             @OA\Property(property="active", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Service créé avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage pour chien", "en": "Dog Grooming", "es": "Aseo para perros"}
+     *             ),
+     *             @OA\Property(property="description", type="object",
+     *                 example={"fr": "Service complet de toilettage", "en": "Full grooming service", "es": "Servicio completo de aseo"}
+     *             ),
+     *             @OA\Property(property="price", type="number", format="float", example=49.99),
+     *             @OA\Property(property="active", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Erreur de validation"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function store(StoreServiceRequest $request)
@@ -79,7 +125,7 @@ public function index(): JsonResponse
             $service = $this->serviceService->create($request->validated());
             return ApiService::response(new ServiceResource($service), 201);
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
+            return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -87,13 +133,28 @@ public function index(): JsonResponse
      * @OA\Get(
      *     path="/services/{id}",
      *     tags={"Services"},
-     *     summary="Get service details",
-     *     description="Retrieve details of a specific service",
+     *     summary="Obtenir les détails d'un service",
+     *     description="Récupère les détails d'un service avec ses traductions",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Service details retrieved successfully"),
-     *     @OA\Response(response=404, description="Service not found"),
-     *     @OA\Response(response=500, description="Internal server error")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Détails récupérés avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage pour chien", "en": "Dog Grooming", "es": "Aseo para perros"}
+     *             ),
+     *             @OA\Property(property="description", type="object",
+     *                 example={"fr": "Service complet de toilettage", "en": "Full grooming service", "es": "Servicio completo de aseo"}
+     *             ),
+     *             @OA\Property(property="price", type="number", format="float", example=49.99),
+     *             @OA\Property(property="active", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Service non trouvé"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function show($id)
@@ -102,7 +163,7 @@ public function index(): JsonResponse
             $service = $this->serviceService->find($id);
             return ApiService::response(new ServiceResource($service), 200);
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
+            return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -110,22 +171,29 @@ public function index(): JsonResponse
      * @OA\Put(
      *     path="/services/{id}",
      *     tags={"Services"},
-     *     summary="Update service details",
-     *     description="Update details of an existing service",
+     *     summary="Mettre à jour un service",
+     *     description="Met à jour les informations d'un service, y compris les traductions",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="category_id", type="integer", example=1),
-     *         @OA\Property(property="provider_id", type="integer", example=2),
-     *         @OA\Property(property="name", type="string", example="Dog Grooming Deluxe"),
-     *         @OA\Property(property="description", type="string", example="Enhanced grooming service"),
-     *         @OA\Property(property="price", type="number", format="float", example=59.99),
-     *         @OA\Property(property="active", type="boolean", example=false)
-     *     )),
-     *     @OA\Response(response=200, description="Service updated successfully"),
-     *     @OA\Response(response=404, description="Service not found"),
-     *     @OA\Response(response=422, description="Validation error"),
-     *     @OA\Response(response=500, description="Internal server error")
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="category_id", type="integer", example=1),
+     *             @OA\Property(property="provider_id", type="integer", example=2),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage de luxe", "en": "Luxury Dog Grooming"}
+     *             ),
+     *             @OA\Property(property="description", type="object",
+     *                 example={"fr": "Toilettage haut de gamme", "en": "Premium grooming service"}
+     *             ),
+     *             @OA\Property(property="price", type="number", format="float", example=59.99),
+     *             @OA\Property(property="active", type="boolean", example=false)
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Service mis à jour avec succès"),
+     *     @OA\Response(response=404, description="Service non trouvé"),
+     *     @OA\Response(response=422, description="Erreur de validation"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function update(UpdateServiceRequest $request, $id)
@@ -135,7 +203,7 @@ public function index(): JsonResponse
             $updatedService = $this->serviceService->update($service, $request->validated());
             return ApiService::response(new ServiceResource($updatedService), 200);
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
+            return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -143,13 +211,13 @@ public function index(): JsonResponse
      * @OA\Delete(
      *     path="/services/{id}",
      *     tags={"Services"},
-     *     summary="Delete a service",
-     *     description="Delete a service by ID",
+     *     summary="Supprimer un service",
+     *     description="Supprime un service par ID",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Service deleted successfully"),
-     *     @OA\Response(response=404, description="Service not found"),
-     *     @OA\Response(response=500, description="Internal server error")
+     *     @OA\Response(response=200, description="Service supprimé avec succès"),
+     *     @OA\Response(response=404, description="Service non trouvé"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function destroy($id)
@@ -157,9 +225,9 @@ public function index(): JsonResponse
         try {
             $service = $this->serviceService->find($id);
             $this->serviceService->delete($service);
-            return ApiService::response(['message' => 'Service deleted successfully'], 200);
+            return ApiService::response(['message' => 'Service supprimé avec succès'], 200);
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
+            return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
         }
     }
 }

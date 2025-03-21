@@ -13,16 +13,19 @@ class StoreServiceRequest extends FormRequest
     }
 
     public function rules(): array
-    {
-        return [
-            'category_id'  => 'required|exists:categories,id',
-            'provider_id'  => 'required|exists:providers,id',
-            'name'         => 'required|string|max:255',
-            'description'  => 'nullable|string|max:1000',
-            'price'        => 'required|numeric|min:0',
-            'active'       => 'boolean',
-        ];
-    }
+{
+    return [
+        'category_id'  => 'required|exists:categories,id',
+        'provider_id'  => 'required|exists:providers,id',
+        'name'         => 'required|array', // Tableau pour les langues
+        'name.*'       => 'required|string|max:255', // Chaque langue doit être une string
+        'description'  => 'nullable|array',
+        'description.*'=> 'nullable|string',
+        'price'        => 'required|numeric|min:0',
+        'active'       => 'boolean',
+    ];
+}
+
     
     public function messages(): array
     {

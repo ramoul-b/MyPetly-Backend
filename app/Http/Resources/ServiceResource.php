@@ -1,8 +1,5 @@
 <?php
 
-
-// app/Http/Resources/ServiceResource.php
-
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -14,19 +11,19 @@ class ServiceResource extends JsonResource
     {
         return [
             'id'           => $this->id,
-            'name'         => $this->name,
-            'description'  => $this->description,
+            'name'         => $this->getTranslations('name'), 
+            'description'  => $this->getTranslations('description'),
             'price'        => $this->price,
             'active'       => (bool) $this->active,
             'category'     => [
-                'id'          => $this->category->id,
-                'name'       => $this->category->name,
-                'icon'       => $this->category->icon,
-                'color'     => $this->category->color,
+                'id'    => $this->category->id,
+                'name'  => $this->category->getTranslations('name'),
+                'icon'  => $this->category->icon,
+                'color' => $this->category->color,
             ],
             'provider'     => [
                 'id'             => $this->provider->id,
-                'name'           => $this->provider->name,
+                'name'           => $this->provider->getTranslations('name'),
                 'photo'          => $this->provider->photo,
                 'specialization' => $this->provider->specialization,
                 'rating'         => $this->provider->rating,

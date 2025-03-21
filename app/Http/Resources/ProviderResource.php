@@ -7,30 +7,25 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProviderResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'description' => $this->description,
-            'photo' => $this->photo,
-            'birth_year' => $this->birth_year,
-            'specialization' => $this->specialization,
-            'education' => $this->education,
-            'experience' => $this->experience,
+            'id'            => $this->id,
+            'name'          => $this->getTranslations('name'),
+            'email'         => $this->email,
+            'phone'         => $this->phone,
+            'address'       => $this->address,
+            'description'   => $this->getTranslations('description'),
+            'photo'         => $this->photo,
+            'birth_year'    => $this->birth_year,
+            'specialization'=> $this->getTranslations('specialization'),
+            'education'     => $this->education,
+            'experience'    => $this->experience,
             'personal_info' => $this->personal_info,
-            'rating' => $this->rating,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'services' => ServiceResource::collection($this->whenLoaded('services')),
+            'rating'        => $this->rating,
+            'services'      => ServiceResource::collection($this->whenLoaded('services')),
+            'created_at'    => $this->created_at->format('Y-m-d H:i'),
+            'updated_at'    => $this->updated_at->format('Y-m-d H:i'),
         ];
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-// database/migrations/xxxx_xx_xx_create_providers_table.php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->json('name'); // Multilingue
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->text('description')->nullable();
+            $table->json('description')->nullable(); // Multilingue
+            $table->string('photo')->nullable();
             $table->integer('birth_year')->nullable();
-            $table->string('specialization')->nullable();
+            $table->json('specialization')->nullable(); // Multilingue
             $table->text('education')->nullable();
             $table->text('experience')->nullable();
             $table->text('personal_info')->nullable();

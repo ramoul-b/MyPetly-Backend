@@ -9,19 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('provider_id')->constrained('providers')->cascadeOnDelete();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->json('name'); // Stocke les noms des services en JSON
+            $table->json('description')->nullable(); // Stocke les descriptions traduites
             $table->decimal('price', 8, 2);
             $table->boolean('active')->default(true);
+            $table->foreignId('provider_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
+   
 
     /**
      * Reverse the migrations.

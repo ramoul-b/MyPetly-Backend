@@ -12,16 +12,19 @@ class UpdateServiceRequest extends FormRequest
     }
 
     public function rules(): array
-    {
-        return [
-            'category_id'  => 'sometimes|exists:categories,id',
-            'provider_id'  => 'sometimes|exists:providers,id',
-            'name'         => 'sometimes|string|max:255',
-            'description'  => 'nullable|string',
-            'price'        => 'sometimes|numeric|min:0',
-            'active'       => 'sometimes|boolean',
-        ];
-    }
+{
+    return [
+        'category_id'  => 'sometimes|exists:categories,id',
+        'provider_id'  => 'sometimes|exists:providers,id',
+        'name'         => 'sometimes|array',
+        'name.*'       => 'sometimes|string|max:255',
+        'description'  => 'nullable|array',
+        'description.*'=> 'nullable|string',
+        'price'        => 'sometimes|numeric|min:0',
+        'active'       => 'sometimes|boolean',
+    ];
+}
+
 
     public function messages(): array
     {

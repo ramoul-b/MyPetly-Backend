@@ -12,14 +12,29 @@ use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
-    /**
+/**
      * @OA\Get(
      *     path="/categories",
      *     tags={"Categories"},
-     *     summary="Liste toutes les catégories",
+     *     summary="Obtenir toutes les catégories",
+     *     description="Récupère la liste de toutes les catégories disponibles",
      *     security={{"bearerAuth":{}}},
-     *     @OA\Response(response=200, description="Liste des catégories récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des catégories récupérée avec succès",
+     *         @OA\JsonContent(type="array", @OA\Items(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage", "en": "Grooming", "es": "Aseo"}
+     *             ),
+     *             @OA\Property(property="type", type="string", example="service"),
+     *             @OA\Property(property="icon", type="string", example="icon.png"),
+     *             @OA\Property(property="color", type="string", example="#ffcc00"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-19 10:30"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-19 11:00")
+     *         ))
+     *     ),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function index(): JsonResponse
@@ -36,17 +51,23 @@ class CategoryController extends Controller
      * @OA\Post(
      *     path="/categories",
      *     tags={"Categories"},
-     *     summary="Crée une nouvelle catégorie",
+     *     summary="Créer une catégorie",
+     *     description="Ajoute une nouvelle catégorie avec support multilingue",
      *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="name", type="string", example="Toilettage"),
-     *         @OA\Property(property="icon", type="string", example="spa"),
-     *         @OA\Property(property="type", type="string", example="material"),
-     *         @OA\Property(property="color", type="string", example="#FF0000")
-     *     )),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage", "en": "Grooming", "es": "Aseo"}
+     *             ),
+     *             @OA\Property(property="type", type="string", example="service"),
+     *             @OA\Property(property="icon", type="string", example="icon.png"),
+     *             @OA\Property(property="color", type="string", example="#ffcc00")
+     *         )
+     *     ),
      *     @OA\Response(response=201, description="Catégorie créée avec succès"),
      *     @OA\Response(response=422, description="Erreur de validation"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function store(StoreCategoryRequest $request): JsonResponse
@@ -63,12 +84,28 @@ class CategoryController extends Controller
      * @OA\Get(
      *     path="/categories/{id}",
      *     tags={"Categories"},
-     *     summary="Affiche une catégorie spécifique",
+     *     summary="Obtenir les détails d'une catégorie",
+     *     description="Récupère les détails d'une catégorie spécifique",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Catégorie récupérée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie introuvable"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Détails récupérés avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="object",
+     *                 example={"fr": "Toilettage", "en": "Grooming", "es": "Aseo"}
+     *             ),
+     *             @OA\Property(property="type", type="string", example="service"),
+     *             @OA\Property(property="icon", type="string", example="icon.png"),
+     *             @OA\Property(property="color", type="string", example="#ffcc00"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-19 10:30"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-19 11:00")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function show(Category $category): JsonResponse
@@ -113,12 +150,13 @@ class CategoryController extends Controller
      * @OA\Delete(
      *     path="/categories/{id}",
      *     tags={"Categories"},
-     *     summary="Supprime une catégorie",
+     *     summary="Supprimer une catégorie",
+     *     description="Supprime une catégorie par ID",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Catégorie supprimée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie introuvable"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function destroy(Category $category): JsonResponse

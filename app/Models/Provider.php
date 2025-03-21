@@ -6,10 +6,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 class Provider extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
 
     protected $fillable = [
         'name',
@@ -25,6 +26,7 @@ class Provider extends Model
         'personal_info',
         'rating',
     ];
+    public $translatable = ['name', 'description','specialization'];
 
     public function services()
     {

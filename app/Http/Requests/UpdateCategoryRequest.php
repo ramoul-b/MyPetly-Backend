@@ -4,28 +4,27 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
-        return true; // Autoriser tous les utilisateurs à faire cette requête
+        return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name'         => 'required|array',
-            'name.*'       => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'color' => 'required|string|max:7',
+            'name'         => 'sometimes|array',
+            'name.*'       => 'sometimes|string|max:255',
+            'icon'         => 'nullable|string|max:255',
+            'type'         => 'required|string|max:255',
+            'color'        => 'nullable|string|max:10',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'  => 'Le nom de la catégorie est obligatoire.',
             'name.*.string'  => 'Le nom doit être une chaîne de caractères.',
             'icon.string'    => 'L’icône doit être une chaîne de caractères.',
             'type.string'    => 'Le type doit être une chaîne de caractères.',

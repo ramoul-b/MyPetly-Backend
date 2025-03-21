@@ -6,12 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
 use App\Http\Resources\ProviderResource;
+use App\Services\ProviderService;
 use App\Services\ApiService;
-use App\Models\Provider;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Tag(name="Providers", description="Gestion des prestataires de services")
+ */
 class ProviderController extends Controller
 {
+    protected $providerService;
+
+    public function __construct(ProviderService $providerService)
+    {
+        $this->providerService = $providerService;
+    }
+
     /**
      * @OA\Get(
      *     path="/providers",
@@ -19,13 +29,13 @@ class ProviderController extends Controller
      *     summary="Liste tous les prestataires",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(response=200, description="Liste des prestataires récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function index(): JsonResponse
     {
         try {
-            $providers = Provider::all();
+            $providers = $this->providerService->getAll();
             return ApiService::response(ProviderResource::collection($providers), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération des prestataires.', 'error' => $e->getMessage()], 500);
@@ -39,22 +49,26 @@ class ProviderController extends Controller
      *     summary="Crée un nouveau prestataire",
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="name", type="string", example="Dr. John Doe"),
+     *         @OA\Property(property="name", type="object",
+     *             example={"fr": "Toiletteur", "en": "Groomer", "es": "Peluquero"}
+     *         ),
      *         @OA\Property(property="email", type="string", example="john@example.com"),
      *         @OA\Property(property="phone", type="string", example="+123456789"),
      *         @OA\Property(property="address", type="string", example="123 Street, City"),
-     *         @OA\Property(property="specialization", type="string", example="Vet"),
+     *         @OA\Property(property="specialization", type="object",
+     *             example={"fr": "Vétérinaire", "en": "Veterinarian", "es": "Veterinario"}
+     *         ),
      *         @OA\Property(property="rating", type="number", example=4.8)
      *     )),
      *     @OA\Response(response=201, description="Prestataire créé avec succès"),
      *     @OA\Response(response=422, description="Erreur de validation"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
     public function store(StoreProviderRequest $request): JsonResponse
     {
         try {
-            $provider = Provider::create($request->validated());
+            $provider = $this->providerService->create($request->validated());
             return ApiService::response(new ProviderResource($provider), 201);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la création du prestataire.', 'error' => $e->getMessage()], 500);
@@ -70,12 +84,13 @@ class ProviderController extends Controller
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Prestataire récupéré avec succès"),
      *     @OA\Response(response=404, description="Prestataire introuvable"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
-    public function show(Provider $provider): JsonResponse
+    public function show($id): JsonResponse
     {
         try {
+            $provider = $this->providerService->find($id);
             return ApiService::response(new ProviderResource($provider), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération du prestataire.', 'error' => $e->getMessage()], 500);
@@ -90,24 +105,29 @@ class ProviderController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="name", type="string", example="Dr. John Doe Updated"),
+     *         @OA\Property(property="name", type="object",
+     *             example={"fr": "Toiletteur", "en": "Groomer", "es": "Peluquero"}
+     *         ),
      *         @OA\Property(property="email", type="string", example="johnupdated@example.com"),
      *         @OA\Property(property="phone", type="string", example="+987654321"),
      *         @OA\Property(property="address", type="string", example="456 Avenue, City"),
-     *         @OA\Property(property="specialization", type="string", example="Grooming"),
+     *         @OA\Property(property="specialization", type="object",
+     *             example={"fr": "Grooming", "en": "Grooming", "es": "Peluquería"}
+     *         ),
      *         @OA\Property(property="rating", type="number", example=4.9)
      *     )),
      *     @OA\Response(response=200, description="Prestataire mis à jour avec succès"),
      *     @OA\Response(response=404, description="Prestataire introuvable"),
      *     @OA\Response(response=422, description="Erreur de validation"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
-    public function update(UpdateProviderRequest $request, Provider $provider): JsonResponse
+    public function update(UpdateProviderRequest $request, $id): JsonResponse
     {
         try {
-            $provider->update($request->validated());
-            return ApiService::response(new ProviderResource($provider), 200);
+            $provider = $this->providerService->find($id);
+            $updatedProvider = $this->providerService->update($provider, $request->validated());
+            return ApiService::response(new ProviderResource($updatedProvider), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la mise à jour du prestataire.', 'error' => $e->getMessage()], 500);
         }
@@ -122,13 +142,13 @@ class ProviderController extends Controller
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Prestataire supprimé avec succès"),
      *     @OA\Response(response=404, description="Prestataire introuvable"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
-    public function destroy(Provider $provider): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
-            $provider->delete();
+            $this->providerService->delete($id);
             return ApiService::response(['message' => 'Prestataire supprimé avec succès.'], 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la suppression du prestataire.', 'error' => $e->getMessage()], 500);

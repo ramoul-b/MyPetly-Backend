@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->json('name'); // Stocke le nom en plusieurs langues 
             $table->string('icon');
             $table->string('type');
             $table->string('color');

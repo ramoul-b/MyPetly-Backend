@@ -1,6 +1,5 @@
 <?php
 
-// app/Services/ServiceService.php
 namespace App\Services;
 
 use App\Models\Service;
@@ -20,12 +19,44 @@ class ServiceService
 
     public function create(array $data): Service
     {
-        return Service::create($data);
+        $service = new Service();
+        $service->category_id = $data['category_id'];
+        $service->provider_id = $data['provider_id'];
+        $service->price = $data['price'];
+        $service->active = $data['active'] ?? true;
+
+        // Gérer les traductions
+        $service->setTranslations('name', $data['name']);
+        $service->setTranslations('description', $data['description'] ?? []);
+
+        $service->save();
+        return $service;
     }
 
     public function update(Service $service, array $data): Service
     {
-        $service->update($data);
+        if (isset($data['category_id'])) {
+            $service->category_id = $data['category_id'];
+        }
+        if (isset($data['provider_id'])) {
+            $service->provider_id = $data['provider_id'];
+        }
+        if (isset($data['price'])) {
+            $service->price = $data['price'];
+        }
+        if (isset($data['active'])) {
+            $service->active = $data['active'];
+        }
+
+        // Mise à jour des traductions
+        if (isset($data['name'])) {
+            $service->setTranslations('name', $data['name']);
+        }
+        if (isset($data['description'])) {
+            $service->setTranslations('description', $data['description']);
+        }
+
+        $service->save();
         return $service;
     }
 

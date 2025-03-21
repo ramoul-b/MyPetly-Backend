@@ -2535,14 +2535,61 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Liste toutes les catégories",
+                "summary": "Obtenir toutes les catégories",
+                "description": "Récupère la liste de toutes les catégories disponibles",
                 "operationId": "b1b247b2b491b0491c3c728dc33f23f0",
                 "responses": {
                     "200": {
-                        "description": "Liste des catégories récupérée avec succès"
+                        "description": "Liste des catégories récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Toilettage",
+                                                    "en": "Grooming",
+                                                    "es": "Aseo"
+                                                }
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "service"
+                                            },
+                                            "icon": {
+                                                "type": "string",
+                                                "example": "icon.png"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "example": "#ffcc00"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 10:30"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 11:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -2555,7 +2602,8 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Crée une nouvelle catégorie",
+                "summary": "Créer une catégorie",
+                "description": "Ajoute une nouvelle catégorie avec support multilingue",
                 "operationId": "c86cd7a85ad06a4fe905bfab62146952",
                 "requestBody": {
                     "required": true,
@@ -2564,20 +2612,24 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Toilettage"
-                                    },
-                                    "icon": {
-                                        "type": "string",
-                                        "example": "spa"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toilettage",
+                                            "en": "Grooming",
+                                            "es": "Aseo"
+                                        }
                                     },
                                     "type": {
                                         "type": "string",
-                                        "example": "material"
+                                        "example": "service"
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "icon.png"
                                     },
                                     "color": {
                                         "type": "string",
-                                        "example": "#FF0000"
+                                        "example": "#ffcc00"
                                     }
                                 },
                                 "type": "object"
@@ -2593,7 +2645,7 @@
                         "description": "Erreur de validation"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -2608,7 +2660,8 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Affiche une catégorie spécifique",
+                "summary": "Obtenir les détails d'une catégorie",
+                "description": "Récupère les détails d'une catégorie spécifique",
                 "operationId": "486849467f411ec5e4bdf111f50ede87",
                 "parameters": [
                     {
@@ -2622,13 +2675,56 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Catégorie récupérée avec succès"
+                        "description": "Détails récupérés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Toilettage",
+                                                "en": "Grooming",
+                                                "es": "Aseo"
+                                            }
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "service"
+                                        },
+                                        "icon": {
+                                            "type": "string",
+                                            "example": "icon.png"
+                                        },
+                                        "color": {
+                                            "type": "string",
+                                            "example": "#ffcc00"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-19 10:30"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-19 11:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Catégorie introuvable"
+                        "description": "Catégorie non trouvée"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -2705,7 +2801,8 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Supprime une catégorie",
+                "summary": "Supprimer une catégorie",
+                "description": "Supprime une catégorie par ID",
                 "operationId": "491dfe5b6b58b480181690ede6550e44",
                 "parameters": [
                     {
@@ -2722,10 +2819,10 @@
                         "description": "Catégorie supprimée avec succès"
                     },
                     "404": {
-                        "description": "Catégorie introuvable"
+                        "description": "Catégorie non trouvée"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -3604,10 +3701,46 @@
                 "operationId": "6a43357b0da7e513e0f847904fd6a28e",
                 "responses": {
                     "200": {
-                        "description": "Liste des prestataires récupérée avec succès"
+                        "description": "Liste des prestataires récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Toiletteur",
+                                                    "en": "Groomer",
+                                                    "es": "Peluquero"
+                                                }
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "provider@email.com"
+                                            },
+                                            "phone": {
+                                                "type": "string",
+                                                "example": "+33123456789"
+                                            },
+                                            "rating": {
+                                                "type": "number",
+                                                "example": 4.5
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -3629,8 +3762,12 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Dr. John Doe"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toiletteur",
+                                            "en": "Groomer",
+                                            "es": "Peluquero"
+                                        }
                                     },
                                     "email": {
                                         "type": "string",
@@ -3645,8 +3782,12 @@
                                         "example": "123 Street, City"
                                     },
                                     "specialization": {
-                                        "type": "string",
-                                        "example": "Vet"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Vétérinaire",
+                                            "en": "Veterinarian",
+                                            "es": "Veterinario"
+                                        }
                                     },
                                     "rating": {
                                         "type": "number",
@@ -3666,7 +3807,7 @@
                         "description": "Erreur de validation"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -3695,13 +3836,46 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Prestataire récupéré avec succès"
+                        "description": "Prestataire récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Toiletteur",
+                                                "en": "Groomer",
+                                                "es": "Peluquero"
+                                            }
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "provider@email.com"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "+33123456789"
+                                        },
+                                        "rating": {
+                                            "type": "number",
+                                            "example": 4.5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Prestataire introuvable"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -3733,8 +3907,12 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Dr. John Doe Updated"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toiletteur",
+                                            "en": "Groomer",
+                                            "es": "Peluquero"
+                                        }
                                     },
                                     "email": {
                                         "type": "string",
@@ -3749,8 +3927,12 @@
                                         "example": "456 Avenue, City"
                                     },
                                     "specialization": {
-                                        "type": "string",
-                                        "example": "Grooming"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Grooming",
+                                            "en": "Grooming",
+                                            "es": "Peluquería"
+                                        }
                                     },
                                     "rating": {
                                         "type": "number",
@@ -3773,7 +3955,7 @@
                         "description": "Erreur de validation"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -3806,7 +3988,7 @@
                         "description": "Prestataire introuvable"
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -4389,12 +4571,12 @@
                 "tags": [
                     "Services"
                 ],
-                "summary": "Get all services",
-                "description": "Retrieve a list of all services",
+                "summary": "Obtenir la liste des services",
+                "description": "Récupère une liste de tous les services avec leurs traductions",
                 "operationId": "9bc5badba49cd41fbedbf409d8da8e9c",
                 "responses": {
                     "200": {
-                        "description": "List retrieved successfully",
+                        "description": "Liste récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4406,12 +4588,20 @@
                                                 "example": 1
                                             },
                                             "name": {
-                                                "type": "string",
-                                                "example": "Dog Grooming"
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Toilettage pour chien",
+                                                    "en": "Dog Grooming",
+                                                    "es": "Aseo para perros"
+                                                }
                                             },
                                             "description": {
-                                                "type": "string",
-                                                "example": "Full grooming service"
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Service complet de toilettage",
+                                                    "en": "Full grooming service",
+                                                    "es": "Servicio completo de aseo"
+                                                }
                                             },
                                             "price": {
                                                 "type": "number",
@@ -4421,6 +4611,71 @@
                                             "active": {
                                                 "type": "boolean",
                                                 "example": true
+                                            },
+                                            "category": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "object",
+                                                        "example": {
+                                                            "fr": "Toilettage",
+                                                            "en": "Grooming",
+                                                            "es": "Aseo"
+                                                        }
+                                                    },
+                                                    "icon": {
+                                                        "type": "string",
+                                                        "example": "icon.png"
+                                                    },
+                                                    "color": {
+                                                        "type": "string",
+                                                        "example": "#ffcc00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "provider": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "name": {
+                                                        "type": "object",
+                                                        "example": {
+                                                            "fr": "Prestataire Pro",
+                                                            "en": "Pro Provider",
+                                                            "es": "Proveedor Profesional"
+                                                        }
+                                                    },
+                                                    "photo": {
+                                                        "type": "string",
+                                                        "example": "provider.png"
+                                                    },
+                                                    "specialization": {
+                                                        "type": "string",
+                                                        "example": "Toilettage"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.8
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 10:30"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 11:00"
                                             }
                                         },
                                         "type": "object"
@@ -4430,7 +4685,7 @@
                         }
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -4443,8 +4698,8 @@
                 "tags": [
                     "Services"
                 ],
-                "summary": "Create a new service",
-                "description": "Add a new service",
+                "summary": "Créer un nouveau service",
+                "description": "Ajoute un nouveau service avec support multilingue",
                 "operationId": "cfbcc1164b7a56d8ad0af7f28c927ab3",
                 "requestBody": {
                     "required": true,
@@ -4461,12 +4716,20 @@
                                         "example": 2
                                     },
                                     "name": {
-                                        "type": "string",
-                                        "example": "Dog Grooming"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toilettage pour chien",
+                                            "en": "Dog Grooming",
+                                            "es": "Aseo para perros"
+                                        }
                                     },
                                     "description": {
-                                        "type": "string",
-                                        "example": "Full grooming service"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Service complet de toilettage",
+                                            "en": "Full grooming service",
+                                            "es": "Servicio completo de aseo"
+                                        }
                                     },
                                     "price": {
                                         "type": "number",
@@ -4485,13 +4748,51 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Service created successfully"
+                        "description": "Service créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Toilettage pour chien",
+                                                "en": "Dog Grooming",
+                                                "es": "Aseo para perros"
+                                            }
+                                        },
+                                        "description": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Service complet de toilettage",
+                                                "en": "Full grooming service",
+                                                "es": "Servicio completo de aseo"
+                                            }
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 49.99
+                                        },
+                                        "active": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Erreur de validation"
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -4506,8 +4807,8 @@
                 "tags": [
                     "Services"
                 ],
-                "summary": "Get service details",
-                "description": "Retrieve details of a specific service",
+                "summary": "Obtenir les détails d'un service",
+                "description": "Récupère les détails d'un service avec ses traductions",
                 "operationId": "86409cc308ffee739dd6a4b1fc9b81e7",
                 "parameters": [
                     {
@@ -4521,13 +4822,51 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Service details retrieved successfully"
+                        "description": "Détails récupérés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Toilettage pour chien",
+                                                "en": "Dog Grooming",
+                                                "es": "Aseo para perros"
+                                            }
+                                        },
+                                        "description": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Service complet de toilettage",
+                                                "en": "Full grooming service",
+                                                "es": "Servicio completo de aseo"
+                                            }
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 49.99
+                                        },
+                                        "active": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Service not found"
+                        "description": "Service non trouvé"
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -4540,8 +4879,8 @@
                 "tags": [
                     "Services"
                 ],
-                "summary": "Update service details",
-                "description": "Update details of an existing service",
+                "summary": "Mettre à jour un service",
+                "description": "Met à jour les informations d'un service, y compris les traductions",
                 "operationId": "73a90b52799c4e3a25f6e5d970be59b9",
                 "parameters": [
                     {
@@ -4568,12 +4907,18 @@
                                         "example": 2
                                     },
                                     "name": {
-                                        "type": "string",
-                                        "example": "Dog Grooming Deluxe"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toilettage de luxe",
+                                            "en": "Luxury Dog Grooming"
+                                        }
                                     },
                                     "description": {
-                                        "type": "string",
-                                        "example": "Enhanced grooming service"
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Toilettage haut de gamme",
+                                            "en": "Premium grooming service"
+                                        }
                                     },
                                     "price": {
                                         "type": "number",
@@ -4592,16 +4937,16 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Service updated successfully"
+                        "description": "Service mis à jour avec succès"
                     },
                     "404": {
-                        "description": "Service not found"
+                        "description": "Service non trouvé"
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Erreur de validation"
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
@@ -4614,8 +4959,8 @@
                 "tags": [
                     "Services"
                 ],
-                "summary": "Delete a service",
-                "description": "Delete a service by ID",
+                "summary": "Supprimer un service",
+                "description": "Supprime un service par ID",
                 "operationId": "061b1d1133c5bbdcad7427c1fdb76e06",
                 "parameters": [
                     {
@@ -4629,13 +4974,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Service deleted successfully"
+                        "description": "Service supprimé avec succès"
                     },
                     "404": {
-                        "description": "Service not found"
+                        "description": "Service non trouvé"
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Erreur interne du serveur"
                     }
                 },
                 "security": [
