@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+use Spatie\Translatable\HasTranslations;
+
+class Product extends Model
+{
+    use HasFactory, HasTranslations;
+
+    protected $fillable = [
+        'product_category_id',
+        'name',
+        'description',
+        'price',
+        'stock',
+        'image',
+    ];
+
+    public $translatable = ['name', 'description'];
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+}
+
