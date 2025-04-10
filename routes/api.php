@@ -40,6 +40,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/delete-account', [AccountController::class, 'deleteAccount']);
 
         // AnimalController
+        Route::post('/animals', [AnimalController::class, 'index']);
         Route::post('/animals/{id}/collar', [AnimalController::class, 'attachCollar']);
         Route::put('/animals/{id}/lost', [AnimalController::class, 'markAsLost']);
         Route::put('/animals/{id}/found', [AnimalController::class, 'markAsFound']);
