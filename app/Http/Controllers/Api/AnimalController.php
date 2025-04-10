@@ -25,6 +25,7 @@ class AnimalController extends Controller
      *     tags={"Animals"},
      *     summary="Get all animals",
      *     description="Retrieve a list of all animals for the authenticated user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of animals",
