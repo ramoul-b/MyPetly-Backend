@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -66,4 +67,20 @@ class UserService
     {
         return $photo->store('profiles', 'public');
     }
+
+    public function findUserById($id)
+    {
+        return User::findOrFail($id);
+    }
+    
+    public function assignRole($userId, $roleId)
+    {
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
+    
+        $user->assignRole($role->name);
+    
+        return true;
+    }
+    
 }

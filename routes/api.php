@@ -58,6 +58,11 @@ Route::prefix('v1')->group(function () {
         |--------------------------------------------------------------------------
         */
         Route::get('/animals', [AnimalController::class, 'index']);
+        Route::post('/animals', [AnimalController::class, 'store']);
+        Route::get('/animals/{id}', [AnimalController::class, 'show']);
+        Route::put('/animals/{id}', [AnimalController::class, 'update']);
+        Route::delete('/animals/{id}', [AnimalController::class, 'destroy']);
+        
         Route::post('/animals/{id}/collar', [AnimalController::class, 'attachCollar']);
         Route::put('/animals/{id}/lost', [AnimalController::class, 'markAsLost']);
         Route::put('/animals/{id}/found', [AnimalController::class, 'markAsFound']);
@@ -85,6 +90,27 @@ Route::prefix('v1')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
+        | Users Management
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('users')->group(function () {
+            // Routes CRUD pour les utilisateurs
+            Route::get('/', [UserController::class, 'index']);
+            Route::post('/', [UserController::class, 'store']);
+            Route::get('/{id}', [UserController::class, 'show']);
+            Route::put('/{id}', [UserController::class, 'update']);
+            Route::delete('/{id}', [UserController::class, 'destroy']);
+            
+            // Routes pour la gestion des rôles et permissions des utilisateurs
+            Route::get('/{id}/roles', [UserController::class, 'getRoles']);
+            Route::post('/{id}/roles', [UserController::class, 'assignRoles']);
+            Route::get('/{id}/permissions', [UserController::class, 'getPermissions']);
+            Route::post('/{id}/assign-role', [UserController::class, 'assignRole']);
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
         | Roles & Permissions Management
         |--------------------------------------------------------------------------
         */
@@ -96,7 +122,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}', [RoleController::class, 'destroy']);
 
             Route::post('/{id}/permissions', [RoleController::class, 'assignPermissions']);
-            Route::get('/{id}/permissions', [RoleController::class, 'getPermissions']);
+            Route::get('/{id}/permissions', [RoleController::class, 'listPermissions']);
         });
 
         Route::prefix('permissions')->group(function () {
@@ -105,14 +131,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [PermissionController::class, 'show']);
             Route::put('/{id}', [PermissionController::class, 'update']);
             Route::delete('/{id}', [PermissionController::class, 'destroy']);
-            Route::get('/{id}/roles', [PermissionController::class, 'getRoles']); // optionnel
+            Route::get('/{id}/roles', [PermissionController::class, 'getRoles']);
         });
-
-        Route::prefix('users')->group(function () {
-            Route::get('/{id}/roles', [UserController::class, 'getRoles']);
-            Route::post('/{id}/roles', [UserController::class, 'assignRoles']);
-            Route::get('/{id}/permissions', [UserController::class, 'getPermissions']);
-        });
-
     });
 });

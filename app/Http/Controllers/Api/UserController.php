@@ -25,6 +25,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="List all users",
      *     description="Retrieve a list of all users",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of users",
@@ -67,6 +68,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Create a new user",
      *     description="Add a new user to the system",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -117,6 +119,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Get user details",
      *     description="Retrieve details of a specific user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -149,7 +152,7 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $user = $this->userService->getUserById($id);
+            $user = $this->userService->findUserById($id);
             if (!$user) {
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
             }
@@ -165,6 +168,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Update user details",
      *     description="Update details of an existing user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -224,6 +228,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Delete a user",
      *     description="Remove a user from the system",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -267,6 +272,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Search for users",
      *     description="Search for users by name, email, or other criteria",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="query",
      *         in="query",
@@ -329,6 +335,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Assign a role to a user",
      *     description="Assign a specific role to a user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -380,6 +387,7 @@ class UserController extends Controller
      *     tags={"Users"},
      *     summary="Revoke a role from a user",
      *     description="Remove a specific role from a user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Http\Request;
 use App\Services\ApiService;
 
 class PermissionController extends Controller
@@ -21,7 +23,12 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return ApiService::response(Permission::all(), 200);
+        try {
+            $permissions = Permission::all();
+            return ApiService::response($permissions, 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -32,16 +39,19 @@ class PermissionController extends Controller
      *     description="Create a permission",
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(@OA\JsonContent(
-     *         @OA\Property(property="name", type="string", example="manage-users")
+     *         @OA\Property(property="name", type="string", example="view-users")
      *     )),
      *     @OA\Response(response=201, description="Created")
      * )
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
-        $data = $request->validate(['name' => 'required|string|unique:permissions,name']);
-        $permission = Permission::create(['name' => $data['name']]);
-        return ApiService::response($permission, 201);
+        try {
+            $permission = Permission::create(['name' => $request->name]);
+            return ApiService::response($permission, 201);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -53,16 +63,20 @@ class PermissionController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true),
      *     @OA\RequestBody(@OA\JsonContent(
-     *         @OA\Property(property="name", type="string", example="edit-posts")
+     *         @OA\Property(property="name", type="string", example="edit-users")
      *     )),
      *     @OA\Response(response=200, description="Updated")
      * )
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePermissionRequest $request, $id)
     {
-        $permission = Permission::findById($id);
-        $permission->update($request->only('name'));
-        return ApiService::response($permission, 200);
+        try {
+            $permission = Permission::findById($id);
+            $permission->update(['name' => $request->name]);
+            return ApiService::response($permission, 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -78,8 +92,12 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        $permission = Permission::findById($id);
-        $permission->delete();
-        return ApiService::response(['message' => 'Permission deleted'], 200);
+        try {
+            $permission = Permission::findById($id);
+            $permission->delete();
+            return ApiService::response(['message' => 'Permission deleted'], 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 }

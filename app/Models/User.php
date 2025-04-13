@@ -79,4 +79,10 @@ class User extends Authenticatable
     {
         $this->update(['email_verified_at' => now()]);
     }
+    public function getUserById(int $id)
+    {
+        // Vous pouvez utiliser une méthode Eloquent comme find() ou findOrFail()
+        return User::find($id);
+    }
+    
 }

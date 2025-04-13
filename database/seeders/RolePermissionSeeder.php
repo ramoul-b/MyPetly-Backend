@@ -1,5 +1,4 @@
 <?php
-// database/seeders/RolePermissionSeeder.php
 
 namespace Database\Seeders;
 
@@ -9,28 +8,35 @@ use Spatie\Permission\Models\Permission;
 
 class RolePermissionSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        // Création des permissions
+        // Création des rôles
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'sanctum']);
+        $managerRole = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'sanctum']);
+        $userRole = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'sanctum']);
+
+        // Permissions (liste à factoriser)
         $permissions = [
-            'view users',
-            'edit users',
-            'delete users',
-            'manage services',
-            'view bookings',
+            'view-animals', 'create-animals', 'edit-animals', 'delete-animals',
+            'view-users', 'create-users', 'edit-users', 'delete-users',
+            'manage-roles', 'manage-permissions'
         ];
 
-        foreach ($permissions as $perm) {
-            Permission::firstOrCreate(['name' => $perm]);
+        // Création des permissions
+        foreach ($permissions as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'sanctum']);
         }
 
-        // Création des rôles et assignation des permissions
-        $admin = Role::firstOrCreate(['name' => 'admin']);
-        $provider = Role::firstOrCreate(['name' => 'provider']);
-        $user = Role::firstOrCreate(['name' => 'user']);
+        // Attribution des permissions aux rôles
+        $adminRole->syncPermissions($permissions);
 
-        $admin->syncPermissions(Permission::all()); // Tous les droits
-        $provider->syncPermissions(['manage services', 'view bookings']);
-        $user->syncPermissions([]); // Aucun par défaut
+        $managerRole->syncPermissions([
+            'view-animals', 'create-animals', 'edit-animals',
+            'view-users'
+        ]);
+
+        $userRole->syncPermissions([
+            'view-animals', 'create-animals', 'edit-animals', 'delete-animals'
+        ]);
     }
 }

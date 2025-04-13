@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Http\Request;
 use App\Services\ApiService;
 
 class RoleController extends Controller
@@ -23,7 +23,12 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return ApiService::response(Role::all(), 200);
+        try {
+            $roles = Role::all();
+            return ApiService::response($roles, 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -39,11 +44,14 @@ class RoleController extends Controller
      *     @OA\Response(response=201, description="Created")
      * )
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $data = $request->validate(['name' => 'required|string|unique:roles,name']);
-        $role = Role::create(['name' => $data['name']]);
-        return ApiService::response($role, 201);
+        try {
+            $role = Role::create(['name' => $request->name]);
+            return ApiService::response($role, 201);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -60,11 +68,15 @@ class RoleController extends Controller
      *     @OA\Response(response=200, description="Updated")
      * )
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRoleRequest $request, $id)
     {
-        $role = Role::findById($id);
-        $role->update($request->only('name'));
-        return ApiService::response($role, 200);
+        try {
+            $role = Role::findById($id);
+            $role->update(['name' => $request->name]);
+            return ApiService::response($role, 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -80,9 +92,13 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findById($id);
-        $role->delete();
-        return ApiService::response(['message' => 'Role deleted'], 200);
+        try {
+            $role = Role::findById($id);
+            $role->delete();
+            return ApiService::response(['message' => 'Role deleted'], 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -101,9 +117,19 @@ class RoleController extends Controller
      */
     public function assignPermissions(Request $request, $id)
     {
-        $role = Role::findById($id);
-        $role->syncPermissions($request->permissions);
-        return ApiService::response(['message' => 'Permissions updated'], 200);
+        try {
+            $request->validate([
+                'permissions' => 'required|array',
+                'permissions.*' => 'string|exists:permissions,name',
+            ]);
+
+            $role = Role::findById($id);
+            $role->syncPermissions($request->permissions);
+
+            return ApiService::response(['message' => 'Permissions updated'], 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 
     /**
@@ -119,8 +145,11 @@ class RoleController extends Controller
      */
     public function listPermissions($id)
     {
-        $role = Role::findById($id);
-        return ApiService::response($role->permissions, 200);
+        try {
+            $role = Role::findById($id);
+            return ApiService::response($role->permissions, 200);
+        } catch (\Exception $e) {
+            return ApiService::response(['error' => 'Erreur serveur.'], 500);
+        }
     }
 }
-

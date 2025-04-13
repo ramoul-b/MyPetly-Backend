@@ -22,6 +22,7 @@ return Application::configure(
         $middleware->alias([
             'auth' => Authenticate::class,
             'locale' => \App\Http\Middleware\SetLocale::class,
+            'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
 
         // Exemple si tu veux ajouter d’autres alias :

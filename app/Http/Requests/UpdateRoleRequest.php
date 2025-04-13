@@ -4,42 +4,27 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePermissionRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
-    /**
-     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
-        // Autoriser cette requête pour tous les utilisateurs authentifiés (à ajuster si besoin)
-        return auth()->check();
+        return true;
     }
 
-    /**
-     * Règles de validation applicables à la requête.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
+        $roleId = $this->route('id');
+
         return [
-            'name' => 'sometimes|string|max:255|unique:permissions,name,' . $this->permission->id,
-            'slug' => 'sometimes|string|max:255|unique:permissions,slug,' . $this->permission->id,
+            'name' => 'required|string|max:255|unique:roles,name,' . $roleId,
         ];
     }
 
-    /**
-     * Messages personnalisés pour les erreurs de validation.
-     *
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.unique' => __('validation.unique', ['attribute' => 'name']),
-            'slug.unique' => __('validation.unique', ['attribute' => 'slug']),
+            'name.required' => 'Le nom du rôle est requis.',
+            'name.unique' => 'Ce rôle existe déjà.',
         ];
     }
 }

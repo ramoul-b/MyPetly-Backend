@@ -3357,7 +3357,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "manage-users"
+                                        "example": "view-users"
                                     }
                                 },
                                 "type": "object"
@@ -3399,7 +3399,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "edit-posts"
+                                        "example": "edit-users"
                                     }
                                 },
                                 "type": "object"
@@ -4564,7 +4564,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -4679,7 +4684,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users/{id}": {
@@ -4760,7 +4770,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -4874,7 +4889,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -4928,7 +4948,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users/search": {
@@ -5033,7 +5058,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users/{id}/assign-role": {
@@ -5108,7 +5138,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users/{id}/revoke-role": {
@@ -5183,7 +5218,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/users/{id}/roles": {
