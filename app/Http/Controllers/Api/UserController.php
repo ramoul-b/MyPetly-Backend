@@ -424,5 +424,54 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/users/{id}/roles",
+     *     tags={"Users"},
+     *     summary="Get user roles",
+     *     description="Retrieve roles assigned to a user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, example=1),
+     *     @OA\Response(response=200, description="Success"),
+     *     @OA\Response(response=404, description="User not found")
+     * )
+     */
+    public function getRoles($id)
+    {
+        return ApiService::response($this->userService->getRoles($id));
+    }
 
+    /**
+     * @OA\Post(
+     *     path="/users/{id}/roles",
+     *     tags={"Users"},
+     *     summary="Assign roles to user",
+     *     description="Assign one or more roles to a user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, example=1),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="roles", type="array", @OA\Items(type="string")))),
+     *     @OA\Response(response=200, description="Roles assigned successfully")
+     * )
+     */
+    public function assignRoles(Request $request, $id)
+    {
+        $request->validate(['roles' => 'required|array']);
+        return ApiService::response($this->userService->assignRoles($id, $request->roles));
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/users/{id}/permissions",
+     *     tags={"Users"},
+     *     summary="Get user permissions",
+     *     description="Retrieve permissions assigned to a user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, example=1),
+     *     @OA\Response(response=200, description="Permissions list")
+     * )
+     */
+    public function getPermissions($id)
+    {
+        return ApiService::response($this->userService->getPermissions($id));
+    }
 }

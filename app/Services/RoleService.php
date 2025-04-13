@@ -2,36 +2,56 @@
 
 namespace App\Services;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoleService
 {
     public function getAllRoles()
     {
-        return Role::with('permissions')->get();
+        return Role::all();
+    }
+
+    public function findRoleById($id)
+    {
+        return Role::findOrFail($id);
     }
 
     public function createRole(array $data)
     {
-        return Role::create($data);
+        return Role::create(['name' => $data['name']]);
     }
 
     public function updateRole($id, array $data)
     {
         $role = Role::findOrFail($id);
-        $role->update($data);
+        $role->update(['name' => $data['name']]);
         return $role;
     }
 
     public function deleteRole($id)
     {
         $role = Role::findOrFail($id);
-        $role->delete();
+        return $role->delete();
     }
 
-    public function assignPermissionsToRole($roleId, array $permissions)
+    public function assignPermissions($roleId, array $permissions)
     {
         $role = Role::findOrFail($roleId);
-        $role->permissions()->sync($permissions);
+        return $role->syncPermissions($permissions);
+    }
+
+    public function getPermissions($roleId)
+    {
+        $role = Role::findOrFail($roleId);
+        return $role->permissions;
+    }
+
+    public function revokePermission($roleId, $permissionId)
+    {
+        $role = Role::findOrFail($roleId);
+        $permission = Permission::findOrFail($permissionId);
+        return $role->revokePermissionTo($permission);
     }
 }

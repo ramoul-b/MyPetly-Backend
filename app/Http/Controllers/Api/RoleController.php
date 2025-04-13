@@ -3,61 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRoleRequest;
-use App\Http\Requests\UpdateRoleRequest;
-use App\Http\Resources\RoleResource;
-use App\Services\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Services\ApiService;
 
 class RoleController extends Controller
 {
-    protected $roleService;
-
-    public function __construct(RoleService $roleService)
-    {
-        $this->roleService = $roleService;
-    }
-
     /**
      * @OA\Get(
      *     path="/roles",
      *     tags={"Roles"},
      *     summary="Get all roles",
      *     description="Retrieve a list of all roles",
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of roles",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example="Admin"),
-     *                 @OA\Property(property="slug", type="string", example="admin"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-01-22T17:25:55Z"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-01-22T17:25:55Z")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
-     *             @OA\Property(property="error", type="string", example="Detailed error message")
-     *         )
-     *     )
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="List of roles")
      * )
      */
     public function index()
     {
-        try {
-            $roles = $this->roleService->getAllRoles();
-            return ApiService::response(RoleResource::collection($roles), 200);
-        } catch (\Exception $e) {
-            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
-        }
+        return ApiService::response(Role::all(), 200);
     }
 
     /**
@@ -65,53 +31,19 @@ class RoleController extends Controller
      *     path="/roles",
      *     tags={"Roles"},
      *     summary="Create a new role",
-     *     description="Add a new role to the system",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "slug"},
-     *             @OA\Property(property="name", type="string", example="Editor"),
-     *             @OA\Property(property="slug", type="string", example="editor")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Role created successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="id", type="integer", example=2),
-     *             @OA\Property(property="name", type="string", example="Editor"),
-     *             @OA\Property(property="slug", type="string", example="editor"),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-01-22T17:25:55Z"),
-     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2025-01-22T17:25:55Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Validation error."),
-     *             @OA\Property(property="errors", type="object", example={"name": {"The name field is required."}})
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
-     *             @OA\Property(property="error", type="string", example="Detailed error message")
-     *         )
-     *     )
+     *     description="Create a role",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(@OA\JsonContent(
+     *         @OA\Property(property="name", type="string", example="admin")
+     *     )),
+     *     @OA\Response(response=201, description="Created")
      * )
      */
-    public function store(StoreRoleRequest $request)
+    public function store(Request $request)
     {
-        try {
-            $role = $this->roleService->createRole($request->validated());
-            return ApiService::response(new RoleResource($role), 201);
-        } catch (\Exception $e) {
-            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
-        }
+        $data = $request->validate(['name' => 'required|string|unique:roles,name']);
+        $role = Role::create(['name' => $data['name']]);
+        return ApiService::response($role, 201);
     }
 
     /**
@@ -119,59 +51,20 @@ class RoleController extends Controller
      *     path="/roles/{id}",
      *     tags={"Roles"},
      *     summary="Update a role",
-     *     description="Update the details of an existing role",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="Role ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "slug"},
-     *             @OA\Property(property="name", type="string", example="Editor"),
-     *             @OA\Property(property="slug", type="string", example="editor")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Role updated successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="id", type="integer", example=2),
-     *             @OA\Property(property="name", type="string", example="Editor"),
-     *             @OA\Property(property="slug", type="string", example="editor"),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-01-22T17:25:55Z"),
-     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2025-01-22T17:25:55Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Role not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Role not found.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
-     *             @OA\Property(property="error", type="string", example="Detailed error message")
-     *         )
-     *     )
+     *     description="Update a role",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\RequestBody(@OA\JsonContent(
+     *         @OA\Property(property="name", type="string", example="editor")
+     *     )),
+     *     @OA\Response(response=200, description="Updated")
      * )
      */
-    public function update(UpdateRoleRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        try {
-            $role = $this->roleService->updateRole($id, $request->validated());
-            return ApiService::response(new RoleResource($role), 200);
-        } catch (\Exception $e) {
-            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
-        }
+        $role = Role::findById($id);
+        $role->update($request->only('name'));
+        return ApiService::response($role, 200);
     }
 
     /**
@@ -179,45 +72,55 @@ class RoleController extends Controller
      *     path="/roles/{id}",
      *     tags={"Roles"},
      *     summary="Delete a role",
-     *     description="Remove a role from the system",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="Role ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Role deleted successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Role deleted successfully.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Role not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Role not found.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="An error occurred while processing your request."),
-     *             @OA\Property(property="error", type="string", example="Detailed error message")
-     *         )
-     *     )
+     *     description="Delete a role",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\Response(response=200, description="Deleted")
      * )
      */
     public function destroy($id)
     {
-        try {
-            $this->roleService->deleteRole($id);
-            return ApiService::response(['message' => __('messages.role_deleted')], 200);
-        } catch (\Exception $e) {
-            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
-        }
+        $role = Role::findById($id);
+        $role->delete();
+        return ApiService::response(['message' => 'Role deleted'], 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/roles/{id}/permissions",
+     *     tags={"Roles"},
+     *     summary="Assign permissions to role",
+     *     description="Attach permissions",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\RequestBody(@OA\JsonContent(
+     *         @OA\Property(property="permissions", type="array", @OA\Items(type="string"))
+     *     )),
+     *     @OA\Response(response=200, description="Assigned")
+     * )
+     */
+    public function assignPermissions(Request $request, $id)
+    {
+        $role = Role::findById($id);
+        $role->syncPermissions($request->permissions);
+        return ApiService::response(['message' => 'Permissions updated'], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/roles/{id}/permissions",
+     *     tags={"Roles"},
+     *     summary="List permissions for role",
+     *     description="List permissions",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\Response(response=200, description="Permissions list")
+     * )
+     */
+    public function listPermissions($id)
+    {
+        $role = Role::findById($id);
+        return ApiService::response($role->permissions, 200);
     }
 }
+

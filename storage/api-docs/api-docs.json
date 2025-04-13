@@ -580,7 +580,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -3329,86 +3334,28 @@
                 "operationId": "8b2089df410846234e6e453c26a0f7e9",
                 "responses": {
                     "200": {
-                        "description": "List of permissions",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "example": "Manage Users"
-                                            },
-                                            "slug": {
-                                                "type": "string",
-                                                "example": "manage-users"
-                                            },
-                                            "created_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "example": "2025-01-22T17:15:37Z"
-                                            },
-                                            "updated_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "example": "2025-01-22T17:15:37Z"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "List of permissions"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
                     "Permissions"
                 ],
                 "summary": "Create a new permission",
-                "description": "Add a new permission to the system",
+                "description": "Create a permission",
                 "operationId": "62b8fc6d7ebe4852aef66e1870b0cb6b",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "slug"
-                                ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Manage Users"
-                                    },
-                                    "slug": {
                                         "type": "string",
                                         "example": "manage-users"
                                     }
@@ -3420,84 +3367,14 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Permission created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Manage Users"
-                                        },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "manage-users"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:15:37Z"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:15:37Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Validation error."
-                                        },
-                                        "errors": {
-                                            "type": "object",
-                                            "example": {
-                                                "name": [
-                                                    "The name field is required."
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Created"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/permissions/{id}": {
@@ -3506,35 +3383,21 @@
                     "Permissions"
                 ],
                 "summary": "Update a permission",
-                "description": "Update an existing permission",
+                "description": "Update a permission",
                 "operationId": "ad64376f64acf541e7e64d26568d635f",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the permission to update",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        }
+                        "required": true
                     }
                 ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "slug"
-                                ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Edit Posts"
-                                    },
-                                    "slug": {
                                         "type": "string",
                                         "example": "edit-posts"
                                     }
@@ -3546,150 +3409,39 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Permission updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Edit Posts"
-                                        },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "edit-posts"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:15:37Z"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:15:37Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Permission not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Permission not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Updated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
                     "Permissions"
                 ],
                 "summary": "Delete a permission",
-                "description": "Remove a permission from the system",
+                "description": "Delete a permission",
                 "operationId": "86d7ccb5048a6ef18ba395deb3bf0479",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Permission ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Permission deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Permission deleted successfully."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Permission not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Permission not found."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Deleted"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/providers": {
@@ -3701,43 +3453,7 @@
                 "operationId": "6a43357b0da7e513e0f847904fd6a28e",
                 "responses": {
                     "200": {
-                        "description": "Liste des prestataires récupérée avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "name": {
-                                                "type": "object",
-                                                "example": {
-                                                    "fr": "Toiletteur",
-                                                    "en": "Groomer",
-                                                    "es": "Peluquero"
-                                                }
-                                            },
-                                            "email": {
-                                                "type": "string",
-                                                "example": "provider@email.com"
-                                            },
-                                            "phone": {
-                                                "type": "string",
-                                                "example": "+33123456789"
-                                            },
-                                            "rating": {
-                                                "type": "number",
-                                                "example": 4.5
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Liste des prestataires récupérée avec succès"
                     },
                     "500": {
                         "description": "Erreur interne du serveur"
@@ -3836,40 +3552,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Prestataire récupéré avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "object",
-                                            "example": {
-                                                "fr": "Toiletteur",
-                                                "en": "Groomer",
-                                                "es": "Peluquero"
-                                            }
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "example": "provider@email.com"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "+33123456789"
-                                        },
-                                        "rating": {
-                                            "type": "number",
-                                            "example": 4.5
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Prestataire récupéré avec succès"
                     },
                     "404": {
                         "description": "Prestataire introuvable"
@@ -4205,88 +3888,30 @@
                 "operationId": "a54b004ebbd6168338f4feed2095aa40",
                 "responses": {
                     "200": {
-                        "description": "List of roles",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "example": "Admin"
-                                            },
-                                            "slug": {
-                                                "type": "string",
-                                                "example": "admin"
-                                            },
-                                            "created_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "example": "2025-01-22T17:25:55Z"
-                                            },
-                                            "updated_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "example": "2025-01-22T17:25:55Z"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "List of roles"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
                     "Roles"
                 ],
                 "summary": "Create a new role",
-                "description": "Add a new role to the system",
+                "description": "Create a role",
                 "operationId": "bcb0907febbb51b1021efa8e9174ce0d",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "slug"
-                                ],
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Editor"
-                                    },
-                                    "slug": {
-                                        "type": "string",
-                                        "example": "editor"
+                                        "example": "admin"
                                     }
                                 },
                                 "type": "object"
@@ -4296,84 +3921,14 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Role created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 2
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Editor"
-                                        },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "editor"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:25:55Z"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:25:55Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Validation error."
-                                        },
-                                        "errors": {
-                                            "type": "object",
-                                            "example": {
-                                                "name": [
-                                                    "The name field is required."
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Created"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/roles/{id}": {
@@ -4382,34 +3937,21 @@
                     "Roles"
                 ],
                 "summary": "Update a role",
-                "description": "Update the details of an existing role",
+                "description": "Update a role",
                 "operationId": "cf4bcd0bc1dbd5ec769b7e62a269688a",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Role ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "required": true
                     }
                 ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "slug"
-                                ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Editor"
-                                    },
-                                    "slug": {
                                         "type": "string",
                                         "example": "editor"
                                     }
@@ -4421,149 +3963,108 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Role updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 2
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Editor"
-                                        },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "editor"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:25:55Z"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-01-22T17:25:55Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Role not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Role not found."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Updated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
                     "Roles"
                 ],
                 "summary": "Delete a role",
-                "description": "Remove a role from the system",
+                "description": "Delete a role",
                 "operationId": "eb1e1d4330bed83f78bb6a7643d4cbc2",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Role ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Role deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Role deleted successfully."
+                        "description": "Deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/roles/{id}/permissions": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "List permissions for role",
+                "description": "List permissions",
+                "operationId": "84e5e4eed68d76ca18f0d65549b6bf95",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Permissions list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Assign permissions to role",
+                "description": "Attach permissions",
+                "operationId": "111a9abb37e3b39bac318840f8c04161",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
                                         }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Role not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Role not found."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred while processing your request."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Detailed error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
-                }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Assigned"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/services": {
@@ -5684,6 +5185,108 @@
                     }
                 }
             }
+        },
+        "/users/{id}/roles": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user roles",
+                "description": "Retrieve roles assigned to a user",
+                "operationId": "eac3ab0189def7d1819076f2829a4a69",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Assign roles to user",
+                "description": "Assign one or more roles to a user",
+                "operationId": "eee6ac8660e3230c66fa4d7f53553ee8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Roles assigned successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/permissions": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user permissions",
+                "description": "Retrieve permissions assigned to a user",
+                "operationId": "2a8aa4c87c5f09cc808f0caef912e527",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Permissions list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -5696,6 +5299,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Providers",
+            "description": "Gestion des prestataires de services"
+        },
         {
             "name": "Account",
             "description": "Account"
@@ -5723,10 +5330,6 @@
         {
             "name": "Permissions",
             "description": "Permissions"
-        },
-        {
-            "name": "Providers",
-            "description": "Providers"
         },
         {
             "name": "Reviews",
