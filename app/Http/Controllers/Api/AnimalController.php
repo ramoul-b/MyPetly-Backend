@@ -59,7 +59,7 @@ class AnimalController extends Controller
             if (auth()->user()->hasRole('admin')) {
                 $animals = Animal::all();
             } else {
-                $animals = auth()->user()->animals;
+                $animals = auth()->user()->animals ?? collect();
             }
     
             return ApiService::response(AnimalResource::collection($animals), 200);
