@@ -84,5 +84,9 @@ class User extends Authenticatable
         // Vous pouvez utiliser une méthode Eloquent comme find() ou findOrFail()
         return User::find($id);
     }
-    
+    public function animals()
+{
+    return $this->hasMany(Animal::class);
+}
+
 }

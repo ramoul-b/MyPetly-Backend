@@ -53,20 +53,27 @@ class AnimalController extends Controller
      * )
      */
     public function index()
-    {
-        try {
-            // Vérification du rôle
-            if (auth()->user()->hasRole('admin')) {
-                $animals = Animal::all();
-            } else {
-                $animals = auth()->user()->animals ?? collect();
-            }
-    
-            return ApiService::response(AnimalResource::collection($animals), 200);
-        } catch (\Exception $e) {
-            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
+{
+    try {
+        if (auth()->user()->hasRole('admin')) {
+            $animals = Animal::all();
+        } else {
+            $animals = auth()->user()->animals;
         }
+
+        if ($animals->isEmpty()) {
+            return ApiService::response(['message' => 'Aucun animal enregistré.'], 200);
+        }
+
+        return ApiService::response(AnimalResource::collection($animals), 200);
+    } catch (\Exception $e) {
+        return ApiService::response([
+            'message' => __('messages.operation_failed'),
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
     
 
 
