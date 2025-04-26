@@ -176,7 +176,7 @@ class AnimalController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *     path="/animals/{id}",
      *     tags={"Animals"},
      *     summary="Update animal details",

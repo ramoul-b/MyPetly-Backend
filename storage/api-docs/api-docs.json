@@ -805,13 +805,13 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "Animals"
                 ],
                 "summary": "Update animal details",
                 "description": "Update the details of an existing animal",
-                "operationId": "0641d70481a597fb8d51072074cc8241",
+                "operationId": "22256ff8698245ebf6e66a127e7a809e",
                 "parameters": [
                     {
                         "name": "id",
