@@ -234,7 +234,15 @@ class AnimalController extends Controller
     }
 }
 
-
+public function uploadImage(UploadAnimalImageRequest $request, $id)
+{
+    $path   = $request->file('image')->store('animals', 'public');
+    $animal = $this->animalService->updatePhoto($id, $path);
+    return ApiService::response([
+        'message'   => __('messages.image_uploaded'),
+        'photo_url' => asset('storage/'.$path)
+    ], 200);
+}
     /**
      * @OA\Delete(
      *     path="/animals/{id}",
