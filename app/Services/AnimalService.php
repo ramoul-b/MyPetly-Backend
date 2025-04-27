@@ -59,6 +59,25 @@ class AnimalService
         return $animal;
     }
 
+    /* IMAGE ----------------------------------------------------------- */
+
+    public function updatePhoto(int $id, string $path): ?Animal
+    {
+        $animal = $this->getAnimalById($id);
+        if (!$animal) { return null; }
+
+        // suppression ancienne image si existe
+        if ($animal->photo && Storage::disk('public')->exists($animal->photo)) {
+            Storage::disk('public')->delete($animal->photo);
+        }
+
+        $animal->photo = $path;
+        $animal->save();
+
+        return $animal;
+    }
+
+    
     /**
      * Supprimer un animal.
      */

@@ -60,8 +60,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/animals', [AnimalController::class, 'index']);
         Route::post('/animals', [AnimalController::class, 'store']);
         Route::get('/animals/{id}', [AnimalController::class, 'show']);
-        Route::post('/animals/{id}', [AnimalController::class, 'update']);       // JSON
-        Route::post('/animals/{id}/image', [AnimalController::class, 'uploadImage']);  // multipart
+        Route::post('/animals/{id}/image', [AnimalController::class, 'uploadImage']);
+        Route::put('/animals/{id}', [AnimalController::class, 'update']);
         Route::delete('/animals/{id}', [AnimalController::class, 'destroy']);
         
         Route::post('/animals/{id}/collar', [AnimalController::class, 'attachCollar']);
