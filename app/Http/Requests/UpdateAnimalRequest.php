@@ -23,7 +23,7 @@ class UpdateAnimalRequest extends FormRequest
             'weight'                => 'sometimes|nullable|numeric|min:0',
             'height'                => 'sometimes|nullable|numeric|min:0',
             'birth_date'            => 'sometimes|nullable|date',
-            'gender'                => 'sometimes|required|in:male,female',
+            'sex'                => 'sometimes|required|in:male,female',
             'identification_number' => "sometimes|nullable|string|max:100|unique:animals,identification_number,{$id}",
             'status'                => 'sometimes|in:active,lost',
             'collar_type'           => 'sometimes|nullable|in:GPS,NFC,none',
