@@ -9,6 +9,8 @@ use App\Http\Resources\AnimalResource;
 use App\Services\AnimalService;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
+use App\Http\Requests\UploadAnimalImageRequest;   
+use Illuminate\Support\Facades\Storage;
 
 class AnimalController extends Controller
 {
@@ -234,14 +236,81 @@ class AnimalController extends Controller
     }
 }
 
+
+
+/**
+ * @OA\Post(
+ *     path="/animals/{id}/image",
+ *     tags={"Animals"},
+ *     summary="Téléverser/mettre à jour la photo d’un animal",
+ *     description="Remplace l’image d’un animal. Format multipart/form-data.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de l’animal",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"image"},
+ *                 @OA\Property(
+ *                     property="image",
+ *                     type="string",
+ *                     format="binary",
+ *                     description="Fichier jpg/png ≤ 5 Mo"
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Image enregistrée",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Image uploaded."),
+ *             @OA\Property(property="photo_url", type="string", example="https://api.mypetly.com/storage/animals/1.jpg")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Animal introuvable",
+ *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Animal not found."))
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Erreur de validation",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Validation error."),
+ *             @OA\Property(property="errors", type="object", example={"image":{"The image field is required."}})
+ *         )
+ *     )
+ * )
+ */
 public function uploadImage(UploadAnimalImageRequest $request, $id)
 {
-    $path   = $request->file('image')->store('animals', 'public');
-    $animal = $this->animalService->updatePhoto($id, $path);
-    return ApiService::response([
-        'message'   => __('messages.image_uploaded'),
-        'photo_url' => asset('storage/'.$path)
-    ], 200);
+    try {
+        $path   = $request->file('image')->store('animals', 'public');
+
+        $animal = $this->animalService->updatePhoto($id, $path);
+        if (!$animal) {
+            return ApiService::response(['message' => __('messages.animal_not_found')], 404);
+        }
+
+        return ApiService::response([
+            'message'   => __('messages.image_uploaded'),
+            'photo_url' => asset('storage/'.$path)
+        ], 200);
+
+    } catch (\Exception $e) {
+        return ApiService::response([
+            'message' => __('messages.operation_failed'),
+            'error'   => $e->getMessage()
+        ], 500);
+    }
 }
     /**
      * @OA\Delete(

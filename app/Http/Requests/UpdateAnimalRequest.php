@@ -4,16 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAnimalRequest extends FormRequest
+class UpdateAnimalRequest extends StoreAnimalRequest
 {
-    public function rules() { return [ /* champs texte JSON */ ]; }
+    // Même validation que StoreAnimalRequest
 }
-
-class UploadAnimalImageRequest extends FormRequest
-{
-    public function rules()
-    {
-        return ['image' => 'required|image|max:5120'];
-    }
-}
-
