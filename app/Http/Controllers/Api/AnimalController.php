@@ -78,6 +78,7 @@ class AnimalController extends Controller
      *     tags={"Animals"},
      *     summary="Create a new animal",
      *     description="Add a new animal profile for the authenticated user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -134,6 +135,7 @@ class AnimalController extends Controller
      *     tags={"Animals"},
      *     summary="Get animal details",
      *     description="Retrieve the details of a specific animal owned by the authenticated user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -183,6 +185,7 @@ class AnimalController extends Controller
      *     tags={"Animals"},
      *     summary="Update animal details",
      *     description="Update the details of an existing animal",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -318,6 +321,7 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *     tags={"Animals"},
      *     summary="Delete an animal",
      *     description="Delete an animal profile owned by the authenticated user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -361,6 +365,7 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *     tags={"Animals"},
      *     summary="Attach a collar to an animal",
      *     description="Attach a unique NFC/QR collar to the specified animal",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -425,6 +430,7 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *     tags={"Animals"},
      *     summary="Mark an animal as lost",
      *     description="Update the status of an animal to 'lost'",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -469,6 +475,7 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *     tags={"Animals"},
      *     summary="Mark an animal as found",
      *     description="Update the status of an animal to 'active' after being found",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -513,6 +520,7 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *     tags={"Animals"},
      *     summary="Scan an animal's collar",
      *     description="Retrieve public details of an animal by scanning its NFC/QR collar",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="collarId",
      *         in="path",
