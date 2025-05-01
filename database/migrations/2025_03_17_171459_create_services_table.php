@@ -17,7 +17,7 @@ return new class extends Migration
             $table->json('description')->nullable(); // Stocke les descriptions traduites
             $table->string('icon')->nullable();
             $table->string('color')->nullable();
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->nullable();
             $table->boolean('active')->default(true);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
