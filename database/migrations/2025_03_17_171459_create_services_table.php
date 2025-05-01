@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->json('name'); // Stocke les noms des services en JSON
             $table->json('description')->nullable(); // Stocke les descriptions traduites
+            $table->string('icon')->nullable();
+            $table->string('color')->nullable();
             $table->decimal('price', 8, 2);
             $table->boolean('active')->default(true);
-            $table->foreignId('provider_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
