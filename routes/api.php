@@ -13,7 +13,8 @@ use App\Http\Controllers\Api\{
     ReviewController,
     RoleController,
     PermissionController,
-    UserController
+    UserController,
+    ProviderServiceController
 };
 
 Route::prefix('v1')->group(function () {
@@ -112,7 +113,7 @@ Route::prefix('v1')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Roles & Permissions Management
+        | Roles 
         |--------------------------------------------------------------------------
         */
         Route::prefix('roles')->group(function () {
@@ -126,6 +127,12 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}/permissions', [RoleController::class, 'listPermissions']);
         });
 
+        /*
+        |--------------------------------------------------------------------------
+        |  Permissions Management
+        |--------------------------------------------------------------------------
+        */
+
         Route::prefix('permissions')->group(function () {
             Route::get('/', [PermissionController::class, 'index']);
             Route::post('/', [PermissionController::class, 'store']);
@@ -134,5 +141,23 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}', [PermissionController::class, 'destroy']);
             Route::get('/{id}/roles', [PermissionController::class, 'getRoles']);
         });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        |  Permissions Management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('provider-services')->group(function () {
+            Route::get('/', [ProviderServiceController::class, 'index']);
+            Route::post('/', [ProviderServiceController::class, 'store']);
+            Route::get('/{id}', [ProviderServiceController::class, 'show']);
+            Route::put('/{id}', [ProviderServiceController::class, 'update']);
+            Route::delete('/{id}', [ProviderServiceController::class, 'destroy']);
+            Route::delete('/by-provider/{provider_id}', [ProviderServiceController::class, 'getByProvider']);
+            Route::delete('/by-service/{service_id}', [ProviderServiceController::class, 'getByService']);
+        });
+
     });
 });

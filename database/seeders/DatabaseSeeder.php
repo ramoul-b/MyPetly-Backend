@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             RoleSeeder::class,
             RolePermissionSeeder::class,
+            ServiceSeeder::class,
+
         ]);
         User::factory()->create([
             'name' => 'Test User',

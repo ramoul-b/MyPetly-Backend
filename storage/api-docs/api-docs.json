@@ -3829,6 +3829,262 @@
                 ]
             }
         },
+        "/provider-services": {
+            "get": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Lister tous les services proposés par les providers",
+                "operationId": "a84b2e13117e0524aa148ab3b5b59a7d",
+                "responses": {
+                    "200": {
+                        "description": "Liste récupérée"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Créer un service personnalisé par un provider",
+                "operationId": "3cc8bea68e0e39bb51a499645df18c91",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "provider_id",
+                                    "service_id"
+                                ],
+                                "properties": {
+                                    "provider_id": {
+                                        "type": "integer"
+                                    },
+                                    "service_id": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "duration": {
+                                        "type": "integer"
+                                    },
+                                    "available": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Créé avec succès"
+                    },
+                    "422": {
+                        "description": "Validation échouée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/provider-services/{id}": {
+            "get": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Afficher un service provider spécifique",
+                "operationId": "7c6a85a38fba049588df568161bfa8ea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détail du service"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Mettre à jour un service provider",
+                "operationId": "a017c3a103547442f83cc6dbb03490d2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "duration": {
+                                        "type": "integer"
+                                    },
+                                    "available": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mis à jour"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Supprimer un service provider",
+                "operationId": "6e326b0551593f4d8af2a64b9cd04806",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Supprimé"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/provider-services/by-provider/{provider_id}": {
+            "get": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Lister les services proposés par un provider",
+                "operationId": "0d4b2d2b30563c9b048e770fa0bff8d4",
+                "parameters": [
+                    {
+                        "name": "provider_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des services du provider"
+                    },
+                    "404": {
+                        "description": "Provider non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/provider-services/by-service/{service_id}": {
+            "get": {
+                "tags": [
+                    "Provider Services"
+                ],
+                "summary": "Lister les providers qui proposent un service donné",
+                "operationId": "7d11f7789212188b7cc22ea280150a5a",
+                "parameters": [
+                    {
+                        "name": "service_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des providers pour ce service"
+                    },
+                    "404": {
+                        "description": "Service non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/reviews": {
             "get": {
                 "tags": [
@@ -5518,6 +5774,10 @@
         {
             "name": "Permissions",
             "description": "Permissions"
+        },
+        {
+            "name": "Provider Services",
+            "description": "Provider Services"
         },
         {
             "name": "Reviews",
