@@ -21,7 +21,7 @@ class StoreProviderRequest extends FormRequest
             'address'         => 'nullable|string|max:255',
             'description'     => 'nullable|array',
             'description.*'   => 'nullable|string',
-            'photo'           => 'nullable|string|max:255',
+            'photo'           => 'nullable|string',
             'birth_year'      => 'nullable|integer|min:1900|max:' . date('Y'),
             'specialization'  => 'nullable|array',
             'specialization.*'=> 'nullable|string|max:255',
