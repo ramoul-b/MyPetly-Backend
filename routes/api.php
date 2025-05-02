@@ -78,8 +78,8 @@ Route::prefix('v1')->group(function () {
         | Services / Providers / Categories
         |--------------------------------------------------------------------------
         */
-        Route::apiResource('services', ServiceController::class);
         Route::apiResource('providers', ProviderController::class);
+        Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);
 
         /*
@@ -155,8 +155,8 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [ProviderServiceController::class, 'show']);
             Route::put('/{id}', [ProviderServiceController::class, 'update']);
             Route::delete('/{id}', [ProviderServiceController::class, 'destroy']);
-            Route::delete('/by-provider/{provider_id}', [ProviderServiceController::class, 'getByProvider']);
-            Route::delete('/by-service/{service_id}', [ProviderServiceController::class, 'getByService']);
+            Route::get('/by-provider/{provider_id}', [ProviderServiceController::class, 'getByProvider']);
+            Route::get('/by-service/{service_id}', [ProviderServiceController::class, 'getByService']);
         });
 
     });
