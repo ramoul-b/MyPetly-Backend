@@ -43,7 +43,7 @@ class StripeWebhookController extends Controller
  *         description="Requête invalide"
  *     )
  * )
- */
+ */ 
     public function handleWebhook(Request $request)
     {
         $payload = $request->getContent();

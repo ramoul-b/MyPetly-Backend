@@ -16,7 +16,7 @@ class PaymentController extends Controller
     {
         $this->paymentService = $paymentService;
     }
-
+ 
     /**
      * @OA\Post(
      *     path="/payment-intent",
