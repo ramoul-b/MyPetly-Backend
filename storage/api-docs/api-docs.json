@@ -3472,6 +3472,61 @@
                 }
             }
         },
+        "/payment-intent": {
+            "post": {
+                "tags": [
+                    "Paiement"
+                ],
+                "summary": "Créer un PaymentIntent Stripe",
+                "operationId": "8ac8cd7eb7c8c11bafc5869c14b2a9b4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": 1000
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "example": "eur"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Client secret créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "client_secret": {
+                                            "type": "string",
+                                            "example": "pi_123456_secret_abcdef"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/permissions": {
             "get": {
                 "tags": [
@@ -4895,6 +4950,68 @@
                 ]
             }
         },
+        "/stripe/webhook": {
+            "post": {
+                "tags": [
+                    "Stripe"
+                ],
+                "summary": "Webhook Stripe - traite les événements comme payment_intent.succeeded",
+                "operationId": "c77485b60b58709691f47eadf6680365",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "evt_1N1KcdSGgkkP0D1L7LnYpRJD"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "payment_intent.succeeded"
+                                    },
+                                    "data": {
+                                        "properties": {
+                                            "object": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "pi_3N1KcdSGgkkP0D1L7LnYpRJD"
+                                                    },
+                                                    "metadata": {
+                                                        "type": "object",
+                                                        "example": {
+                                                            "booking_id": "12"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Webhook traité avec succès"
+                    },
+                    "400": {
+                        "description": "Requête invalide"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/users": {
             "get": {
                 "tags": [
@@ -5772,6 +5889,10 @@
             "description": "Collars"
         },
         {
+            "name": "Paiement",
+            "description": "Paiement"
+        },
+        {
             "name": "Permissions",
             "description": "Permissions"
         },
@@ -5790,6 +5911,10 @@
         {
             "name": "Services",
             "description": "Services"
+        },
+        {
+            "name": "Stripe",
+            "description": "Stripe"
         },
         {
             "name": "Users",

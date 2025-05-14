@@ -14,8 +14,11 @@ use App\Http\Controllers\Api\{
     RoleController,
     PermissionController,
     UserController,
-    ProviderServiceController
+    ProviderServiceController,
+    PaymentController,
+    StripeWebhookController
 };
+
 
 Route::prefix('v1')->group(function () {
     /*
@@ -158,6 +161,19 @@ Route::prefix('v1')->group(function () {
             Route::get('/by-provider/{provider_id}', [ProviderServiceController::class, 'getByProvider']);
             Route::get('/by-service/{service_id}', [ProviderServiceController::class, 'getByService']);
         });
+        /*
+        |--------------------------------------------------------------------------
+        |  Payment
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('payment-intent')->group(function () {
+            Route::post('/', [PaymentController::class, 'createIntent']);
+        });
+
+
+        Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
 
     });
 });
