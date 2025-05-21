@@ -193,4 +193,39 @@ public function __construct(private BookingService $bookingService) {}
             return ApiService::response(['message' => 'Erreur lors de la suppression de la réservation.', 'error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/bookings/mine",
+ *     tags={"Bookings"},
+ *     summary="Liste des réservations de l'utilisateur connecté",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste récupérée avec succès"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur serveur"
+ *     )
+ * )
+ */
+public function myBookings(): JsonResponse
+{
+    try {
+        $user = auth()->user();
+        $bookings = Booking::with(['service', 'provider'])
+            ->where('user_id', $user->id)
+            ->orderByDesc('appointment_date')
+            ->get();
+
+        return ApiService::response(BookingResource::collection($bookings), 200);
+    } catch (\Throwable $e) {
+        return ApiService::response([
+            'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }

@@ -93,6 +93,23 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('bookings', BookingController::class);
         Route::apiResource('reviews', ReviewController::class);
 
+
+                /*
+        |--------------------------------------------------------------------------
+        | Booking Management
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('bookings')->group(function () {
+             
+            Route::get('/', [BookingController::class, 'index']);
+            Route::post('/', [BookingController::class, 'store']);
+            Route::get('/{id}', [BookingController::class, 'show']);
+            Route::put('/{id}', [BookingController::class, 'update']);
+            Route::delete('/{id}', [BookingController::class, 'destroy']);
+            Route::delete('/mine', [BookingController::class, 'myBookings']);
+
+
+        });
         /*
         |--------------------------------------------------------------------------
         | Users Management
