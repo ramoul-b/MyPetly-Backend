@@ -2809,6 +2809,28 @@
                 ]
             }
         },
+        "/bookings/mine": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Liste des réservations de l'utilisateur connecté",
+                "operationId": "4b9112ae6e9301579cd6c21f3581d0da",
+                "responses": {
+                    "200": {
+                        "description": "Liste récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/categories": {
             "get": {
                 "tags": [
