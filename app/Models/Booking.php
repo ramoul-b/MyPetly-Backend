@@ -22,6 +22,11 @@ class Booking extends Model
         'status', // pending, confirmed, cancelled
         'notes',
     ];
+protected $casts = [
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'appointment_date' => 'date',
+];
 
     public function service()
     {
