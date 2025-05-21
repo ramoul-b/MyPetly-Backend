@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
 use App\Http\Resources\ProviderResource;
 use App\Services\ProviderService;
+use App\Models\Provider;
 use App\Services\ApiService;
 use Illuminate\Http\JsonResponse;
 
