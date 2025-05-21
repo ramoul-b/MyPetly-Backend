@@ -195,37 +195,40 @@ public function __construct(private BookingService $bookingService) {}
     }
 
     /**
- * @OA\Get(
- *     path="/bookings/mine",
- *     tags={"Bookings"},
- *     summary="Liste des réservations de l'utilisateur connecté",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="Liste récupérée avec succès"
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Erreur serveur"
- *     )
- * )
- */
-public function myBookings(): JsonResponse
-{
-    try {
-        $user = auth()->user();
-        $bookings = Booking::with(['service', 'provider'])
-            ->where('user_id', $user->id)
-            ->orderByDesc('appointment_date')
-            ->get();
+     * @OA\Get(
+     *     path="/bookings/mine",
+     *     tags={"Bookings"},
+     *     summary="Liste des réservations de l'utilisateur connecté",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste récupérée avec succès"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
+     */
+    public function myBookings(): JsonResponse
+    {
+        try {
+            $user = auth()->user();
 
-        return ApiService::response(BookingResource::collection($bookings), 200);
-    } catch (\Throwable $e) {
-        return ApiService::response([
-            'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
-            'error' => $e->getMessage(),
-        ], 500);
+            $bookings = Booking::with(['service', 'provider'])
+                ->where('user_id', $user->id)
+                ->orderByDesc('appointment_date')
+                ->get();
+
+            return ApiService::response(BookingResource::collection($bookings), 200);
+        } catch (\Throwable $e) {
+            \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return ApiService::response([
+                'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
+
 
 }
