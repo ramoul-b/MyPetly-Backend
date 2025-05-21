@@ -28,9 +28,10 @@ class Provider extends Model
     ];
     public $translatable = ['name', 'description','specialization'];
 
+
     public function services()
     {
-        return $this->hasMany(Service::class);
+        return $this->belongsToMany(Service::class, 'provider_services', 'provider_id', 'service_id');
     }
 
     public function reviews()
