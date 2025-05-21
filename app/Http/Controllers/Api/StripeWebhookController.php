@@ -64,7 +64,20 @@ class StripeWebhookController extends Controller
         switch ($event->type) {
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
-                Log::info("✅ Paiement réussi : {$paymentIntent->id}");
+                $bookingId = $paymentIntent->metadata->booking_id ?? null;
+                if ($bookingId) {
+                    $booking = \App\Models\Booking::find($bookingId);
+                    if ($booking) {
+                        $booking->status = 'confirmed';
+                        $booking->save();
+                        Log::info("✅ Réservation confirmée pour booking_id={$bookingId}");
+                    } else {
+                        Log::warning("❗ Booking introuvable pour ID : {$bookingId}");
+                    }
+                } else {
+                    Log::warning("❗ booking_id manquant dans metadata");
+                }
+
                 break;
 
             case 'payment_intent.payment_failed':

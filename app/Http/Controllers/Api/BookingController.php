@@ -9,9 +9,16 @@ use App\Http\Resources\BookingResource;
 use App\Services\ApiService;
 use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use App\Services\BookingService;
 
 class BookingController extends Controller
 {
+    
+
+public function __construct(private BookingService $bookingService) {}
+
     /**
      * @OA\Get(
      *     path="/bookings",
@@ -36,29 +43,85 @@ class BookingController extends Controller
      * @OA\Post(
      *     path="/bookings",
      *     tags={"Bookings"},
-     *     summary="Crée une nouvelle réservation",
+     *     summary="Créé une nouvelle réservation payée",
      *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="service_id", type="integer", example=1),
-     *         @OA\Property(property="user_id", type="integer", example=1),
-     *         @OA\Property(property="appointment_date", type="string", format="date-time", example="2025-04-20 10:00:00"),
-     *         @OA\Property(property="status", type="string", example="pending"),
-     *         @OA\Property(property="notes", type="string", example="Préférences particulières")
-     *     )),
-     *     @OA\Response(response=201, description="Réservation créée avec succès"),
-     *     @OA\Response(response=422, description="Erreur de validation"),
-     *     @OA\Response(response=500, description="Erreur serveur interne")
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"service_id","provider_id","appointment_date","time","payment_intent"},
+     *             @OA\Property(property="service_id",      type="integer", example=1),
+     *             @OA\Property(property="provider_id",     type="integer", example=3),
+     *             @OA\Property(property="appointment_date",type="string",  format="date", example="2025-05-22"),
+     *             @OA\Property(property="time",            type="string",  example="09:30"),
+     *             @OA\Property(property="payment_intent",  type="string",  example="pi_3RO…"),
+     *             @OA\Property(property="currency",        type="string",  example="eur"),
+     *             @OA\Property(property="notes",           type="string",  example="Mon chien est sensible")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Réservation créée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="service_id", type="integer", example=1),
+     *             @OA\Property(property="provider_id", type="integer", example=3),
+     *             @OA\Property(property="appointment_date", type="string", example="2025-05-22"),
+     *             @OA\Property(property="sex", type="string", enum={"male", "female"}, example="male"),
+     *             @OA\Property(property="time", type="string", example="09:30"),
+     *             @OA\Property(property="payment_intent", type="string", example="i_3RO…"),
+     *             @OA\Property(property="currency", type="string", example="eur"),
+     *             @OA\Property(property="notes", type="string", example="Mon chien est sensible")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Créneau déjà réservé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Créneau déjà réservé"),
+     *             @OA\Property(property="errors", type="object", example={"name": {"Créneau déjà réservé"}})     
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Paiement non confirmé ou validation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Paiement non confirmé ou validation"),
+     *             @OA\Property(property="errors", type="object", example={"name": {"Paiement non confirmé ou validation"}})     
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur serveur"),
+     *             @OA\Property(property="errors", type="object", example={"name": {"Erreur serveur"}})     
+     *         )
+     *     ),
      * )
      */
     public function store(StoreBookingRequest $request): JsonResponse
     {
         try {
-            $booking = Booking::create($request->validated());
+            // Stripe : vérification paiement
+            Stripe::setApiKey(config('services.stripe.secret'));
+            $intent = PaymentIntent::retrieve($request->payment_intent);
+            if ($intent->status !== 'succeeded') {
+                return ApiService::response(['message'=>'Paiement non confirmé'], 422);
+            }
+
+            // Appel au service
+            $booking = $this->bookingService->createConfirmed($request->validated());
+
             return ApiService::response(new BookingResource($booking), 201);
+
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'Erreur lors de la création de la réservation.', 'error' => $e->getMessage()], 500);
+            return ApiService::response([
+                'message' => 'Erreur lors de la réservation',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
+
+
 
     /**
      * @OA\Get(

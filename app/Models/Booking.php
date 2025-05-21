@@ -13,8 +13,12 @@ class Booking extends Model
 
     protected $fillable = [
         'service_id',
+        'provider_id',      // nouveau
         'user_id',
         'appointment_date',
+        'time',             // nouveau
+        'payment_intent',   // nouveau
+        'currency',         // nouveau
         'status', // pending, confirmed, cancelled
         'notes',
     ];

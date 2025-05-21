@@ -2501,34 +2501,49 @@
                 "tags": [
                     "Bookings"
                 ],
-                "summary": "Crée une nouvelle réservation",
+                "summary": "Créé une nouvelle réservation payée",
                 "operationId": "166547aa028b063e31d6efe9c093aa88",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "service_id",
+                                    "provider_id",
+                                    "appointment_date",
+                                    "time",
+                                    "payment_intent"
+                                ],
                                 "properties": {
                                     "service_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "user_id": {
+                                    "provider_id": {
                                         "type": "integer",
-                                        "example": 1
+                                        "example": 3
                                     },
                                     "appointment_date": {
                                         "type": "string",
-                                        "format": "date-time",
-                                        "example": "2025-04-20 10:00:00"
+                                        "format": "date",
+                                        "example": "2025-05-22"
                                     },
-                                    "status": {
+                                    "time": {
                                         "type": "string",
-                                        "example": "pending"
+                                        "example": "09:30"
+                                    },
+                                    "payment_intent": {
+                                        "type": "string",
+                                        "example": "pi_3RO…"
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "example": "eur"
                                     },
                                     "notes": {
                                         "type": "string",
-                                        "example": "Préférences particulières"
+                                        "example": "Mon chien est sensible"
                                     }
                                 },
                                 "type": "object"
@@ -2538,13 +2553,124 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Réservation créée avec succès"
+                        "description": "Réservation créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "service_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "provider_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "appointment_date": {
+                                            "type": "string",
+                                            "example": "2025-05-22"
+                                        },
+                                        "sex": {
+                                            "type": "string",
+                                            "enum": [
+                                                "male",
+                                                "female"
+                                            ],
+                                            "example": "male"
+                                        },
+                                        "time": {
+                                            "type": "string",
+                                            "example": "09:30"
+                                        },
+                                        "payment_intent": {
+                                            "type": "string",
+                                            "example": "i_3RO…"
+                                        },
+                                        "currency": {
+                                            "type": "string",
+                                            "example": "eur"
+                                        },
+                                        "notes": {
+                                            "type": "string",
+                                            "example": "Mon chien est sensible"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Créneau déjà réservé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Créneau déjà réservé"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "Créneau déjà réservé"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Erreur de validation"
+                        "description": "Paiement non confirmé ou validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Paiement non confirmé ou validation"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "Paiement non confirmé ou validation"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Erreur serveur interne"
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur serveur"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "Erreur serveur"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
