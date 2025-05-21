@@ -106,7 +106,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [BookingController::class, 'show']);
             Route::put('/{id}', [BookingController::class, 'update']);
             Route::delete('/{id}', [BookingController::class, 'destroy']);
-            Route::delete('/mine', [BookingController::class, 'myBookings']);
+            Route::get('/mine', [BookingController::class, 'myBookings']);
 
 
         });
