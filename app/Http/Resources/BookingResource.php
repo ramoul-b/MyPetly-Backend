@@ -25,7 +25,9 @@ class BookingResource extends JsonResource
             'currency'         => $this->currency,
             'status'           => $this->status,
             'notes'            => $this->notes,
-            'created_at'       => $this->created_at->format('Y-m-d H:i'),
+            'created_at' => $this->created_at
+                            ? $this->created_at->format('Y-m-d H:i')
+                            : null,
         ];
     }
 }
