@@ -90,12 +90,13 @@ class ProviderController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $provider = $this->providerService->find($id);
-            return ApiService::response(new ProviderResource($provider), 200);
+            $provider = Provider::with('services')->findOrFail($id);
+            return ApiService::response(new ProviderResource($provider));
         } catch (\Exception $e) {
-            return ApiService::response(['message' => 'Erreur lors de la récupération du prestataire.', 'error' => $e->getMessage()], 500);
+            return ApiService::error('Provider introuvable', 404);
         }
     }
+
 
     /**
      * @OA\Put(
