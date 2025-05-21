@@ -12,19 +12,20 @@ class BookingResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'service' => new ServiceResource($this->whenLoaded('service')),
-            'user' => new UserResource($this->whenLoaded('user')),
+            'id'               => $this->id,
+            'service'          => new ServiceResource($this->whenLoaded('service')),
+            'provider'         => new ProviderResource($this->whenLoaded('provider')),
             'appointment_date' => $this->appointment_date 
-    ? \Carbon\Carbon::parse($this->appointment_date)->format('Y-m-d') 
-    : null,
-            'status' => $this->status,
-            'notes' => $this->notes,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+                                    ? \Carbon\Carbon::parse($this->appointment_date)->format('Y-m-d') 
+                                    : null,
+            'time'             => $this->time,
+            'currency'         => $this->currency,
+            'status'           => $this->status,
+            'notes'            => $this->notes,
+            'created_at'       => $this->created_at->format('Y-m-d H:i'),
         ];
     }
 }
