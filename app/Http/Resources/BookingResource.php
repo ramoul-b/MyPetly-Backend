@@ -18,7 +18,9 @@ class BookingResource extends JsonResource
             'id' => $this->id,
             'service' => new ServiceResource($this->whenLoaded('service')),
             'user' => new UserResource($this->whenLoaded('user')),
-            'appointment_date' => $this->appointment_date,
+            'appointment_date' => $this->appointment_date 
+    ? \Carbon\Carbon::parse($this->appointment_date)->format('Y-m-d') 
+    : null,
             'status' => $this->status,
             'notes' => $this->notes,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
