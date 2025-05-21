@@ -90,7 +90,7 @@ Route::prefix('v1')->group(function () {
         | Bookings / Reviews
         |--------------------------------------------------------------------------
         */
-        Route::apiResource('bookings', BookingController::class);
+        //Route::apiResource('bookings', BookingController::class);
         Route::apiResource('reviews', ReviewController::class);
 
 
