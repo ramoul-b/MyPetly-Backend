@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ApiService
 {
@@ -11,6 +12,11 @@ class ApiService
     {
         $response = [];
         $locale = App::getLocale();
+
+        // Traitement spécial pour les collections de ressources
+        if ($data instanceof ResourceCollection) {
+            return response()->json($data, $statusCode);
+        }
 
         if ($statusCode >= 200 && $statusCode < 300) {
             $response = $data ?: ['message' => __('messages.success', [], $locale)];
