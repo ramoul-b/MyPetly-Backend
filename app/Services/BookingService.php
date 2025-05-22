@@ -56,16 +56,17 @@ public function getUserBookings(int $userId)
 {
     \Log::info('🔁 [BookingService] getUserBookings lancé', ['user_id' => $userId]);
 
-    $bookings = Booking::with(['service', 'provider'])
-        ->whereNotNull('id') // sécurité supplémentaire
+    $bookings = Booking::query()
+        ->with(['service', 'provider'])
         ->where('user_id', $userId)
-        ->latest('appointment_date')
+        ->orderByDesc('appointment_date')
         ->get();
 
-    \Log::info('✅ [BookingService] Bookings récupérés :', ['count' => $bookings->count(), 'ids' => $bookings->pluck('id')]);
+    \Log::info('✅ [BookingService] Bookings IDs :', $bookings->pluck('id')->toArray());
 
     return $bookings;
 }
+
 
 
 

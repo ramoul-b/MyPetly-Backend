@@ -219,8 +219,13 @@ public function myBookings(): JsonResponse
 
         \Log::info('📦 [myBookings] Bookings récupérés :', ['count' => $bookings->count(), 'ids' => $bookings->pluck('id')]);
         \Log::debug('🧪 [myBookings] Bookings bruts :', $bookings->toArray());
-
-        return ApiService::response(BookingResource::collection($bookings), 200);
+        foreach ($bookings as $booking) {
+            \Log::info('🔍 Booking type :', ['class' => get_class($booking), 'id' => $booking->id]);
+        }
+        return ApiService::response(
+            BookingResource::collection(collect($bookings)),
+            200
+        );
     } catch (\Throwable $e) {
         \Log::error('❌ [myBookings] Erreur', [
             'message' => $e->getMessage(),
