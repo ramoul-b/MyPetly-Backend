@@ -212,6 +212,7 @@ public function __construct(private BookingService $bookingService) {}
      */
 public function myBookings(): JsonResponse
 {
+    \Log::info('🔍 [myBookings] Auth ID Badr');
     try {
         \Log::info('🔍 [myBookings] Auth ID :', ['user_id' => auth()->id()]);
 
