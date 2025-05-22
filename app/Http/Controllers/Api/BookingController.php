@@ -217,22 +217,31 @@ public function __construct(private BookingService $bookingService) {}
      *      @OA\Response(response=500, description="Erreur serveur")
      * )
      */
-    public function myBookings(): JsonResponse
-    {
-        try {
-            $bookings = $this->bookingService->getUserBookings(Auth::id());
+public function myBookings(): JsonResponse
+{
+    try {
+        $bookings = $this->bookingService->getUserBookings(Auth::id());
 
-            return ApiService::response(
-                ['message' => 'Opération réussie', 'data' => BookingResource::collection($bookings)],
-                200
-            );
-        } catch (Throwable $e) {
-            return ApiService::response(
-                ['message' => 'Une erreur est survenue', 'error' => config('app.debug') ? $e->getMessage() : null],
-                500
-            );
-        }
+        // ⚠️ NE PAS utiliser « new BookingResource($bookings) »
+        // mais bien la collection :
+        return ApiService::response(
+            [
+                'message' => 'Opération réussie',
+                'data'    => BookingResource::collection($bookings),
+            ],
+            200
+        );
+    } catch (\Throwable $e) {
+        return ApiService::response(
+            [
+                'message' => 'Une erreur est survenue',
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ],
+            500
+        );
     }
+}
+
 
 
 
