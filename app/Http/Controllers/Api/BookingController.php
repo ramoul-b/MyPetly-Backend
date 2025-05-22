@@ -213,22 +213,18 @@ public function __construct(private BookingService $bookingService) {}
     public function myBookings(): JsonResponse
     {
         try {
-            $user = auth()->user();
-
-            $bookings = Booking::with(['service', 'provider'])
-                ->where('user_id', $user->id)
-                ->orderByDesc('appointment_date')
-                ->get();
-
+            $bookings = $this->bookingService->getUserBookings();
             return ApiService::response(BookingResource::collection($bookings), 200);
         } catch (\Throwable $e) {
-            \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            \Log::error('Erreur bookings/mine', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return ApiService::response([
-                'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+                'message' => 'Erreur lors de la récupération des réservations.',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
-
-
 }

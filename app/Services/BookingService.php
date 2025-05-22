@@ -28,28 +28,37 @@ class BookingService
     }
 
     public function createConfirmed(array $data): Booking
-{
-    // Vérifier si le créneau est déjà réservé
-    $exists = Booking::where('provider_id', $data['provider_id'])
-        ->whereDate('appointment_date', $data['appointment_date'])
-        ->where('time', $data['time'])
-        ->exists();
+    {
+        // Vérifier si le créneau est déjà réservé
+        $exists = Booking::where('provider_id', $data['provider_id'])
+            ->whereDate('appointment_date', $data['appointment_date'])
+            ->where('time', $data['time'])
+            ->exists();
 
-    if ($exists) {
-        throw new \Exception('Créneau déjà réservé');
+        if ($exists) {
+            throw new \Exception('Créneau déjà réservé');
+        }
+
+        return Booking::create([
+            'user_id' => auth()->id(),
+            'service_id' => $data['service_id'],
+            'provider_id' => $data['provider_id'],
+            'appointment_date' => $data['appointment_date'],
+            'time' => $data['time'],
+            'payment_intent' => $data['payment_intent'] ?? null,
+            'currency' => $data['currency'] ?? 'eur',
+            'status' => 'confirmed',
+            'notes' => $data['notes'] ?? null,
+        ]);
     }
 
-    return Booking::create([
-        'user_id' => auth()->id(),
-        'service_id' => $data['service_id'],
-        'provider_id' => $data['provider_id'],
-        'appointment_date' => $data['appointment_date'],
-        'time' => $data['time'],
-        'payment_intent' => $data['payment_intent'] ?? null,
-        'currency' => $data['currency'] ?? 'eur',
-        'status' => 'confirmed',
-        'notes' => $data['notes'] ?? null,
-    ]);
-}
+    public function getUserBookings(): \Illuminate\Support\Collection
+    {
+        return Booking::with(['service', 'provider'])
+            ->where('user_id', auth()->id())
+            ->orderByDesc('appointment_date')
+            ->get();
+    }
+
 
 }
