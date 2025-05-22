@@ -211,28 +211,19 @@ public function __construct(private BookingService $bookingService) {}
      * )
      */
     public function myBookings(): JsonResponse
-{
-    try {
-        $user = auth()->user();
+    {
+        try {
+            $bookings = $this->bookingService->getUserBookings(auth()->id());
 
-        $bookings = Booking::with(['service', 'provider'])
-            ->where('user_id', $user->id)
-            ->orderByDesc('appointment_date')
-            ->get();
-
-        // Si aucune réservation n'est trouvée, retourner un tableau vide
-        if ($bookings->isEmpty()) {
-            return ApiService::response([], 200);
+            return ApiService::response(BookingResource::collection($bookings), 200);
+        } catch (\Throwable $e) {
+            \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return ApiService::response([
+                'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return ApiService::response(BookingResource::collection($bookings), 200);
-    } catch (\Throwable $e) {
-        \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-        return ApiService::response([
-            'message' => 'Erreur lors de la récupération des réservations de l\'utilisateur.',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
+
 
 }
