@@ -220,27 +220,27 @@ public function __construct(private BookingService $bookingService) {}
 public function myBookings(): JsonResponse
 {
     try {
-        $bookings = $this->bookingService->getUserBookings(Auth::id());
-
-        // ⚠️ NE PAS utiliser « new BookingResource($bookings) »
-        // mais bien la collection :
-        return ApiService::response(
-            [
-                'message' => 'Opération réussie',
-                'data'    => BookingResource::collection($bookings),
-            ],
-            200
-        );
+        // Récupérer les réservations paginées
+        $bookings = $this->bookingService->getUserBookings(auth()->id());
+        
+        // Transformer la pagination en collection de ressources paginées
+        $bookingsResource = BookingResource::collection($bookings);
+        
+        // Retourner directement la collection de ressources
+        return response()->json($bookingsResource, 200);
     } catch (\Throwable $e) {
-        return ApiService::response(
-            [
-                'message' => 'Une erreur est survenue',
-                'error'   => config('app.debug') ? $e->getMessage() : null,
-            ],
-            500
-        );
+        \Log::error('Erreur bookings/mine', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return ApiService::response([
+            'message' => 'Une erreur est survenue',
+            'error' => config('app.debug') ? $e->getMessage() : null,
+        ], 500);
     }
 }
+
+
 
 
 
