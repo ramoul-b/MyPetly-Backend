@@ -217,37 +217,24 @@ public function __construct(private BookingService $bookingService) {}
      *      @OA\Response(response=500, description="Erreur serveur")
      * )
      */
-public function myBookings(): JsonResponse
-{
-    try {
-        // Récupérer les réservations paginées
-        $bookings = $this->bookingService->getUserBookings(auth()->id());
-        
-        // Transformer la pagination en collection de ressources paginées
-        $bookingsResource = BookingResource::collection($bookings);
-        
-        // Retourner directement la collection de ressources
-        return response()->json($bookingsResource, 200);
-    } catch (\Throwable $e) {
-        \Log::error('Erreur bookings/mine', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return ApiService::response([
-            'message' => 'Une erreur est survenue',
-            'error' => config('app.debug') ? $e->getMessage() : null,
-        ], 500);
+    public function myBookings(): JsonResponse
+    {
+        try {
+            // même logique que index, mais filtrée
+            $bookings = Booking::with(['service', 'provider'])
+                ->where('user_id', Auth::id())
+                ->get();
+
+            // on renvoie la collection directement, comme index
+            return ApiService::response(
+                BookingResource::collection($bookings),
+                200
+            );
+        } catch (\Exception $e) {
+            return ApiService::response(
+                ['message' => 'Erreur lors de la récupération des réservations.', 'error' => $e->getMessage()],
+                500
+            );
+        }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
 }
