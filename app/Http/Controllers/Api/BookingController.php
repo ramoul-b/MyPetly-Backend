@@ -210,20 +210,28 @@ public function __construct(private BookingService $bookingService) {}
      *     )
      * )
      */
-    public function myBookings(): JsonResponse
-    {
-        try {
-            $bookings = $this->bookingService->getUserBookings(auth()->id());
+public function myBookings(): JsonResponse
+{
+    try {
+        \Log::info('🔍 [myBookings] Auth ID :', ['user_id' => auth()->id()]);
 
-            return ApiService::response(BookingResource::collection($bookings), 200);
-        } catch (\Throwable $e) {
-            \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return ApiService::response([
-                'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        $bookings = $this->bookingService->getUserBookings(auth()->id());
+
+        \Log::info('📦 [myBookings] Bookings récupérés :', ['count' => $bookings->count(), 'ids' => $bookings->pluck('id')]);
+
+        return ApiService::response(BookingResource::collection($bookings), 200);
+    } catch (\Throwable $e) {
+        \Log::error('❌ [myBookings] Erreur', [
+            'message' => $e->getMessage(),
+            'trace'   => $e->getTraceAsString(),
+        ]);
+        return ApiService::response([
+            'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
 }
