@@ -52,13 +52,13 @@ class BookingService
         ]);
     }
 
-    public function getUserBookings(): \Illuminate\Support\Collection
-    {
-        return Booking::with(['service', 'provider'])
-            ->where('user_id', auth()->id())
-            ->orderByDesc('appointment_date')
-            ->get();
-    }
+public function getUserBookings(): \Illuminate\Support\Collection
+{
+    return Booking::with(['service', 'provider'])
+        ->where('user_id', auth()->id())
+        ->orderByDesc('appointment_date')
+        ->get();
+}
 
 
 }
