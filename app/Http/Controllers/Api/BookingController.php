@@ -220,11 +220,10 @@ public function myBookings(): JsonResponse
             ->orderByDesc('appointment_date')
             ->get();
 
-        // Retourner directement la collection de ressources sans passer par ApiService
-        return response()->json(BookingResource::collection($bookings), 200);
+        // Convertir la collection de ressources en tableau avant de la passer à ApiService
+        $bookingsArray = BookingResource::collection($bookings)->toArray(request());
         
-        // OU si vous devez utiliser ApiService, assurez-vous qu'il gère correctement les collections
-        // return ApiService::response(['data' => BookingResource::collection($bookings)], 200);
+        return ApiService::response($bookingsArray, 200);
     } catch (\Throwable $e) {
         \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         return ApiService::response([
