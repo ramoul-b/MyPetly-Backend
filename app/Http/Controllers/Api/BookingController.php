@@ -218,6 +218,7 @@ public function myBookings(): JsonResponse
         $bookings = $this->bookingService->getUserBookings(auth()->id());
 
         \Log::info('📦 [myBookings] Bookings récupérés :', ['count' => $bookings->count(), 'ids' => $bookings->pluck('id')]);
+        \Log::debug('🧪 [myBookings] Bookings bruts :', $bookings->toArray());
 
         return ApiService::response(BookingResource::collection($bookings), 200);
     } catch (\Throwable $e) {
