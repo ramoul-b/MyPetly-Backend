@@ -14,12 +14,14 @@ class BookingResource extends JsonResource
      */
     public function toArray($request): array
     {
-        \Log::info('🧩 [BookingResource] ID booking : ' . $this->id);
-
         return [
             'id'               => $this->id,
-            'service'          => new ServiceResource($this->whenLoaded('service')),
-            'provider'         => new ProviderResource($this->whenLoaded('provider')),
+            'service'          => $this->whenLoaded('service', function() {
+                return new ServiceResource($this->service);
+            }),
+            'provider'         => $this->whenLoaded('provider', function() {
+                return new ProviderResource($this->provider);
+            }),
             'appointment_date' => $this->appointment_date 
                                     ? \Carbon\Carbon::parse($this->appointment_date)->format('Y-m-d') 
                                     : null,
@@ -28,7 +30,7 @@ class BookingResource extends JsonResource
             'status'           => $this->status,
             'notes'            => $this->notes,
             'created_at'       => $this->created_at 
-                                    ? $this->created_at->format('Y-m-d H:i') 
+                                    ? $this->created_at->format('Y-m-d H:i')
                                     : null,
         ];
     }
