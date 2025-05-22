@@ -14,6 +14,8 @@ class BookingResource extends JsonResource
      */
     public function toArray($request): array
     {
+        \Log::info('🧩 [BookingResource] ID booking : ' . $this->id);
+
         return [
             'id'               => $this->id,
             'service'          => new ServiceResource($this->whenLoaded('service')),
@@ -25,7 +27,9 @@ class BookingResource extends JsonResource
             'currency'         => $this->currency,
             'status'           => $this->status,
             'notes'            => $this->notes,
-            'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i') : null,
+            'created_at'       => $this->created_at 
+                                    ? $this->created_at->format('Y-m-d H:i') 
+                                    : null,
         ];
     }
 }
