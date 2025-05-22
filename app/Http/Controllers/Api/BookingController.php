@@ -219,7 +219,7 @@ public function __construct(private BookingService $bookingService) {}
      */
     public function myBookings(): JsonResponse
     {
-        dd(__METHOD__); 
+        
         try {
             $bookings = Booking::with(['service', 'provider'])
                 ->where('user_id', Auth::id())
