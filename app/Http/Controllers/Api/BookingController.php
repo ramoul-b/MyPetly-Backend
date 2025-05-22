@@ -220,16 +220,13 @@ public function __construct(private BookingService $bookingService) {}
     public function myBookings(): JsonResponse
     {
         try {
-            // même logique que index, mais filtrée
             $bookings = Booking::with(['service', 'provider'])
                 ->where('user_id', Auth::id())
-                ->get();
+                ->get();                     // pas de paginator → même logique que index
 
-            // on renvoie la collection directement, comme index
-            return ApiService::response(
-                BookingResource::collection($bookings),
-                200
-            );
+            // ➜ on envoie DIRECTEMENT la ResourceCollection
+            return ApiService::response(BookingResource::collection($bookings), 200);
+
         } catch (\Exception $e) {
             return ApiService::response(
                 ['message' => 'Erreur lors de la récupération des réservations.', 'error' => $e->getMessage()],
