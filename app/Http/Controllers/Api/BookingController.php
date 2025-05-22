@@ -11,7 +11,7 @@ use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
-use App\Services\BookingService;
+
 
 class BookingController extends Controller
 {
