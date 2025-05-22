@@ -212,21 +212,53 @@ public function __construct(private BookingService $bookingService) {}
  */
 public function myBookings(): JsonResponse
 {
+    \Log::info('User ID', ['id' => $user->id]);
+\Log::info('Bookings count', ['count' => $bookings->count()]);
+\Log::info('First booking', $bookings->first() ? $bookings->first()->toArray() : ['none']);
+
     try {
-        $userId = auth()->id();
-        $bookings = $this->bookingService->getUserBookings($userId);
+        $user = auth()->user();
 
-        \Log::info('📦 Bookings récupérés', ['count' => $bookings->count()]);
+        $bookings = Booking::with(['service', 'provider'])
+            ->where('user_id', $user->id)
+            ->orderByDesc('appointment_date')
+            ->get();
 
-        return ApiService::response(BookingResource::collection($bookings), 200);
+        // Créer un tableau de données à partir de la collection
+        $bookingsData = [];
+        foreach ($bookings as $booking) {
+            $bookingsData[] = [
+                'id' => $booking->id,
+                'service' => $booking->service ? [
+                    'id' => $booking->service->id,
+                    'name' => $booking->service->name,
+                    // autres propriétés du service
+                ] : null,
+                'provider' => $booking->provider ? [
+                    'id' => $booking->provider->id,
+                    'name' => $booking->provider->name,
+                    // autres propriétés du provider
+                ] : null,
+                'appointment_date' => $booking->appointment_date ? \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d') : null,
+                'time' => $booking->time,
+                'currency' => $booking->currency,
+                'status' => $booking->status,
+                'notes' => $booking->notes,
+                'created_at' => $booking->created_at ? $booking->created_at->format('Y-m-d H:i') : null,
+            ];
+        }
+
+        // Renvoyer le tableau de données
+        return ApiService::response(['bookings' => $bookingsData], 200);
     } catch (\Throwable $e) {
-        \Log::error('❌ Erreur bookings/mine', ['error' => $e->getMessage()]);
+        \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         return ApiService::response([
-            'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
+            'message' => 'Erreur lors de la récupération des réservations de l\'utilisateur.',
             'error' => $e->getMessage(),
         ], 500);
     }
 }
+
 
 
 
