@@ -220,10 +220,32 @@ public function myBookings(): JsonResponse
             ->orderByDesc('appointment_date')
             ->get();
 
-        // Convertir la collection de ressources en tableau avant de la passer à ApiService
-        $bookingsArray = BookingResource::collection($bookings)->toArray(request());
-        
-        return ApiService::response($bookingsArray, 200);
+        // Créer un tableau de données à partir de la collection
+        $bookingsData = [];
+        foreach ($bookings as $booking) {
+            $bookingsData[] = [
+                'id' => $booking->id,
+                'service' => $booking->service ? [
+                    'id' => $booking->service->id,
+                    'name' => $booking->service->name,
+                    // autres propriétés du service
+                ] : null,
+                'provider' => $booking->provider ? [
+                    'id' => $booking->provider->id,
+                    'name' => $booking->provider->name,
+                    // autres propriétés du provider
+                ] : null,
+                'appointment_date' => $booking->appointment_date ? \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d') : null,
+                'time' => $booking->time,
+                'currency' => $booking->currency,
+                'status' => $booking->status,
+                'notes' => $booking->notes,
+                'created_at' => $booking->created_at ? $booking->created_at->format('Y-m-d H:i') : null,
+            ];
+        }
+
+        // Renvoyer le tableau de données
+        return ApiService::response(['bookings' => $bookingsData], 200);
     } catch (\Throwable $e) {
         \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         return ApiService::response([
@@ -232,6 +254,7 @@ public function myBookings(): JsonResponse
         ], 500);
     }
 }
+
 
 
 
