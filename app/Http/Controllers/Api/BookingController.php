@@ -9,6 +9,7 @@ use App\Http\Resources\BookingResource;
 use App\Services\ApiService;
 use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
+use App\Services\BookingService;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
