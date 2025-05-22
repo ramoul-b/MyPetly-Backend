@@ -52,24 +52,32 @@ class BookingService
         ]);
     }
 
-public function getUserBookings(int $userId)
+// Dans BookingService.php
+public function getUserBookings($userId)
 {
-    \Log::info('🔁 [BookingService] getUserBookings lancé', ['user_id' => $userId]);
-
-    $bookings = Booking::query()
-        ->with(['service', 'provider'])
+    return Booking::with(['service', 'provider'])
         ->where('user_id', $userId)
         ->orderByDesc('appointment_date')
         ->get();
-
-    \Log::info('✅ [BookingService] Bookings IDs :', $bookings->pluck('id')->toArray());
-
-    return $bookings;
 }
 
-
-
-
+// Dans BookingController.php
+public function myBookings(): JsonResponse
+{
+    try {
+        $userId = auth()->id();
+        $bookings = $this->bookingService->getUserBookings($userId);
+        
+        // Retourner directement la collection de ressources
+        return response()->json(BookingResource::collection($bookings), 200);
+    } catch (\Throwable $e) {
+        \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        return response()->json([
+            'message' => 'Erreur lors de la récupération des réservations de l\'utilisateur.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 
 }

@@ -215,36 +215,25 @@ public function myBookings(): JsonResponse
     try {
         $user = auth()->user();
 
-        \Log::info('🟢 [myBookings] Utilisateur connecté', ['user_id' => $user->id]);
-
         $bookings = Booking::with(['service', 'provider'])
             ->where('user_id', $user->id)
             ->orderByDesc('appointment_date')
             ->get();
 
-        foreach ($bookings as $booking) {
-            \Log::info('📌 [myBookings] Booking trouvé', [
-                'id'           => $booking->id,
-                'service_id'   => $booking->service_id,
-                'provider_id'  => $booking->provider_id,
-                'date'         => $booking->appointment_date,
-                'time'         => $booking->time,
-                'created_at'   => $booking->created_at,
-            ]);
-        }
-
-        return ApiService::response(BookingResource::collection($bookings), 200);
+        // Retourner directement la collection de ressources sans passer par ApiService
+        return response()->json(BookingResource::collection($bookings), 200);
+        
+        // OU si vous devez utiliser ApiService, assurez-vous qu'il gère correctement les collections
+        // return ApiService::response(['data' => BookingResource::collection($bookings)], 200);
     } catch (\Throwable $e) {
-        \Log::error('❌ [myBookings] Erreur', [
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
+        \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         return ApiService::response([
-            'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
-            'error'   => $e->getMessage(),
+            'message' => 'Erreur lors de la récupération des réservations de l\'utilisateur.',
+            'error' => $e->getMessage(),
         ], 500);
     }
 }
+
 
 
 
