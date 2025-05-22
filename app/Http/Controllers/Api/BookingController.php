@@ -194,50 +194,58 @@ public function __construct(private BookingService $bookingService) {}
         }
     }
 
-    /**
-     * @OA\Get(
-     *     path="/bookings/mine",
-     *     tags={"Bookings"},
-     *     summary="Liste des réservations de l'utilisateur connecté",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Liste récupérée avec succès"
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erreur serveur"
-     *     )
-     * )
-     */
+/**
+ * @OA\Get(
+ *     path="/bookings/mine",
+ *     tags={"Bookings"},
+ *     summary="Liste des réservations de l'utilisateur connecté",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Liste récupérée avec succès"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur serveur"
+ *     )
+ * )
+ */
 public function myBookings(): JsonResponse
 {
-    \Log::info('🔍 [myBookings] Auth ID Badr');
     try {
-        \Log::info('🔍 [myBookings] Auth ID :', ['user_id' => auth()->id()]);
+        $user = auth()->user();
 
-        $bookings = $this->bookingService->getUserBookings(auth()->id());
+        \Log::info('🟢 [myBookings] Utilisateur connecté', ['user_id' => $user->id]);
 
-        \Log::info('📦 [myBookings] Bookings récupérés :', ['count' => $bookings->count(), 'ids' => $bookings->pluck('id')]);
-        \Log::debug('🧪 [myBookings] Bookings bruts :', $bookings->toArray());
+        $bookings = Booking::with(['service', 'provider'])
+            ->where('user_id', $user->id)
+            ->orderByDesc('appointment_date')
+            ->get();
+
         foreach ($bookings as $booking) {
-            \Log::info('🔍 Booking type :', ['class' => get_class($booking), 'id' => $booking->id]);
+            \Log::info('📌 [myBookings] Booking trouvé', [
+                'id'           => $booking->id,
+                'service_id'   => $booking->service_id,
+                'provider_id'  => $booking->provider_id,
+                'date'         => $booking->appointment_date,
+                'time'         => $booking->time,
+                'created_at'   => $booking->created_at,
+            ]);
         }
-        return ApiService::response(
-            BookingResource::collection(collect($bookings)),
-            200
-        );
+
+        return ApiService::response(BookingResource::collection($bookings), 200);
     } catch (\Throwable $e) {
         \Log::error('❌ [myBookings] Erreur', [
             'message' => $e->getMessage(),
-            'trace'   => $e->getTraceAsString(),
+            'trace' => $e->getTraceAsString(),
         ]);
         return ApiService::response([
             'message' => 'Erreur lors de la récupération des réservations de l’utilisateur.',
-            'error' => $e->getMessage(),
+            'error'   => $e->getMessage(),
         ], 500);
     }
 }
+
 
 
 
