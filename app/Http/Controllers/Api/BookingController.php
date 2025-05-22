@@ -195,69 +195,44 @@ public function __construct(private BookingService $bookingService) {}
     }
 
 /**
- * @OA\Get(
- *     path="/bookings/mine",
- *     tags={"Bookings"},
- *     summary="Liste des réservations de l'utilisateur connecté",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="Liste récupérée avec succès"
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Erreur serveur"
- *     )
- * )
- */
-public function myBookings(): JsonResponse
-{
-    \Log::info('User ID', ['id' => $user->id]);
-\Log::info('Bookings count', ['count' => $bookings->count()]);
-\Log::info('First booking', $bookings->first() ? $bookings->first()->toArray() : ['none']);
+     * @OA\Get(
+     *      path="/bookings/mine",
+     *      operationId="myBookings",
+     *      tags={"Bookings"},
+     *      summary="Liste des réservations de l’utilisateur connecté",
+     *      security={{"sanctum":{}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Succès",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Opération réussie"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="current_page", type="integer"),
+     *                  @OA\Property(property="data", type="array",
+     *                      @OA\Items(ref="#/components/schemas/BookingResource")
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function myBookings(): JsonResponse
+    {
+        try {
+            $bookings = $this->bookingService->getUserBookings(Auth::id());
 
-    try {
-        $user = auth()->user();
-
-        $bookings = Booking::with(['service', 'provider'])
-            ->where('user_id', $user->id)
-            ->orderByDesc('appointment_date')
-            ->get();
-
-        // Créer un tableau de données à partir de la collection
-        $bookingsData = [];
-        foreach ($bookings as $booking) {
-            $bookingsData[] = [
-                'id' => $booking->id,
-                'service' => $booking->service ? [
-                    'id' => $booking->service->id,
-                    'name' => $booking->service->name,
-                    // autres propriétés du service
-                ] : null,
-                'provider' => $booking->provider ? [
-                    'id' => $booking->provider->id,
-                    'name' => $booking->provider->name,
-                    // autres propriétés du provider
-                ] : null,
-                'appointment_date' => $booking->appointment_date ? \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d') : null,
-                'time' => $booking->time,
-                'currency' => $booking->currency,
-                'status' => $booking->status,
-                'notes' => $booking->notes,
-                'created_at' => $booking->created_at ? $booking->created_at->format('Y-m-d H:i') : null,
-            ];
+            return ApiService::response(
+                ['message' => 'Opération réussie', 'data' => BookingResource::collection($bookings)],
+                200
+            );
+        } catch (Throwable $e) {
+            return ApiService::response(
+                ['message' => 'Une erreur est survenue', 'error' => config('app.debug') ? $e->getMessage() : null],
+                500
+            );
         }
-
-        // Renvoyer le tableau de données
-        return ApiService::response(['bookings' => $bookingsData], 200);
-    } catch (\Throwable $e) {
-        \Log::error('Erreur bookings/mine', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-        return ApiService::response([
-            'message' => 'Erreur lors de la récupération des réservations de l\'utilisateur.',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
 
 
 

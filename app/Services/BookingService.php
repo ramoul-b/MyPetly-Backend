@@ -52,20 +52,13 @@ class BookingService
         ]);
     }
 
-public function getUserBookings(int $userId)
-{
-    \Log::info('🔁 [BookingService] getUserBookings lancé', ['user_id' => $userId]);
-
-    $bookings = Booking::query()
-        ->with(['service', 'provider'])
-        ->where('user_id', $userId)
-        ->orderByDesc('appointment_date')
-        ->get();
-
-    \Log::info('✅ [BookingService] Bookings IDs :', $bookings->pluck('id')->toArray());
-
-    return $bookings;
-}
+ public function getUserBookings(int $userId)
+    {
+        return Booking::with(['service', 'provider'])
+            ->where('user_id', $userId)
+            ->orderByDesc('appointment_date')
+            ->paginate(15);          // pagination standard
+    }
 
 
 
