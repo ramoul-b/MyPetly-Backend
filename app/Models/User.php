@@ -26,6 +26,8 @@ class User extends Authenticatable
         'address',
         'status', 
         'email_verification_token', 
+        'roles',
+        'permissions',
     ];
 
     /**

@@ -194,7 +194,8 @@ class AuthController extends Controller
 
         // Vérifier les identifiants
         $user = User::where('email', $request->email)->first();
-
+        $user->load(['roles', 'permissions']);
+        
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ApiService::response([
                 'message' => __('messages.invalid_credentials'),
