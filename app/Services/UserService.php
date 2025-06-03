@@ -31,23 +31,24 @@ class UserService
     /**
      * Mettre à jour le profil utilisateur, y compris la photo.
      */
-    public function updateUser(User $user, array $data)
+    public function updateUser(int $id, array $data)
 {
+    $user = User::findOrFail($id);
+
+    // Photo
     if (isset($data['photo'])) {
-        // Supprimer l'ancienne photo si elle existe
         if ($user->photo) {
             Storage::disk('public')->delete($user->photo);
         }
-
-        // Sauvegarder la nouvelle photo
         $data['photo'] = $data['photo']->store('profiles', 'public');
     }
 
-    // Mise à jour des informations
     $user->update($data);
 
-    return $user;
+    // retourner avec rôles + permissions
+    return $user->load(['roles', 'permissions']);
 }
+
 
 
     /**
