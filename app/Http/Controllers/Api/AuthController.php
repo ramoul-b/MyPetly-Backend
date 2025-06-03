@@ -379,31 +379,35 @@ public function userProfile(Request $request)
 public function refreshToken(Request $request)
 {
     try {
-        // Vérifier qu'un utilisateur authentifié est présent
-        $user = $request->user();
+        $user = $request->user();           // déjà auth:sanctum
         if (!$user) {
             return ApiService::response([
                 'message' => __('messages.unauthenticated'),
             ], 401);
         }
 
-        // Générer un nouveau token
+        // 1. révoquer l’ancien token
+        $request->user()->currentAccessToken()->delete();
+
+        // 2. créer le nouveau
         $newToken = $user->createToken('mypetly')->plainTextToken;
+
+        // 3. charger rôles + permissions
+        $user->load(['roles', 'permissions']);
+        $flatPerms = $user->getAllPermissions()->pluck('name');
 
         return ApiService::response([
             'access_token' => $newToken,
-            'user' => new UserResource($user), // Retourner l'utilisateur formaté si nécessaire
+            'user'         => new UserResource($user),
+            'permissions'  => $flatPerms,
         ], 200);
 
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         return ApiService::response([
             'message' => __('messages.operation_failed'),
-            'error' => $e->getMessage(), // Facultatif en mode debug
         ], 500);
     }
 }
-
-
 /**
  * @OA\Post(
  *     path="/forgot-password",

@@ -82,5 +82,10 @@ class UserService
     
         return true;
     }
+
+    public function getAllUsers(int $perPage = 15)
+    {
+        return User::with(['roles', 'permissions'])->paginate($perPage);
+    }
     
 }
