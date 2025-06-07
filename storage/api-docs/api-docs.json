@@ -2809,19 +2809,63 @@
                 ]
             }
         },
-        "/bookings/mine": {
+        "/bookings/my": {
             "get": {
                 "tags": [
                     "Bookings"
                 ],
-                "summary": "Liste des réservations de l'utilisateur connecté",
-                "operationId": "4b9112ae6e9301579cd6c21f3581d0da",
+                "summary": "Réservations de l’utilisateur authentifié",
+                "description": "Retourne la liste des réservations appartenant à l’utilisateur connecté.",
+                "operationId": "ebfa4e044b2b6e2ec00aefec8130ecc7",
                 "responses": {
                     "200": {
-                        "description": "Liste récupérée avec succès"
+                        "description": "Liste paginée des réservations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 42
+                                            },
+                                            "service_id": {
+                                                "type": "integer",
+                                                "example": 7
+                                            },
+                                            "user_id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-07-01"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "confirmed"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-06-01T10:00:00Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-06-01T10:00:00Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     },
-                    "500": {
-                        "description": "Erreur serveur"
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -4539,6 +4583,84 @@
             }
         },
         "/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Détails d’un rôle",
+                "description": "Retourne le rôle demandé avec ses permissions",
+                "operationId": "5b38991d928cba24ad388107e8c4a93a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID du rôle",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rôle trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "permissions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "users.*"
+                                            }
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rôle non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Role not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Roles"

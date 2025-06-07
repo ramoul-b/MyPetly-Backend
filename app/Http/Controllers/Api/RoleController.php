@@ -30,6 +30,56 @@ class RoleController extends Controller
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
     }
+    
+    /**
+     * @OA\Get(
+     *     path="/roles/{id}",
+     *     tags={"Roles"},
+     *     summary="Détails d’un rôle",
+     *     description="Retourne le rôle demandé avec ses permissions",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID du rôle",
+     *          @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Rôle trouvé",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="id", type="integer", example=1),
+     *              @OA\Property(property="name", type="string", example="admin"),
+     *              @OA\Property(
+     *                  property="permissions",
+     *                  type="array",
+     *                  @OA\Items(type="string", example="users.*")
+     *              ),
+     *              @OA\Property(property="created_at", type="string", format="date-time"),
+     *              @OA\Property(property="updated_at", type="string", format="date-time")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Rôle non trouvé",
+     *          @OA\JsonContent(@OA\Property(property="message", type="string", example="Role not found."))
+     *     )
+     * )
+     */
+    public function show($id)
+    {
+        try {
+            $role = Role::with('permissions')->findOrFail($id);
+            return ApiService::response($role, 200);
+        } catch (\Exception $e) {
+            return ApiService::response([
+                'message' => __('messages.operation_failed'),
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     /**
      * @OA\Post(

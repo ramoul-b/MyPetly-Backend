@@ -196,27 +196,33 @@ public function __construct(private BookingService $bookingService) {}
         }
     }
 
-/**
+    /**
      * @OA\Get(
-     *      path="/bookings/mine",
-     *      operationId="myBookings",
-     *      tags={"Bookings"},
-     *      summary="Liste des réservations de l’utilisateur connecté",
-     *      security={{"sanctum":{}}},
-     *      @OA\Response(
-     *          response=200,
-     *          description="Succès",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Opération réussie"),
-     *              @OA\Property(property="data", type="object",
-     *                  @OA\Property(property="current_page", type="integer"),
-     *                  @OA\Property(property="data", type="array",
-     *                      @OA\Items(ref="#/components/schemas/BookingResource")
-     *                  )
-     *              )
-     *          )
-     *      ),
-     *      @OA\Response(response=500, description="Erreur serveur")
+     *     path="/bookings/my",
+     *     tags={"Bookings"},
+     *     summary="Réservations de l’utilisateur authentifié",
+     *     description="Retourne la liste des réservations appartenant à l’utilisateur connecté.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste paginée des réservations",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id",         type="integer", example=42),
+     *                 @OA\Property(property="service_id", type="integer", example=7),
+     *                 @OA\Property(property="user_id",    type="integer", example=1),
+     *                 @OA\Property(property="date",       type="string",  format="date",      example="2025-07-01"),
+     *                 @OA\Property(property="status",     type="string",  example="confirmed"),
+     *                 @OA\Property(property="created_at", type="string",  format="date-time", example="2025-06-01T10:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string",  format="date-time", example="2025-06-01T10:00:00Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
      * )
      */
     public function myBookings(): JsonResponse
