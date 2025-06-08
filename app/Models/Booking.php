@@ -13,13 +13,14 @@ class Booking extends Model
 
     protected $fillable = [
         'service_id',
-        'provider_id',      // nouveau
+        'provider_id',      
         'user_id',
+        'animal_id',
         'appointment_date',
-        'time',             // nouveau
-        'payment_intent',   // nouveau
-        'currency',         // nouveau
-        'status', // pending, confirmed, cancelled
+        'time',             
+        'payment_intent',   
+        'currency',         
+        'status', 
         'notes',
     ];
 protected $casts = [
@@ -42,6 +43,12 @@ protected $casts = [
 {
     return $this->belongsTo(Provider::class);
 }
+
+public function animal()
+{
+    return $this->belongsTo(Animal::class);
+}
+
 
 }
 

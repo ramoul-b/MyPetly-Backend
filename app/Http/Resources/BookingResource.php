@@ -18,7 +18,10 @@ class BookingResource extends JsonResource
             'id' => $this->id,
             'service' => new ServiceResource($this->whenLoaded('service')),
             'user'    => new UserResource($this->whenLoaded('user')),
-            'animal'  => new AnimalResource($this->whenLoaded('animal')),
+            'animal' => [
+                'id' => $this->animal->id ?? null,
+                'name' => $this->animal->name ?? null,
+            ],
             'provider'=> new ProviderResource($this->whenLoaded('provider')),
             'appointment_date' => $this->appointment_date,
             'time'             => $this->time,
