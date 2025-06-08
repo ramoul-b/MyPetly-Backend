@@ -34,7 +34,7 @@ public function __construct(private BookingService $bookingService) {}
     public function index(): JsonResponse
     {
         try {
-            $bookings = Booking::with(['service', 'user'])->get();
+            $bookings = Booking::with(['service', 'user', 'animal', 'provider'])->get();
             return ApiService::response(BookingResource::collection($bookings), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération des réservations.', 'error' => $e->getMessage()], 500);
