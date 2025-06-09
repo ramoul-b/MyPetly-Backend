@@ -36,6 +36,7 @@ class ProviderController extends Controller
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('view', new Provider());
             $providers = $this->providerService->getAll();
             return ApiService::response(ProviderResource::collection($providers), 200);
         } catch (\Exception $e) {
@@ -69,6 +70,7 @@ class ProviderController extends Controller
     public function store(StoreProviderRequest $request): JsonResponse
     {
         try {
+            $this->authorize('create', new Provider());
             $provider = $this->providerService->create($request->validated());
             return ApiService::response(new ProviderResource($provider), 201);
         } catch (\Exception $e) {
@@ -92,6 +94,7 @@ class ProviderController extends Controller
     {
         try {
             $provider = Provider::with('services')->findOrFail($id);
+            $this->authorize('view', $provider);
             return ApiService::response(new ProviderResource($provider));
         } catch (\Exception $e) {
             return ApiService::error('Provider introuvable', 404);
@@ -128,6 +131,7 @@ class ProviderController extends Controller
     {
         try {
             $provider = $this->providerService->find($id);
+            $this->authorize('update', $provider);
             $updatedProvider = $this->providerService->update($provider, $request->validated());
             return ApiService::response(new ProviderResource($updatedProvider), 200);
         } catch (\Exception $e) {
@@ -150,6 +154,8 @@ class ProviderController extends Controller
     public function destroy($id): JsonResponse
     {
         try {
+            $provider = $this->providerService->find($id);
+            $this->authorize('delete', $provider);
             $this->providerService->delete($id);
             return ApiService::response(['message' => 'Prestataire supprimé avec succès.'], 200);
         } catch (\Exception $e) {

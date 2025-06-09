@@ -40,6 +40,7 @@ class CategoryController extends Controller
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('view', new Category());
             $categories = Category::all();
             return ApiService::response(CategoryResource::collection($categories), 200);
         } catch (\Exception $e) {
@@ -73,6 +74,7 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request): JsonResponse
     {
         try {
+            $this->authorize('create', new Category());
             $category = Category::create($request->validated());
             return ApiService::response(new CategoryResource($category), 201);
         } catch (\Exception $e) {
@@ -111,6 +113,7 @@ class CategoryController extends Controller
     public function show(Category $category): JsonResponse
     {
         try {
+            $this->authorize('view', $category);
             return ApiService::response(new CategoryResource($category), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération de la catégorie.', 'error' => $e->getMessage()], 500);
@@ -139,6 +142,7 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
         try {
+            $this->authorize('update', $category);
             $category->update($request->validated());
             return ApiService::response(new CategoryResource($category), 200);
         } catch (\Exception $e) {
@@ -162,6 +166,7 @@ class CategoryController extends Controller
     public function destroy(Category $category): JsonResponse
     {
         try {
+            $this->authorize('delete', $category);
             $category->delete();
             return ApiService::response(['message' => 'Catégorie supprimée avec succès.'], 200);
         } catch (\Exception $e) {
