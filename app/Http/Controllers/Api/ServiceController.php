@@ -70,6 +70,7 @@ class ServiceController extends Controller
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('view', new Service());
             $services = $this->serviceService->getAll();
             return ApiService::response(ServiceResource::collection($services), 200);
         } catch (\Exception $e) {
@@ -122,6 +123,7 @@ class ServiceController extends Controller
     public function store(StoreServiceRequest $request)
     {
         try {
+            $this->authorize('create', new Service());
             $service = $this->serviceService->create($request->validated());
             return ApiService::response(new ServiceResource($service), 201);
         } catch (\Exception $e) {
@@ -161,6 +163,7 @@ class ServiceController extends Controller
     {
         try {
             $service = $this->serviceService->find($id);
+            $this->authorize('view', $service);
             return ApiService::response(new ServiceResource($service), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Une erreur est survenue.', 'error' => $e->getMessage()], 500);
@@ -200,6 +203,7 @@ class ServiceController extends Controller
     {
         try {
             $service = $this->serviceService->find($id);
+            $this->authorize('update', $service);
             $updatedService = $this->serviceService->update($service, $request->validated());
             return ApiService::response(new ServiceResource($updatedService), 200);
         } catch (\Exception $e) {
@@ -224,6 +228,7 @@ class ServiceController extends Controller
     {
         try {
             $service = $this->serviceService->find($id);
+            $this->authorize('delete', $service);
             $this->serviceService->delete($service);
             return ApiService::response(['message' => 'Service supprimé avec succès'], 200);
         } catch (\Exception $e) {
