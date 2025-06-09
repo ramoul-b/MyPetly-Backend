@@ -14,6 +14,7 @@ class CollarPolicy
         }
 
         if (optional($collar->animal)->user_id === $user->id) {
+
             return true;
         }
 
@@ -45,6 +46,7 @@ class CollarPolicy
         }
 
         if (optional($collar->animal)->user_id === $user->id) {
+
             return true;
         }
 

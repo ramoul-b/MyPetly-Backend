@@ -14,6 +14,7 @@ class AnimalPolicy
         }
 
         if ($animal->user_id === $user->id) {
+
             return true;
         }
 
@@ -32,6 +33,7 @@ class AnimalPolicy
         }
 
         if ($animal->user_id === $user->id) {
+
             return true;
         }
 
@@ -45,6 +47,7 @@ class AnimalPolicy
         }
 
         if ($animal->user_id === $user->id) {
+
             return true;
         }
 

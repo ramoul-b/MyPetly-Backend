@@ -60,6 +60,7 @@ class AnimalController extends Controller
         try {
             $this->authorize('view', new \App\Models\Animal());
             if (auth()->user()->can('view-animals')) {
+
                 $animals = Animal::all();
             } else {
                 $animals = auth()->user()->animals ?? collect();

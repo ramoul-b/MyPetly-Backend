@@ -14,6 +14,7 @@ class BookingPolicy
         }
 
         if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 
@@ -23,6 +24,7 @@ class BookingPolicy
     public function create(User $user): bool
     {
         return $user->can('manage-orders');
+
     }
 
     public function update(User $user, Booking $booking): bool
@@ -32,6 +34,7 @@ class BookingPolicy
         }
 
         if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 
@@ -45,6 +48,7 @@ class BookingPolicy
         }
 
         if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 

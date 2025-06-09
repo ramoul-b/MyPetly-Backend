@@ -14,6 +14,7 @@ class ServicePolicy
         }
 
         if ($service->provider_id === $user->id) {
+
             return true;
         }
 
@@ -23,6 +24,7 @@ class ServicePolicy
     public function create(User $user): bool
     {
         return $user->can('create-services');
+
     }
 
     public function update(User $user, Service $service): bool
@@ -32,6 +34,7 @@ class ServicePolicy
         }
 
         if ($service->provider_id === $user->id) {
+
             return true;
         }
 
@@ -45,6 +48,7 @@ class ServicePolicy
         }
 
         if ($service->provider_id === $user->id) {
+
             return true;
         }
 

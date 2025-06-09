@@ -6,7 +6,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class RefreshTokenTest extends TestCase
 {
     
     public function test_refresh_token_works()
