@@ -9,21 +9,23 @@ class CategoryPolicy
 {
     public function view(User $user, Category $category): bool
     {
-        return $user->can('view_any_category');
+        return $user->can('view-services');
+
     }
 
     public function create(User $user): bool
     {
-        return $user->can('create_category');
+        return $user->can('create-services');
     }
 
     public function update(User $user, Category $category): bool
     {
-        return $user->can('edit_any_category');
+        return $user->can('edit-services');
+
     }
 
     public function delete(User $user, Category $category): bool
     {
-        return $user->can('delete_any_category');
+        return $user->can('delete-services');
     }
 }

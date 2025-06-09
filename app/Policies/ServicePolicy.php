@@ -9,11 +9,12 @@ class ServicePolicy
 {
     public function view(User $user, Service $service): bool
     {
-        if ($user->can('view_any_service')) {
+        if ($user->can('view-services')) {
             return true;
         }
 
-        if ($user->can('view_own_service') && $service->provider_id === $user->id) {
+        if ($service->provider_id === $user->id) {
+
             return true;
         }
 
@@ -22,16 +23,18 @@ class ServicePolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create_service');
+        return $user->can('create-services');
+
     }
 
     public function update(User $user, Service $service): bool
     {
-        if ($user->can('edit_any_service')) {
+        if ($user->can('edit-services')) {
             return true;
         }
 
-        if ($user->can('edit_own_service') && $service->provider_id === $user->id) {
+        if ($service->provider_id === $user->id) {
+
             return true;
         }
 
@@ -40,11 +43,12 @@ class ServicePolicy
 
     public function delete(User $user, Service $service): bool
     {
-        if ($user->can('delete_any_service')) {
+        if ($user->can('delete-services')) {
             return true;
         }
 
-        if ($user->can('delete_own_service') && $service->provider_id === $user->id) {
+        if ($service->provider_id === $user->id) {
+
             return true;
         }
 

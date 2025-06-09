@@ -9,11 +9,11 @@ class ProviderPolicy
 {
     public function view(User $user, Provider $provider): bool
     {
-        if ($user->can('view_any_provider')) {
+        if ($user->can('view-providers')) {
             return true;
         }
 
-        if ($user->can('view_own_provider') && $provider->id === $user->id) {
+        if ($provider->id === $user->id) {
             return true;
         }
 
@@ -22,16 +22,16 @@ class ProviderPolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create_provider');
+        return $user->can('approve-providers');
     }
 
     public function update(User $user, Provider $provider): bool
     {
-        if ($user->can('edit_any_provider')) {
+        if ($user->can('approve-providers')) {
             return true;
         }
 
-        if ($user->can('edit_own_provider') && $provider->id === $user->id) {
+        if ($provider->id === $user->id) {
             return true;
         }
 
@@ -40,11 +40,11 @@ class ProviderPolicy
 
     public function delete(User $user, Provider $provider): bool
     {
-        if ($user->can('delete_any_provider')) {
+        if ($user->can('approve-providers')) {
             return true;
         }
 
-        if ($user->can('delete_own_provider') && $provider->id === $user->id) {
+        if ($provider->id === $user->id) {
             return true;
         }
 

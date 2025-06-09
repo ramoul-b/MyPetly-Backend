@@ -9,11 +9,12 @@ class BookingPolicy
 {
     public function view(User $user, Booking $booking): bool
     {
-        if ($user->can('view_any_booking')) {
+        if ($user->can('view-orders')) {
             return true;
         }
 
-        if ($user->can('view_own_booking') && ($booking->user_id === $user->id || $booking->provider_id === $user->id)) {
+        if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 
@@ -22,16 +23,18 @@ class BookingPolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create_booking');
+        return $user->can('manage-orders');
+
     }
 
     public function update(User $user, Booking $booking): bool
     {
-        if ($user->can('edit_any_booking')) {
+        if ($user->can('manage-orders')) {
             return true;
         }
 
-        if ($user->can('edit_own_booking') && ($booking->user_id === $user->id || $booking->provider_id === $user->id)) {
+        if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 
@@ -40,11 +43,12 @@ class BookingPolicy
 
     public function delete(User $user, Booking $booking): bool
     {
-        if ($user->can('delete_any_booking')) {
+        if ($user->can('manage-orders')) {
             return true;
         }
 
-        if ($user->can('delete_own_booking') && ($booking->user_id === $user->id || $booking->provider_id === $user->id)) {
+        if ($booking->user_id === $user->id || $booking->provider_id === $user->id) {
+
             return true;
         }
 
