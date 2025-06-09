@@ -48,6 +48,7 @@ class CollarController extends Controller
     public function index()
     {
         try {
+            $this->authorize('view', new Collar());
             $collars = Collar::all();
             return ApiService::response(CollarResource::collection($collars), 200);
         } catch (\Exception $e) {
@@ -103,6 +104,7 @@ class CollarController extends Controller
     public function store(StoreCollarRequest $request)
     {
         try {
+            $this->authorize('create', new Collar());
             $collar = Collar::create($request->validated());
             return ApiService::response(new CollarResource($collar), 201);
         } catch (\Exception $e) {
@@ -152,6 +154,7 @@ class CollarController extends Controller
             if (!$collar) {
                 return ApiService::response(['message' => __('messages.collar_not_found')], 404);
             }
+            $this->authorize('view', $collar);
             return ApiService::response(new CollarResource($collar), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
@@ -207,6 +210,7 @@ class CollarController extends Controller
                 return ApiService::response(['message' => __('messages.collar_not_found')], 404);
             }
 
+            $this->authorize('update', $collar);
             $collar->update($request->validated());
             return ApiService::response(new CollarResource($collar), 200);
         } catch (\Exception $e) {
@@ -251,6 +255,7 @@ class CollarController extends Controller
                 return ApiService::response(['message' => __('messages.collar_not_found')], 404);
             }
 
+            $this->authorize('delete', $collar);
             $collar->delete();
             return ApiService::response(['message' => __('messages.collar_deleted')], 200);
         } catch (\Exception $e) {
