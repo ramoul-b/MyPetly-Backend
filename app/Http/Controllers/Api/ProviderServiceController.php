@@ -85,10 +85,10 @@ class ProviderServiceController extends Controller
      *     @OA\Response(response=404, description="Non trouvé")
      * )
      */
-    public function show(ProviderService $providerService): JsonResponse
+    public function show(int $id): JsonResponse
     {
         try {
-            $providerService->load(['provider', 'service']);
+            $providerService = $this->providerServiceService->find($id);
             return ApiService::response(new ProviderServiceResource($providerService));
         } catch (\Throwable $e) {
             Log::error('ProviderService show error', ['error' => $e]);
@@ -116,9 +116,10 @@ class ProviderServiceController extends Controller
      *     @OA\Response(response=404, description="Non trouvé")
      * )
      */
-    public function update(UpdateProviderServiceRequest $request, ProviderService $providerService): JsonResponse
+    public function update(UpdateProviderServiceRequest $request, int $id): JsonResponse
     {
         try {
+            $providerService = $this->providerServiceService->find($id);
             $item = $this->providerServiceService->update($providerService, $request->validated());
             return ApiService::response(new ProviderServiceResource($item));
         } catch (\Throwable $e) {
@@ -138,9 +139,10 @@ class ProviderServiceController extends Controller
      *     @OA\Response(response=404, description="Non trouvé")
      * )
      */
-    public function destroy(ProviderService $providerService): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
+            $providerService = $this->providerServiceService->find($id);
             $this->providerServiceService->delete($providerService);
             return ApiService::response(['message' => 'Supprimé avec succès']);
         } catch (\Throwable $e) {

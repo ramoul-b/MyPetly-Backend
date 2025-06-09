@@ -170,9 +170,9 @@ Route::prefix('v1')->group(function () {
         Route::prefix('provider-services')->group(function () {
             Route::get('/', [ProviderServiceController::class, 'index']);
             Route::post('/', [ProviderServiceController::class, 'store']);
-            Route::get('/{providerService}', [ProviderServiceController::class, 'show']);
-            Route::put('/{providerService}', [ProviderServiceController::class, 'update']);
-            Route::delete('/{providerService}', [ProviderServiceController::class, 'destroy']);
+            Route::get('/{id}', [ProviderServiceController::class, 'show']);
+            Route::put('/{id}', [ProviderServiceController::class, 'update']);
+            Route::delete('/{id}', [ProviderServiceController::class, 'destroy']);
             Route::get('/by-provider/{provider_id}', [ProviderServiceController::class, 'getByProvider']);
             Route::get('/by-service/{service_id}', [ProviderServiceController::class, 'getByService']);
         });
