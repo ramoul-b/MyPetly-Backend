@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAnimalRequest;
 use App\Http\Requests\UpdateAnimalRequest;
 use App\Http\Resources\AnimalResource;
 use App\Services\AnimalService;
+use App\Models\Animal;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UploadAnimalImageRequest;   
@@ -57,8 +58,8 @@ class AnimalController extends Controller
     public function index()
     {
         try {
-            // Vérification du rôle
-            if (auth()->user()->hasRole('admin')) {
+            $this->authorize('view', new \App\Models\Animal());
+            if (auth()->user()->can('view-animals')) {
                 $animals = Animal::all();
             } else {
                 $animals = auth()->user()->animals ?? collect();
@@ -117,10 +118,11 @@ class AnimalController extends Controller
      *         )
      *     )
      * )
-     */
+    */
     public function store(StoreAnimalRequest $request)
 {
     try {
+        $this->authorize('create', new \App\Models\Animal());
         $animal = $this->animalService->createAnimal($request->validated());
         return ApiService::response(new AnimalResource($animal), 201);
     } catch (\Exception $e) {
@@ -172,6 +174,7 @@ class AnimalController extends Controller
         if (!$animal) {
             return ApiService::response(['message' => __('messages.animal_not_found')], 404);
         }
+        $this->authorize('view', $animal);
         return ApiService::response(new AnimalResource($animal), 200);
     } catch (\Exception $e) {
         return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
@@ -225,7 +228,7 @@ class AnimalController extends Controller
      *         )
      *     )
      * )
-     */
+    */
     public function update(UpdateAnimalRequest $request, $id)
 {
     try {
@@ -233,6 +236,7 @@ class AnimalController extends Controller
         if (!$animal) {
             return ApiService::response(['message' => __('messages.animal_not_found')], 404);
         }
+        $this->authorize('update', $animal);
         return ApiService::response(new AnimalResource($animal), 200);
     } catch (\Exception $e) {
         return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
@@ -344,10 +348,15 @@ public function uploadImage(UploadAnimalImageRequest $request, $id)
      *         )
      *     )
      * )
-     */
+    */
     public function destroy($id)
 {
     try {
+        $animal = $this->animalService->getAnimalById($id);
+        if (!$animal) {
+            return ApiService::response(['message' => __('messages.animal_not_found')], 404);
+        }
+        $this->authorize('delete', $animal);
         $deleted = $this->animalService->deleteAnimal($id);
         if (!$deleted) {
             return ApiService::response(['message' => __('messages.animal_not_found')], 404);

@@ -34,6 +34,7 @@ public function __construct(private BookingService $bookingService) {}
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('view', new Booking());
             $bookings = Booking::with(['service', 'user', 'animal', 'provider'])->get();
             return ApiService::response(BookingResource::collection($bookings), 200);
         } catch (\Exception $e) {
@@ -103,6 +104,7 @@ public function __construct(private BookingService $bookingService) {}
     public function store(StoreBookingRequest $request): JsonResponse
     {
         try {
+            $this->authorize('create', new Booking());
             // Stripe : vérification paiement
             Stripe::setApiKey(config('services.stripe.secret'));
             $intent = PaymentIntent::retrieve($request->payment_intent);
@@ -140,6 +142,7 @@ public function __construct(private BookingService $bookingService) {}
     public function show(Booking $booking): JsonResponse
     {
         try {
+            $this->authorize('view', $booking);
             return ApiService::response(new BookingResource($booking->load(['service', 'user'])), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération de la réservation.', 'error' => $e->getMessage()], 500);
@@ -167,6 +170,7 @@ public function __construct(private BookingService $bookingService) {}
     public function update(UpdateBookingRequest $request, Booking $booking): JsonResponse
     {
         try {
+            $this->authorize('update', $booking);
             $booking->update($request->validated());
             return ApiService::response(new BookingResource($booking), 200);
         } catch (\Exception $e) {
@@ -189,6 +193,7 @@ public function __construct(private BookingService $bookingService) {}
     public function destroy(Booking $booking): JsonResponse
     {
         try {
+            $this->authorize('delete', $booking);
             $booking->delete();
             return ApiService::response(['message' => 'Réservation supprimée avec succès.'], 200);
         } catch (\Exception $e) {
