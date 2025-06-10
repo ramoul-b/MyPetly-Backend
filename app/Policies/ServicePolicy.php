@@ -2,52 +2,39 @@
 
 namespace App\Policies;
 
-use App\Models\Service;
 use App\Models\User;
+use App\Models\Service;
 
 class ServicePolicy
 {
+    // Voir un service (tout le monde peut voir)
     public function view(User $user, Service $service): bool
     {
-        if ($user->can('view_any_service')) {
-            return true;
-        }
-
-        if ($user->can('view_own_service') && $service->provider_id === $user->id) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
+    // Créer un service (réservé à admin/super_admin)
     public function create(User $user): bool
     {
         return $user->can('create_service');
     }
 
+    // Modifier un service (réservé à admin/super_admin)
     public function update(User $user, Service $service): bool
     {
-        if ($user->can('edit_any_service')) {
-            return true;
-        }
-
-        if ($user->can('edit_own_service') && $service->provider_id === $user->id) {
-            return true;
-        }
-
-        return false;
+        return $user->can('edit_any_service');
     }
 
+    // Supprimer un service (réservé à admin/super_admin)
     public function delete(User $user, Service $service): bool
     {
-        if ($user->can('delete_any_service')) {
-            return true;
-        }
+        return $user->can('delete_any_service');
+    }
 
-        if ($user->can('delete_own_service') && $service->provider_id === $user->id) {
-            return true;
-        }
-
-        return false;
+    // Attribuer un service à un provider (action spéciale, ex: via pivot)
+    public function attachToProvider(User $user, Service $service): bool
+    {
+        // Le provider peut s’attribuer un service existant (provider_service)
+        return $user->can('attach_service_to_provider');
     }
 }
