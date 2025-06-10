@@ -9,11 +9,12 @@ class AnimalPolicy
 {
     public function view(User $user, Animal $animal): bool
     {
-        if ($user->can('view_any_animal')) {
+        if ($user->can('view-animals')) {
             return true;
         }
 
-        if ($user->can('view_own_animal') && $animal->user_id === $user->id) {
+        if ($animal->user_id === $user->id) {
+
             return true;
         }
 
@@ -22,16 +23,17 @@ class AnimalPolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create_animal');
+        return $user->can('create-animals');
     }
 
     public function update(User $user, Animal $animal): bool
     {
-        if ($user->can('edit_any_animal')) {
+        if ($user->can('edit-animals')) {
             return true;
         }
 
-        if ($user->can('edit_own_animal') && $animal->user_id === $user->id) {
+        if ($animal->user_id === $user->id) {
+
             return true;
         }
 
@@ -40,11 +42,12 @@ class AnimalPolicy
 
     public function delete(User $user, Animal $animal): bool
     {
-        if ($user->can('delete_any_animal')) {
+        if ($user->can('delete-animals')) {
             return true;
         }
 
-        if ($user->can('delete_own_animal') && $animal->user_id === $user->id) {
+        if ($animal->user_id === $user->id) {
+
             return true;
         }
 

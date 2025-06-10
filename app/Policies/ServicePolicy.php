@@ -16,7 +16,8 @@ class ServicePolicy
     // Créer un service (réservé à admin/super_admin)
     public function create(User $user): bool
     {
-        return $user->can('create_service');
+        return $user->can('create-services');
+
     }
 
     // Modifier un service (réservé à admin/super_admin)
