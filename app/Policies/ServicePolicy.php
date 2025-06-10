@@ -13,11 +13,6 @@ class ServicePolicy
             return true;
         }
 
-        if ($service->provider_id === $user->id) {
-
-            return true;
-        }
-
         return false;
     }
 
@@ -33,22 +28,12 @@ class ServicePolicy
             return true;
         }
 
-        if ($service->provider_id === $user->id) {
-
-            return true;
-        }
-
         return false;
     }
 
     public function delete(User $user, Service $service): bool
     {
         if ($user->can('delete-services')) {
-            return true;
-        }
-
-        if ($service->provider_id === $user->id) {
-
             return true;
         }
 
