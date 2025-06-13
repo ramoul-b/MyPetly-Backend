@@ -13,6 +13,7 @@ use App\Models\Review;
 use App\Models\ProviderService;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use App\Policies\AnimalPolicy;
 use App\Policies\ServicePolicy;
@@ -49,6 +50,6 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }
