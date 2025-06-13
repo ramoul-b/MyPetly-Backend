@@ -8,72 +8,121 @@ use Spatie\Permission\Models\Permission;
 
 class RolePermissionSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        // Nettoyage
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-
-        // Liste des permissions
-        $permissions = [
-            // Animaux
-            'view-animals', 'create-animals', 'edit-animals', 'delete-animals',
-            'attach-collar', 'mark-as-lost', 'mark-as-found',
-
-            // Colliers
-            'view-collars', 'create-collars', 'edit-collars', 'delete-collars', 'scan-collar',
-
-            // Utilisateurs
-            'view-users', 'create-users', 'edit-users', 'delete-users', 'assign-role',
-
-            // Rôles & permissions
-            'view-roles', 'create-roles', 'edit-roles', 'delete-roles',
-            'manage-roles', 'view-permissions', 'assign-permissions',
-
-            // Services & prestataires
-            'view-services', 'create-services', 'edit-services', 'delete-services',
-            'view-providers', 'approve-providers',
-
-            // Produits & commandes
-            'view-products', 'create-products', 'edit-products', 'delete-products',
-            'view-orders', 'manage-orders',
-
-            // Avis
-            'view-reviews', 'moderate-reviews',
+        // 1. Création des rôles
+        $roles = [
+            'super_admin',
+            'admin',
+            'provider',
+            'provider_manager',
+            'provider_collaborator',
+            'store',
+            'store_manager',
+            'store_collaborator',
+            'user',
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'sanctum']);
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role, 'guard_name' => 'sanctum']);
         }
 
-        // Création des rôles
-        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'sanctum']);
-        $user = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'sanctum']);
-        $provider = Role::firstOrCreate(['name' => 'provider', 'guard_name' => 'sanctum']);
-        $manager = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'sanctum']);
+        // 2. Définition des modules
+        $modules = [
+            'user', 'role', 'permission', 'animal', 'provider', 'service', 'provider_service', 'booking',
+            'category', 'collar', 'review', 'payment'
+        ];
 
-        // Attribution des permissions par rôle
+        // 3. Permissions CRUD standards par module
+        $actions = [
+            'view_any', 'view_own', 'create', 'edit_any', 'edit_own', 'delete_any', 'delete_own'
+        ];
 
-        // 🔐 Admin = tout
-        $admin->syncPermissions(Permission::all());
+        foreach ($modules as $module) {
+            foreach ($actions as $action) {
+                Permission::firstOrCreate([
+                    'name' => "{$action}_{$module}",
+                    'guard_name' => 'sanctum'
+                ]);
+            }
+        }
 
-        // 👤 User
-        $user->syncPermissions([
-            'view-animals', 'create-animals', 'edit-animals', 'delete-animals',
-            'attach-collar', 'mark-as-lost', 'mark-as-found',
-            'view-products', 'view-orders', 'view-reviews',
-        ]);
+        // 4. Permissions spécifiques supplémentaires
+        $specialPermissions = [
+            'attach_service_to_provider',
+            'manage_payments',
+            'assign_role',
+            'manage_provider_services'
+        ];
 
-        // 🧑‍🔧 Provider
-        $provider->syncPermissions([
-            'view-services', 'create-services', 'edit-services', 'delete-services',
-            'view-animals', 'view-orders', 'view-reviews',
-        ]);
+        foreach ($specialPermissions as $perm) {
+            Permission::firstOrCreate([
+                'name' => $perm,
+                'guard_name' => 'sanctum'
+            ]);
+        }
 
-        // 📊 Manager
-        $manager->syncPermissions([
-            'view-animals', 'edit-animals', 'view-users', 'view-orders',
-            'view-services', 'approve-providers',
-            'view-reviews', 'moderate-reviews'
-        ]);
+        // 5. Attribution des permissions aux rôles
+
+        // Permissions par module pour chaque rôle
+        $rolePermissions = [
+            'super_admin' => Permission::pluck('name')->toArray(), // all permissions
+
+            'admin' => array_merge(
+                self::permissionsByAction(['view_any', 'create', 'edit_any', 'delete_any'], $modules),
+                self::permissionsByAction(['assign_role', 'manage_payments', 'manage_provider_services'], []),
+            ),
+
+            'provider' => array_merge(
+                self::permissionsByAction(['view_own', 'edit_own'], ['provider']),
+                self::permissionsByAction(['view_any'], ['service', 'animal', 'category', 'collar', 'review']),
+                self::permissionsByAction(['attach_service_to_provider', 'manage_provider_services', 'manage_payments'], []),
+                self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['provider_service']),
+                self::permissionsByAction(['view_own', 'edit_own'], ['booking']),
+                self::permissionsByAction(['view_own'], ['review'])
+            ),
+
+            'user' => array_merge(
+                self::permissionsByAction(['view_own', 'edit_own'], ['user']),
+                self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['animal']),
+                self::permissionsByAction(['view_any'], ['service', 'category', 'review', 'collar']),
+                self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['booking', 'review']),
+                self::permissionsByAction(['manage_payments'], [])
+            ),
+
+            // Pour les rôles managers/collaborateurs, à compléter selon besoin business :
+            'provider_manager' => [], // à compléter
+            'provider_collaborator' => [], // à compléter
+            'store' => [], // à compléter (pour phase 2 marketplace)
+            'store_manager' => [],
+            'store_collaborator' => [],
+        ];
+
+        // Attribution des permissions
+        foreach ($rolePermissions as $roleName => $perms) {
+            $role = Role::where('name', $roleName)->first();
+            $role->syncPermissions($perms);
+        }
+    }
+
+    /**
+     * Génère les permissions par action et module.
+     * @param array $actions
+     * @param array $modules
+     * @return array
+     */
+    private static function permissionsByAction(array $actions, array $modules)
+    {
+        $perms = [];
+        foreach ($actions as $action) {
+            if ($modules) {
+                foreach ($modules as $module) {
+                    $perms[] = "{$action}_{$module}";
+                }
+            } else {
+                $perms[] = $action;
+            }
+        }
+        return $perms;
     }
 }
