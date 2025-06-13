@@ -2,6 +2,10 @@
 
 return [
     'authenticated' => 'Vous êtes authentifié.',
+    'success' => 'Requête traitée avec succès.',
+    'error' => 'Une erreur s\'est produite.',
+    'server_error' => 'Erreur serveur. Veuillez réessayer plus tard.',
+    'resource_not_found' => 'Ressource introuvable.',
     'operation_failed' => 'Une erreur s\'est produite lors du traitement de votre demande.',
     'invalid_credentials' => 'Identifiants invalides.',
     'logged_out' => 'Déconnexion réussie.',
@@ -32,7 +36,6 @@ return [
     'animal_marked_found' => 'Animal marqué comme retrouvé.',
     'collar_attached' => 'Collier attaché avec succès.',
     'scan_success' => 'Scan réussi.',
-    'operation_failed' => 'Une erreur est survenue lors de l\'opération.',
 
 
     'sex_required' => 'Le sexe de l\'animal est requis.',
@@ -47,6 +50,5 @@ return [
     'collar_not_found' => 'Collier introuvable.',
     'collar_deleted' => 'Collier supprimé avec succès.',
     'collar_assigned' => 'Collier associé à l\'animal avec succès.',
-    'operation_failed' => 'Une erreur est survenue lors du traitement de votre demande.',
     
 ];
