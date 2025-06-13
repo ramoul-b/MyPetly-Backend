@@ -11,10 +11,10 @@ class UserSeeder extends Seeder
     {
         // Compte Super Admin
         $admin = User::firstOrCreate([
-            'email' => 'admin@mypetly.com',
+            'email' => 'badr.ramoul@gmail.com',
         ], [
             'name' => 'Super Admin',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('111111'),
         ]);
 
         $admin->assignRole('super_admin');
