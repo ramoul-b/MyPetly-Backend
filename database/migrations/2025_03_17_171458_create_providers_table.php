@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->after('id')->constrained()->onDelete('cascade');
             $table->json('name'); // Multilingue
             $table->string('email')->unique();
             $table->string('phone')->nullable();
@@ -28,6 +29,11 @@ return new class extends Migration
 
     public function down()
     {
+        Schema::table('providers', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
+
         Schema::dropIfExists('providers');
     }
 };

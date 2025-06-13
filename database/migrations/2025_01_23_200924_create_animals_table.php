@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('animals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('sex', ['male', 'female'])->nullable()->after('name');
+            $table->string('color')->nullable()->after('sex');
+            $table->decimal('weight', 5, 2)->nullable()->after('color');
+            $table->decimal('height', 5, 2)->nullable()->after('weight');
+            $table->string('identification_number')->nullable()->unique()->after('height');
             $table->string('species')->nullable();
             $table->string('breed')->nullable();
             $table->date('birthdate')->nullable();
@@ -30,6 +35,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('animals', function (Blueprint $table) {
+            $table->dropUnique(['identification_number']);
+            $table->dropColumn(['sex', 'color', 'weight', 'height', 'identification_number']);
+        });
+
         Schema::dropIfExists('animals');
     }
 };
