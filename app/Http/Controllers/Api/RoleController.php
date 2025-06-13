@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use App\Services\ApiService;
 
 class RoleController extends Controller
@@ -27,6 +28,8 @@ class RoleController extends Controller
             $this->authorize('viewAny', Role::class);
             $roles = Role::all();
             return ApiService::response($roles, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -74,6 +77,8 @@ class RoleController extends Controller
             $role = Role::with('permissions')->findOrFail($id);
             $this->authorize('view', $role);
             return ApiService::response($role, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response([
                 'message' => __('messages.operation_failed'),
@@ -102,6 +107,8 @@ class RoleController extends Controller
             $this->authorize('create', Role::class);
             $role = Role::create(['name' => $request->name]);
             return ApiService::response($role, 201);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -128,6 +135,8 @@ class RoleController extends Controller
             $this->authorize('update', $role);
             $role->update(['name' => $request->name]);
             return ApiService::response($role, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -151,6 +160,8 @@ class RoleController extends Controller
             $this->authorize('delete', $role);
             $role->delete();
             return ApiService::response(['message' => 'Role deleted'], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -183,6 +194,8 @@ class RoleController extends Controller
             $role->syncPermissions($request->permissions);
 
             return ApiService::response(['message' => 'Permissions updated'], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -205,6 +218,8 @@ class RoleController extends Controller
             $role = Role::findById($id);
             $this->authorize('view', $role);
             return ApiService::response($role->permissions, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
