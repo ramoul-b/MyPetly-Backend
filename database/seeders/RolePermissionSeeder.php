@@ -52,7 +52,10 @@ class RolePermissionSeeder extends Seeder
             'attach_service_to_provider',
             'manage_payments',
             'assign_role',
-            'manage_provider_services'
+            'manage_provider_services',
+            // Permissions utilisées dans ProviderPolicy
+            'approve-providers',
+            'view-providers'
         ];
 
         foreach ($specialPermissions as $perm) {
@@ -71,6 +74,7 @@ class RolePermissionSeeder extends Seeder
             'admin' => array_merge(
                 self::permissionsByAction(['view_any', 'create', 'edit_any', 'delete_any'], $modules),
                 self::permissionsByAction(['assign_role', 'manage_payments', 'manage_provider_services'], []),
+                ['approve-providers', 'view-providers'],
             ),
 
             'provider' => array_merge(
