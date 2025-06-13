@@ -25,6 +25,7 @@ class ReviewController extends Controller
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('viewAny', Review::class);
             $reviews = Review::with(['service', 'user'])->get();
             return ApiService::response(ReviewResource::collection($reviews), 200);
         } catch (\Exception $e) {
@@ -52,6 +53,7 @@ class ReviewController extends Controller
     public function store(StoreReviewRequest $request): JsonResponse
     {
         try {
+            $this->authorize('create', Review::class);
             $review = Review::create($request->validated());
             return ApiService::response(new ReviewResource($review), 201);
         } catch (\Exception $e) {
@@ -74,6 +76,7 @@ class ReviewController extends Controller
     public function show(Review $review): JsonResponse
     {
         try {
+            $this->authorize('view', $review);
             return ApiService::response(new ReviewResource($review->load(['service', 'user'])), 200);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération de l\'avis.', 'error' => $e->getMessage()], 500);
@@ -100,6 +103,7 @@ class ReviewController extends Controller
     public function update(UpdateReviewRequest $request, Review $review): JsonResponse
     {
         try {
+            $this->authorize('update', $review);
             $review->update($request->validated());
             return ApiService::response(new ReviewResource($review), 200);
         } catch (\Exception $e) {
@@ -122,6 +126,7 @@ class ReviewController extends Controller
     public function destroy(Review $review): JsonResponse
     {
         try {
+            $this->authorize('delete', $review);
             $review->delete();
             return ApiService::response(['message' => 'Avis supprimé avec succès.'], 200);
         } catch (\Exception $e) {

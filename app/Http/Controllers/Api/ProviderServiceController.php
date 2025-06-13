@@ -33,6 +33,7 @@ class ProviderServiceController extends Controller
     public function index(): JsonResponse
     {
         try {
+            $this->authorize('viewAny', ProviderService::class);
             $items = $this->providerServiceService->getAll();
             return ApiService::response(ProviderServiceResource::collection($items));
         } catch (\Throwable $e) {
@@ -66,6 +67,7 @@ class ProviderServiceController extends Controller
     public function store(StoreProviderServiceRequest $request): JsonResponse
     {
         try {
+            $this->authorize('create', ProviderService::class);
             $item = $this->providerServiceService->create($request->validated());
             return ApiService::response(new ProviderServiceResource($item), 201);
         } catch (\Throwable $e) {
@@ -89,6 +91,7 @@ class ProviderServiceController extends Controller
     {
         try {
             $providerService = $this->providerServiceService->find($id);
+            $this->authorize('view', $providerService);
             return ApiService::response(new ProviderServiceResource($providerService));
         } catch (\Throwable $e) {
             Log::error('ProviderService show error', ['error' => $e]);
@@ -120,6 +123,7 @@ class ProviderServiceController extends Controller
     {
         try {
             $providerService = $this->providerServiceService->find($id);
+            $this->authorize('update', $providerService);
             $item = $this->providerServiceService->update($providerService, $request->validated());
             return ApiService::response(new ProviderServiceResource($item));
         } catch (\Throwable $e) {
@@ -143,6 +147,7 @@ class ProviderServiceController extends Controller
     {
         try {
             $providerService = $this->providerServiceService->find($id);
+            $this->authorize('delete', $providerService);
             $this->providerServiceService->delete($providerService);
             return ApiService::response(['message' => 'Supprimé avec succès']);
         } catch (\Throwable $e) {
