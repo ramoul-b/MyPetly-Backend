@@ -78,10 +78,50 @@ class UserService
     {
         $user = User::findOrFail($userId);
         $role = Role::findOrFail($roleId);
-    
+
         $user->assignRole($role->name);
-    
+
         return true;
+    }
+
+    public function assignRoles($userId, array $roles)
+    {
+        $user = User::findOrFail($userId);
+        $user->syncRoles($roles);
+        return $user->roles;
+    }
+
+    public function revokeRole($userId, $roleId)
+    {
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
+        $user->removeRole($role);
+        return true;
+    }
+
+    public function getRoles($userId)
+    {
+        $user = User::findOrFail($userId);
+        return $user->roles;
+    }
+
+    public function getPermissions($userId)
+    {
+        $user = User::findOrFail($userId);
+        return $user->permissions;
+    }
+
+    public function deleteUser($userId)
+    {
+        $user = User::findOrFail($userId);
+        return $user->delete();
+    }
+
+    public function searchUsers(string $query)
+    {
+        return User::where('name', 'like', "%{$query}%")
+            ->orWhere('email', 'like', "%{$query}%")
+            ->get();
     }
 
     public function getAllUsers(int $perPage = 15)
