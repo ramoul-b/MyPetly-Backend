@@ -13,6 +13,7 @@ class Provider extends Model
     use HasFactory, HasTranslations;
 
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'phone',
@@ -32,6 +33,11 @@ class Provider extends Model
     public function services()
     {
         return $this->belongsToMany(Service::class, 'provider_services', 'provider_id', 'service_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function reviews()

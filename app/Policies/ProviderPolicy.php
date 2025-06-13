@@ -13,7 +13,7 @@ class ProviderPolicy
             return true;
         }
 
-        if ($provider->id === $user->id) {
+        if ($provider->user_id === $user->id) {
             return true;
         }
 
@@ -31,7 +31,7 @@ class ProviderPolicy
             return true;
         }
 
-        if ($provider->id === $user->id) {
+        if ($provider->user_id === $user->id) {
             return true;
         }
 
@@ -44,7 +44,7 @@ class ProviderPolicy
             return true;
         }
 
-        if ($provider->id === $user->id) {
+        if ($provider->user_id === $user->id) {
             return true;
         }
 
