@@ -2,6 +2,10 @@
 // messages.php
 return [
     'authenticated' => 'You are authenticated.',
+    'success' => 'Request was successful.',
+    'error' => 'An error occurred.',
+    'server_error' => 'Server error. Please try again later.',
+    'resource_not_found' => 'Resource not found.',
     'operation_failed' => 'An error occurred while processing your request.',
     'invalid_credentials' => 'Invalid credentials.',
     'logged_out' => 'Logged out successfully.',
@@ -30,7 +34,6 @@ return [
     'animal_marked_found' => 'Animal marked as found.',
     'collar_attached' => 'Collar attached successfully.',
     'scan_success' => 'Scan successful.',
-    'operation_failed' => 'An error occurred during the operation.',
     
     'sex_required' => 'The animal\'s sex is required.',
     'sex_in' => 'The sex must be either Male or Female.',
@@ -43,5 +46,4 @@ return [
     'collar_not_found' => 'Collar not found.',
     'collar_deleted' => 'Collar deleted successfully.',
     'collar_assigned' => 'Collar assigned to animal successfully.',
-    'operation_failed' => 'An error occurred while processing your request.',
 ];
