@@ -16,6 +16,7 @@ return [
     'verification_email_resent' => 'Email de vérification renvoyé avec succès.',
     'user_not_found' => 'Utilisateur non trouvé.',
     'unauthenticated' => 'Vous n\'êtes pas authentifié.',
+    'unauthorized' => 'Vous n\'êtes pas autorisé à effectuer cette action.',
     'account_deactivated' => 'Compte désactivé avec succès.',
     'account_deleted' => 'Compte supprimé avec succès.',
 

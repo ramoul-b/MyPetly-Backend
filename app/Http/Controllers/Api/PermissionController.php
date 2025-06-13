@@ -7,6 +7,7 @@ use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use App\Services\ApiService;
 
 class PermissionController extends Controller
@@ -27,6 +28,8 @@ class PermissionController extends Controller
             $this->authorize('viewAny', Permission::class);
             $permissions = Permission::all();
             return ApiService::response($permissions, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -51,6 +54,8 @@ class PermissionController extends Controller
             $this->authorize('create', Permission::class);
             $permission = Permission::create(['name' => $request->name]);
             return ApiService::response($permission, 201);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -77,6 +82,8 @@ class PermissionController extends Controller
             $this->authorize('update', $permission);
             $permission->update(['name' => $request->name]);
             return ApiService::response($permission, 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }
@@ -100,6 +107,8 @@ class PermissionController extends Controller
             $this->authorize('delete', $permission);
             $permission->delete();
             return ApiService::response(['message' => 'Permission deleted'], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);
         }

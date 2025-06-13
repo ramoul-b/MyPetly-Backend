@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use App\Services\ApiService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -59,6 +60,8 @@ class UserController extends Controller
             $this->authorize('viewAny', User::class);
             $users = $this->userService->getAllUsers();
             return ApiService::response(UserResource::collection($users), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -111,6 +114,8 @@ class UserController extends Controller
             $this->authorize('create', User::class);
             $user = $this->userService->createUser($request->validated());
             return ApiService::response(new UserResource($user), 201);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -161,6 +166,8 @@ class UserController extends Controller
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
             }
             return ApiService::response(new UserResource($user), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -222,6 +229,8 @@ class UserController extends Controller
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
             }
             return ApiService::response(new UserResource($user), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -268,6 +277,8 @@ class UserController extends Controller
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
             }
             return ApiService::response(['message' => __('messages.user_deleted')], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -332,6 +343,8 @@ class UserController extends Controller
             $users = $this->userService->searchUsers($query);
 
             return ApiService::response(UserResource::collection($users), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -385,6 +398,8 @@ class UserController extends Controller
                 return ApiService::response(['message' => __('messages.user_or_role_not_found')], 404);
             }
             return ApiService::response(['message' => __('messages.role_assigned')], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -437,6 +452,8 @@ class UserController extends Controller
                 return ApiService::response(['message' => __('messages.user_or_role_not_found')], 404);
             }
             return ApiService::response(['message' => __('messages.role_revoked')], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
         }
@@ -456,9 +473,15 @@ class UserController extends Controller
      */
     public function getRoles($id)
     {
-        $user = $this->userService->findUserById($id);
-        $this->authorize('view', $user);
-        return ApiService::response($this->userService->getRoles($id));
+        try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('view', $user);
+            return ApiService::response($this->userService->getRoles($id));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
+        } catch (\Exception $e) {
+            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -476,9 +499,15 @@ class UserController extends Controller
     public function assignRoles(Request $request, $id)
     {
         $request->validate(['roles' => 'required|array']);
-        $user = $this->userService->findUserById($id);
-        $this->authorize('update', $user);
-        return ApiService::response($this->userService->assignRoles($id, $request->roles));
+        try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('update', $user);
+            return ApiService::response($this->userService->assignRoles($id, $request->roles));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
+        } catch (\Exception $e) {
+            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -494,8 +523,14 @@ class UserController extends Controller
      */
     public function getPermissions($id)
     {
-        $user = $this->userService->findUserById($id);
-        $this->authorize('view', $user);
-        return ApiService::response($this->userService->getPermissions($id));
+        try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('view', $user);
+            return ApiService::response($this->userService->getPermissions($id));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
+        } catch (\Exception $e) {
+            return ApiService::response(['message' => __('messages.operation_failed'), 'error' => $e->getMessage()], 500);
+        }
     }
 }
