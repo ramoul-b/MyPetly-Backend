@@ -9,6 +9,7 @@ use App\Services\ApiService;
 use App\Services\UserService;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 
 class AccountController extends Controller
 {
@@ -132,10 +133,11 @@ class AccountController extends Controller
  */
 
     public function updateProfile(UpdateUserRequest $request, UserService $userService)
-{
+    {
     try {
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
+        $this->authorize('update', $user);
 
         // Mise à jour via le service
         $updatedUser = $userService->updateUser($user, $request->validated());
@@ -207,6 +209,7 @@ class AccountController extends Controller
     {
         try {
             $user = $request->user();
+            $this->authorize('update', $user);
 
             // Vérifier le mot de passe actuel
             if (!Hash::check($request->current_password, $user->password)) {
@@ -265,6 +268,7 @@ class AccountController extends Controller
     {
         try {
             $user = $request->user();
+            $this->authorize('delete', $user);
             $user->update(['status' => 'inactive']);
 
             return ApiService::response([
@@ -313,6 +317,7 @@ class AccountController extends Controller
     {
         try {
             $user = $request->user();
+            $this->authorize('delete', $user);
             $user->delete();
 
             return ApiService::response([

@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -55,6 +56,7 @@ class UserController extends Controller
     public function index()
     {
         try {
+            $this->authorize('viewAny', User::class);
             $users = $this->userService->getAllUsers();
             return ApiService::response(UserResource::collection($users), 200);
         } catch (\Exception $e) {
@@ -106,6 +108,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
+            $this->authorize('create', User::class);
             $user = $this->userService->createUser($request->validated());
             return ApiService::response(new UserResource($user), 201);
         } catch (\Exception $e) {
@@ -153,6 +156,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->findUserById($id);
+            $this->authorize('view', $user);
             if (!$user) {
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
             }
@@ -211,6 +215,8 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $id)
     {
         try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('update', $user);
             $user = $this->userService->updateUser($id, $request->validated());
             if (!$user) {
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
@@ -255,6 +261,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('delete', $user);
             $deleted = $this->userService->deleteUser($id);
             if (!$deleted) {
                 return ApiService::response(['message' => __('messages.user_not_found')], 404);
@@ -370,6 +378,8 @@ class UserController extends Controller
     {
         $validated = $request->validate(['role_id' => 'required|exists:roles,id']);
         try {
+            $user = $this->userService->findUserById($id);
+            $this->authorize('update', $user);
             $result = $this->userService->assignRole($id, $validated['role_id']);
             if (!$result) {
                 return ApiService::response(['message' => __('messages.user_or_role_not_found')], 404);
@@ -446,6 +456,8 @@ class UserController extends Controller
      */
     public function getRoles($id)
     {
+        $user = $this->userService->findUserById($id);
+        $this->authorize('view', $user);
         return ApiService::response($this->userService->getRoles($id));
     }
 
@@ -464,6 +476,8 @@ class UserController extends Controller
     public function assignRoles(Request $request, $id)
     {
         $request->validate(['roles' => 'required|array']);
+        $user = $this->userService->findUserById($id);
+        $this->authorize('update', $user);
         return ApiService::response($this->userService->assignRoles($id, $request->roles));
     }
 
@@ -480,6 +494,8 @@ class UserController extends Controller
      */
     public function getPermissions($id)
     {
+        $user = $this->userService->findUserById($id);
+        $this->authorize('view', $user);
         return ApiService::response($this->userService->getPermissions($id));
     }
 }

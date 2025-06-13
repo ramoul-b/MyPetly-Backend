@@ -24,6 +24,7 @@ class RoleController extends Controller
     public function index()
     {
         try {
+            $this->authorize('viewAny', Role::class);
             $roles = Role::all();
             return ApiService::response($roles, 200);
         } catch (\Exception $e) {
@@ -71,6 +72,7 @@ class RoleController extends Controller
     {
         try {
             $role = Role::with('permissions')->findOrFail($id);
+            $this->authorize('view', $role);
             return ApiService::response($role, 200);
         } catch (\Exception $e) {
             return ApiService::response([
@@ -97,6 +99,7 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try {
+            $this->authorize('create', Role::class);
             $role = Role::create(['name' => $request->name]);
             return ApiService::response($role, 201);
         } catch (\Exception $e) {
@@ -122,6 +125,7 @@ class RoleController extends Controller
     {
         try {
             $role = Role::findById($id);
+            $this->authorize('update', $role);
             $role->update(['name' => $request->name]);
             return ApiService::response($role, 200);
         } catch (\Exception $e) {
@@ -144,6 +148,7 @@ class RoleController extends Controller
     {
         try {
             $role = Role::findById($id);
+            $this->authorize('delete', $role);
             $role->delete();
             return ApiService::response(['message' => 'Role deleted'], 200);
         } catch (\Exception $e) {
@@ -174,6 +179,7 @@ class RoleController extends Controller
             ]);
 
             $role = Role::findById($id);
+            $this->authorize('update', $role);
             $role->syncPermissions($request->permissions);
 
             return ApiService::response(['message' => 'Permissions updated'], 200);
@@ -197,6 +203,7 @@ class RoleController extends Controller
     {
         try {
             $role = Role::findById($id);
+            $this->authorize('view', $role);
             return ApiService::response($role->permissions, 200);
         } catch (\Exception $e) {
             return ApiService::response(['error' => 'Erreur serveur.'], 500);

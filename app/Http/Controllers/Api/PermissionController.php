@@ -24,6 +24,7 @@ class PermissionController extends Controller
     public function index()
     {
         try {
+            $this->authorize('viewAny', Permission::class);
             $permissions = Permission::all();
             return ApiService::response($permissions, 200);
         } catch (\Exception $e) {
@@ -47,6 +48,7 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request)
     {
         try {
+            $this->authorize('create', Permission::class);
             $permission = Permission::create(['name' => $request->name]);
             return ApiService::response($permission, 201);
         } catch (\Exception $e) {
@@ -72,6 +74,7 @@ class PermissionController extends Controller
     {
         try {
             $permission = Permission::findById($id);
+            $this->authorize('update', $permission);
             $permission->update(['name' => $request->name]);
             return ApiService::response($permission, 200);
         } catch (\Exception $e) {
@@ -94,6 +97,7 @@ class PermissionController extends Controller
     {
         try {
             $permission = Permission::findById($id);
+            $this->authorize('delete', $permission);
             $permission->delete();
             return ApiService::response(['message' => 'Permission deleted'], 200);
         } catch (\Exception $e) {

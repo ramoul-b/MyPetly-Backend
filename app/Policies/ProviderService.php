@@ -7,6 +7,15 @@ use App\Models\ProviderService;
 
 class ProviderServicePolicy
 {
+    public function viewAny(User $user): bool
+    {
+        return $user->can('view_any_provider_service') || $user->can('view_own_provider_service');
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->can('create_provider_service');
+    }
     // Voir la personnalisation de son propre service
     public function view(User $user, ProviderService $ps): bool
     {
