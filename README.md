@@ -65,3 +65,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 Déploiement GitHub Actions testé
+
+## Authentication
+
+This project uses Laravel Sanctum for API authentication. By default,
+personal access tokens do not expire because the `config/sanctum.php`
+`expiration` option is set to `null`. Tokens remain valid until they are
+explicitly revoked. You may refresh a client's authentication token by
+creating a new token on the user and deleting the old one.
+
+After updating the Sanctum configuration, run `php artisan config:clear`
+when deploying to ensure the new settings are applied.
