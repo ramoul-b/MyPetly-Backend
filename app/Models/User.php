@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(Session::class);
     }
 
+    public function provider()
+    {
+        return $this->hasOne(Provider::class);
+    }
+
     /**
      * Vérifie si l'utilisateur est actif.
      */
