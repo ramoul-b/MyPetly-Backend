@@ -16,9 +16,9 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: vps-88a3af89.vps.ovh.net
-          username: ubuntu
-          password: czre5Tj5DS6k
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd /var/www/MyPetly-Backend
             git pull origin main
