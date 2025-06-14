@@ -97,7 +97,7 @@ class ProviderController extends Controller
             $this->authorize('view', $provider);
             return ApiService::response(new ProviderResource($provider));
         } catch (\Exception $e) {
-            return ApiService::error('Provider introuvable', 404);
+            return ApiService::response(['message' => 'Provider introuvable'], 404);
         }
     }
 

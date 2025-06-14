@@ -41,7 +41,7 @@ class ProviderServiceController extends Controller
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService index error', ['error' => $e]);
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
@@ -77,7 +77,7 @@ class ProviderServiceController extends Controller
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService store error', ['error' => $e]);
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
@@ -102,7 +102,7 @@ class ProviderServiceController extends Controller
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService show error', ['error' => $e]);
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
@@ -137,7 +137,7 @@ class ProviderServiceController extends Controller
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService update error', ['error' => $e]);
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
@@ -163,7 +163,7 @@ class ProviderServiceController extends Controller
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService delete error', ['error' => $e]);
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
@@ -184,7 +184,7 @@ class ProviderServiceController extends Controller
             $services = $this->providerServiceService->getByProvider($provider_id);
             return ApiService::response(ProviderServiceResource::collection($services));
         } catch (\Throwable $e) {
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
     
@@ -205,7 +205,7 @@ class ProviderServiceController extends Controller
             $providers = $this->providerServiceService->getByService($service_id);
             return ApiService::response(ProviderServiceResource::collection($providers));
         } catch (\Throwable $e) {
-            return ApiService::error('Erreur serveur', 500);
+            return ApiService::response(['message' => 'Erreur serveur'], 500);
         }
     }
 
