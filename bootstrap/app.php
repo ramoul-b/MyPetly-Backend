@@ -20,9 +20,7 @@ return Application::configure(
         // On passe un tableau associatif :
         // 'alias' => ClasseMiddleware::class
 
-        $middleware->global([
-            HandleCors::class,
-        ]);
+        $middleware->append(HandleCors::class);
 
         $middleware->alias([
             'auth' => Authenticate::class,
