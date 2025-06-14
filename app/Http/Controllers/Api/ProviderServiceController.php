@@ -8,6 +8,7 @@ use App\Http\Resources\ProviderServiceResource;
 use App\Models\ProviderService;
 use App\Services\ProviderServiceService;
 use App\Services\ApiService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -36,6 +37,8 @@ class ProviderServiceController extends Controller
             $this->authorize('viewAny', ProviderService::class);
             $items = $this->providerServiceService->getAll();
             return ApiService::response(ProviderServiceResource::collection($items));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService index error', ['error' => $e]);
             return ApiService::error('Erreur serveur', 500);
@@ -70,6 +73,8 @@ class ProviderServiceController extends Controller
             $this->authorize('create', ProviderService::class);
             $item = $this->providerServiceService->create($request->validated());
             return ApiService::response(new ProviderServiceResource($item), 201);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService store error', ['error' => $e]);
             return ApiService::error('Erreur serveur', 500);
@@ -93,6 +98,8 @@ class ProviderServiceController extends Controller
             $providerService = $this->providerServiceService->find($id);
             $this->authorize('view', $providerService);
             return ApiService::response(new ProviderServiceResource($providerService));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService show error', ['error' => $e]);
             return ApiService::error('Erreur serveur', 500);
@@ -126,6 +133,8 @@ class ProviderServiceController extends Controller
             $this->authorize('update', $providerService);
             $item = $this->providerServiceService->update($providerService, $request->validated());
             return ApiService::response(new ProviderServiceResource($item));
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService update error', ['error' => $e]);
             return ApiService::error('Erreur serveur', 500);
@@ -150,6 +159,8 @@ class ProviderServiceController extends Controller
             $this->authorize('delete', $providerService);
             $this->providerServiceService->delete($providerService);
             return ApiService::response(['message' => 'Supprimé avec succès']);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Throwable $e) {
             Log::error('ProviderService delete error', ['error' => $e]);
             return ApiService::error('Erreur serveur', 500);
