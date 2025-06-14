@@ -4,6 +4,7 @@ use App\Http\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -18,6 +19,10 @@ return Application::configure(
         // Pour déclarer un “middleware nommé”
         // On passe un tableau associatif :
         // 'alias' => ClasseMiddleware::class
+
+        $middleware->global([
+            HandleCors::class,
+        ]);
 
         $middleware->alias([
             'auth' => Authenticate::class,
