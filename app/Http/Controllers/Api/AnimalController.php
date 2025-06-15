@@ -58,8 +58,8 @@ class AnimalController extends Controller
     public function index()
     {
         try {
-            $this->authorize('view', new \App\Models\Animal());
-            if (auth()->user()->can('view-animals')) {
+            $this->authorize('viewAny', Animal::class);
+            if (auth()->user()->can('view_any_animal')) {
 
                 $animals = Animal::all();
             } else {
