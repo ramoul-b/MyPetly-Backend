@@ -4076,6 +4076,41 @@
                 ]
             }
         },
+        "/providers/by-user/{userId}": {
+            "get": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Récupérer le prestataire associé à un utilisateur",
+                "operationId": "05a30a71a1882dd75813069223983eac",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Prestataire récupéré avec succès"
+                    },
+                    "404": {
+                        "description": "Prestataire introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/provider-services": {
             "get": {
                 "tags": [
