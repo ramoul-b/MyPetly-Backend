@@ -81,6 +81,7 @@ Route::prefix('v1')->group(function () {
         | Services / Providers / Categories
         |--------------------------------------------------------------------------
         */
+        Route::get('providers/by-user/{userId}', [ProviderController::class, 'getByUserId']);
         Route::apiResource('providers', ProviderController::class);
         Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);

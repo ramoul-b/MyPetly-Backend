@@ -101,6 +101,29 @@ class ProviderController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/providers/by-user/{userId}",
+     *     tags={"Providers"},
+     *     summary="Récupérer le prestataire associé à un utilisateur",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="userId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Prestataire récupéré avec succès"),
+     *     @OA\Response(response=404, description="Prestataire introuvable"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
+     * )
+     */
+    public function getByUserId(int $userId): JsonResponse
+    {
+        try {
+            $provider = $this->providerService->findByUserId($userId);
+            $this->authorize('view', $provider);
+            return ApiService::response(new ProviderResource($provider));
+        } catch (\Exception $e) {
+            return ApiService::response(['message' => 'Provider introuvable'], 404);
+        }
+    }
+
 
     /**
      * @OA\Put(

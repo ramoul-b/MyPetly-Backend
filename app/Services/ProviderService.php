@@ -60,6 +60,13 @@ class ProviderService
         return $provider;
     }
 
+    public function findByUserId(int $userId): Provider
+    {
+        return Provider::where('user_id', $userId)
+            ->with('services')
+            ->firstOrFail();
+    }
+
     public function delete(Provider $provider): void
     {
         $provider->delete();
