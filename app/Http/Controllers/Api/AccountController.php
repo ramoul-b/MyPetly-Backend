@@ -140,7 +140,7 @@ class AccountController extends Controller
         $this->authorize('update', $user);
 
         // Mise à jour via le service
-        $updatedUser = $userService->updateUser($user, $request->validated());
+        $updatedUser = $userService->updateUser($user->id, $request->validated());
 
         return ApiService::response([
             'message' => __('messages.profile_updated'),
