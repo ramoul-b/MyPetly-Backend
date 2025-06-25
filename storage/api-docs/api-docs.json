@@ -3664,6 +3664,70 @@
                 }
             }
         },
+        "/orders/{order}/items": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Liste les items d’une commande",
+                "operationId": "4fc8453022b860b26e091a3ced68cf89",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des items"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/order-items/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Voir un item de commande",
+                "operationId": "6769b496b920fe43766fd176b8969beb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item trouvé"
+                    },
+                    "404": {
+                        "description": "Item introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/payment-intent": {
             "post": {
                 "tags": [
@@ -6558,6 +6622,10 @@
         {
             "name": "Collars",
             "description": "Collars"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
         },
         {
             "name": "Paiement",
