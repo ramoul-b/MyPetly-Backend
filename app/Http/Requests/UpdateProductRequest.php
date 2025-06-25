@@ -11,7 +11,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,7 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'product_category_id' => 'required|exists:product_categories,id',
+            'store_id' => 'sometimes|exists:stores,id',
             'name' => 'required|array',
             'name.*' => 'required|string|max:255',
             'description' => 'nullable|array',
