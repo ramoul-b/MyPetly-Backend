@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,9 @@ class OrderService
             $order->user_id = Auth::id();
             $order->total = 0;
             $order->status = 'pending';
+            // Determine store from first product if not provided
+            $firstProduct = Product::find($data['items'][0]['product_id']);
+            $order->store_id = $firstProduct?->store_id ?? $data['store_id'] ?? null;
             $order->save();
 
             $total = 0;
@@ -36,5 +40,43 @@ class OrderService
 
             return $order;
         });
+    }
+
+    public function list(): \Illuminate\Database\Eloquent\Collection
+    {
+        $query = Order::with(['items.product', 'store']);
+        $user = Auth::user();
+
+        if ($user->can('view_any_order')) {
+            return $query->get();
+        }
+
+        if ($user->can('view_own_order') && $user->provider) {
+            $query->whereHas('store', function ($q) use ($user) {
+                $q->where('provider_id', $user->provider->id);
+            });
+            return $query->get();
+        }
+
+        return collect();
+    }
+
+    public function find(int $id): Order
+    {
+        $query = Order::with(['items.product', 'store'])->where('id', $id);
+        $user = Auth::user();
+
+        if ($user->can('view_any_order')) {
+            return $query->firstOrFail();
+        }
+
+        if ($user->can('view_own_order') && $user->provider) {
+            $query->whereHas('store', function ($q) use ($user) {
+                $q->where('provider_id', $user->provider->id);
+            });
+            return $query->firstOrFail();
+        }
+
+        abort(403, 'Unauthorized');
     }
 }

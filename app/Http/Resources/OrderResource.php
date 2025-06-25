@@ -17,10 +17,12 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'store_id' => $this->store_id,
             'status' => $this->status,
             'total' => $this->total,
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
+            'store' => new StoreResource($this->whenLoaded('store')),
             'created_at' => $this->created_at,
         ];
-    }    
+    }
 }
