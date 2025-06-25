@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             StoreSeeder::class,
             ProductSeeder::class,
-            //UserSeeder::class,
+            TestDataSeeder::class,
 
         ]);
         User::factory()->create([
