@@ -11,7 +11,8 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Authorization is handled in the controller via policies
+        return true;
     }
 
     /**

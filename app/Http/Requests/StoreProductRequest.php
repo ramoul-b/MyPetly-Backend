@@ -11,6 +11,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // Authorization is handled in the controller via policies
         return true;
     }
 
