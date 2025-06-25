@@ -10,6 +10,7 @@ class ProductService
     {
         $product = new Product();
         $product->product_category_id = $data['product_category_id'];
+        $product->store_id = $data['store_id'];
         $product->price = $data['price'];
         $product->stock = $data['stock'];
         $product->image = $data['image'] ?? null;
@@ -22,6 +23,9 @@ class ProductService
     public function update(Product $product, array $data): Product
     {
         $product->product_category_id = $data['product_category_id'];
+        if (isset($data['store_id'])) {
+            $product->store_id = $data['store_id'];
+        }
         $product->price = $data['price'];
         $product->stock = $data['stock'];
         $product->image = $data['image'] ?? null;
@@ -36,3 +40,4 @@ class ProductService
         $product->delete();
     }
 }
+
