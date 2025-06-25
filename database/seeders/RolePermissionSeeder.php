@@ -17,9 +17,6 @@ class RolePermissionSeeder extends Seeder
             'provider',
             'provider_manager',
             'provider_collaborator',
-            'store',
-            'store_manager',
-            'store_collaborator',
             'user',
         ];
 
@@ -27,13 +24,14 @@ class RolePermissionSeeder extends Seeder
             Role::firstOrCreate(['name' => $role, 'guard_name' => 'sanctum']);
         }
 
-        // 2. Définition des modules
+        // 2. Modules disponibles
         $modules = [
-            'user', 'role', 'permission', 'animal', 'provider', 'service', 'provider_service', 'booking',
-            'category', 'collar', 'review', 'payment'
+            'user', 'role', 'permission', 'animal', 'provider',
+            'service', 'provider_service', 'booking', 'category',
+            'collar', 'review', 'payment', 'store', 'product', 'order', 'order_item'
         ];
 
-        // 3. Permissions CRUD standards par module
+        // 3. Actions CRUD par module
         $actions = [
             'view_any', 'view_own', 'create', 'edit_any', 'edit_own', 'delete_any', 'delete_own'
         ];
@@ -47,13 +45,12 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
-        // 4. Permissions spécifiques supplémentaires
+        // 4. Permissions spécifiques
         $specialPermissions = [
             'attach_service_to_provider',
             'manage_payments',
             'assign_role',
             'manage_provider_services',
-            // Permissions utilisées dans ProviderPolicy
             'approve-providers',
             'view-providers'
         ];
@@ -66,15 +63,13 @@ class RolePermissionSeeder extends Seeder
         }
 
         // 5. Attribution des permissions aux rôles
-
-        // Permissions par module pour chaque rôle
         $rolePermissions = [
-            'super_admin' => Permission::pluck('name')->toArray(), // all permissions
+            'super_admin' => Permission::pluck('name')->toArray(),
 
             'admin' => array_merge(
                 self::permissionsByAction(['view_any', 'create', 'edit_any', 'delete_any'], $modules),
                 self::permissionsByAction(['assign_role', 'manage_payments', 'manage_provider_services'], []),
-                ['approve-providers', 'view-providers'],
+                ['approve-providers', 'view-providers']
             ),
 
             'provider' => array_merge(
@@ -83,7 +78,9 @@ class RolePermissionSeeder extends Seeder
                 self::permissionsByAction(['attach_service_to_provider', 'manage_provider_services', 'manage_payments'], []),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['provider_service']),
                 self::permissionsByAction(['view_own', 'edit_own'], ['booking']),
-                self::permissionsByAction(['view_own'], ['review'])
+                self::permissionsByAction(['view_own'], ['review']),
+                self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['store', 'product']),
+                self::permissionsByAction(['view_own'], ['order'])
             ),
 
             'user' => array_merge(
@@ -94,27 +91,16 @@ class RolePermissionSeeder extends Seeder
                 self::permissionsByAction(['manage_payments'], [])
             ),
 
-            // Pour les rôles managers/collaborateurs, à compléter selon besoin business :
-            'provider_manager' => [], // à compléter
-            'provider_collaborator' => [], // à compléter
-            'store' => [], // à compléter (pour phase 2 marketplace)
-            'store_manager' => [],
-            'store_collaborator' => [],
+            'provider_manager' => [],
+            'provider_collaborator' => [],
         ];
 
-        // Attribution des permissions
         foreach ($rolePermissions as $roleName => $perms) {
             $role = Role::where('name', $roleName)->first();
             $role->syncPermissions($perms);
         }
     }
 
-    /**
-     * Génère les permissions par action et module.
-     * @param array $actions
-     * @param array $modules
-     * @return array
-     */
     private static function permissionsByAction(array $actions, array $modules)
     {
         $perms = [];
