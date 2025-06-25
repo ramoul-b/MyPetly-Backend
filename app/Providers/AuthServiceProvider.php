@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Review;
 use App\Models\ProviderService;
 use App\Models\Store;
+use App\Models\Order;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +28,7 @@ use App\Policies\PermissionPolicy;
 use App\Policies\ReviewPolicy;
 use App\Policies\ProviderServicePolicy;
 use App\Policies\StorePolicy;
+use App\Policies\OrderPolicy;
 use App\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -48,6 +50,7 @@ class AuthServiceProvider extends ServiceProvider
         Review::class          => ReviewPolicy::class,
         ProviderService::class => ProviderServicePolicy::class,
         Store::class           => StorePolicy::class,
+        Order::class           => OrderPolicy::class,
         User::class            => UserPolicy::class,
     ];
 

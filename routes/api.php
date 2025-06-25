@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\{
     ProviderServiceController,
     StoreController,
     ProductController,
+    OrderController,
     PaymentController,
     StripeWebhookController
 };
@@ -89,6 +90,11 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('stores', StoreController::class);
         Route::apiResource('products', ProductController::class);
+
+        Route::prefix('orders')->group(function () {
+            Route::get('/', [OrderController::class, 'index']);
+            Route::get('/{id}', [OrderController::class, 'show']);
+        });
 
         /*
         |--------------------------------------------------------------------------
