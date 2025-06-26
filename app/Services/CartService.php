@@ -2,22 +2,38 @@
 
 namespace App\Services;
 
+use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 
 class CartService
 {
+    public function getUserCart(): Cart
+    {
+        return Cart::firstOrCreate(['user_id' => Auth::id()]);
+    }
+
     public function addToCart(array $data): CartItem
     {
+        $cart = $this->getUserCart();
+
         return CartItem::updateOrCreate(
             [
-                'user_id' => Auth::id(),
+                'cart_id' => $cart->id,
                 'product_id' => $data['product_id'],
             ],
             [
-                'quantity' => $data['quantity']
+                'quantity' => $data['quantity'],
             ]
         );
+    }
+
+    public function updateItemQuantity(CartItem $item, int $qty): CartItem
+    {
+        $item->quantity = $qty;
+        $item->save();
+
+        return $item;
     }
 
     public function remove(CartItem $item): void
@@ -27,6 +43,14 @@ class CartService
 
     public function clear(): void
     {
-        CartItem::where('user_id', Auth::id())->delete();
+        $cart = $this->getUserCart();
+        $cart->items()->delete();
+    }
+
+    public function listItems()
+    {
+        $cart = $this->getUserCart();
+
+        return $cart->items()->with('product')->get();
     }
 }
