@@ -34,4 +34,15 @@ class OrderController extends Controller
             return ApiService::response('Order not found', 404);
         }
     }
+
+    public function checkout(): JsonResponse
+    {
+        try {
+            $this->authorize('create', new Order());
+            $orders = $this->orderService->checkout();
+            return ApiService::response(OrderResource::collection($orders), 201);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
 }
