@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Order;
 use App\Models\OrderItem;
 
@@ -15,6 +16,33 @@ class MarketplaceSeeder extends Seeder
     public function run(): void
     {
         $faker = app(\Faker\Generator::class);
+
+        // Créer quelques catégories de produits pour les assigner aux produits
+        $categoryData = [
+            [
+                'name' => ['en' => 'Food', 'fr' => 'Nourriture', 'it' => 'Cibo'],
+                'description' => [
+                    'en' => 'Food products',
+                    'fr' => 'Produits alimentaires',
+                    'it' => 'Prodotti alimentari',
+                ],
+            ],
+            [
+                'name' => ['en' => 'Accessories', 'fr' => 'Accessoires', 'it' => 'Accessori'],
+                'description' => [
+                    'en' => 'Pet accessories',
+                    'fr' => 'Accessoires pour animaux',
+                    'it' => 'Accessori per animali',
+                ],
+            ],
+        ];
+
+        $categories = [];
+        foreach ($categoryData as $data) {
+            $categories[] = ProductCategory::firstOrCreate([
+                'name->en' => $data['name']['en'],
+            ], $data);
+        }
 
         // 1. Créer 2 users provider (firstOrCreate évite duplication)
         $providers = [];
@@ -47,6 +75,7 @@ class MarketplaceSeeder extends Seeder
         foreach ($stores as $store) {
             for ($j = 0; $j < 6; $j++) {
                 $products[] = Product::create([
+                    'product_category_id' => $categories[array_rand($categories)]->id,
                     'store_id' => $store->id,
                     'name' => [
                         'en' => $faker->unique()->word . ' EN',
