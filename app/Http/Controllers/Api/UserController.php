@@ -209,7 +209,7 @@ class UserController extends Controller
      *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-01-22T17:25:55Z"),
      *             @OA\Property(property="updated_at", type="string", format="date-time", example="2025-01-22T17:30:55Z")
      *         )
-     *     ),
+     *     ), 
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
