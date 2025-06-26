@@ -21,6 +21,7 @@ class OrderRequestTest extends TestCase
                 [
                     'product_id' => $product->id,
                     'quantity' => 1,
+                    'unit_price' => $product->price,
                 ],
             ],
         ];

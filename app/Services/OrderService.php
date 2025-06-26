@@ -17,6 +17,10 @@ class OrderService
             $order->user_id = Auth::id();
             $order->total = 0;
             $order->status = 'pending';
+            $order->payment_status = $data['payment_status'] ?? 'pending';
+            $order->shipping_status = $data['shipping_status'] ?? 'pending';
+            $order->shipping_address = $data['shipping_address'] ?? null;
+            $order->billing_address = $data['billing_address'] ?? null;
             // Determine store from first product if not provided
             $firstProduct = Product::find($data['items'][0]['product_id']);
             $order->store_id = $firstProduct?->store_id ?? $data['store_id'] ?? null;
@@ -29,10 +33,10 @@ class OrderService
                 $orderItem->order_id = $order->id;
                 $orderItem->product_id = $item['product_id'];
                 $orderItem->quantity = $item['quantity'];
-                $orderItem->price = $item['price'];
+                $orderItem->unit_price = $item['unit_price'];
                 $orderItem->save();
 
-                $total += $item['price'] * $item['quantity'];
+                $total += $item['unit_price'] * $item['quantity'];
             }
 
             $order->total = $total;
