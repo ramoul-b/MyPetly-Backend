@@ -118,10 +118,10 @@ class MarketplaceSeeder extends Seeder
         foreach ($selected as $product) {
             $qty = rand(1, 2);
             OrderItem::create([
-                'order_id' => $order->id,
+                'order_id'  => $order->id,
                 'product_id' => $product->id,
-                'quantity' => $qty,
-                'price' => $product->price
+                'quantity'  => $qty,
+                'unit_price' => $product->price,
             ]);
             $total += $product->price * $qty;
         }
