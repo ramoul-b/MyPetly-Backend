@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 // tests/Feature/Auth/RefreshTokenTest.php
 
 use Tests\TestCase;
+use App\Models\User;
 
 class RefreshTokenTest extends TestCase
 {
