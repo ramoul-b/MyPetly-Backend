@@ -66,6 +66,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 Déploiement GitHub Actions testé
 
+## Setup
+
+1. Run `composer install` to install PHP dependencies (including Faker).
+2. Execute `php artisan migrate` to create database tables.
+3. Seed the database with `php artisan db:seed` or
+   `php artisan db:seed --class=MarketplaceSeeder`.
+
 ## Authentication
 
 This project uses Laravel Sanctum for API authentication. By default,
