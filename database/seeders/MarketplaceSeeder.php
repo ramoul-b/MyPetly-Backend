@@ -10,13 +10,13 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Provider;
 
 class MarketplaceSeeder extends Seeder
 {
     public function run(): void
     {
         $faker = app(\Faker\Generator::class);
-
         // Créer quelques catégories de produits pour les assigner aux produits
         $categoryData = [
             [
@@ -109,10 +109,7 @@ class MarketplaceSeeder extends Seeder
             'user_id' => $client->id,
             'store_id' => $stores[0]->id,
             'total' => 0,
-            'payment_status' => 'paid',
-            'shipping_status' => 'pending',
-            'shipping_address' => '123 Rue Test',
-            'billing_address' => '123 Rue Test'
+            'status' => 'pending',
         ]);
 
         $selected = [$products[0], $products[1], $products[6]];
@@ -124,7 +121,7 @@ class MarketplaceSeeder extends Seeder
                 'order_id' => $order->id,
                 'product_id' => $product->id,
                 'quantity' => $qty,
-                'unit_price' => $product->price
+                'price' => $product->price
             ]);
             $total += $product->price * $qty;
         }
