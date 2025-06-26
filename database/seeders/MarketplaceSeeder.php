@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use Faker\Generator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Store;
@@ -16,8 +14,7 @@ class MarketplaceSeeder extends Seeder
 {
     public function run(): void
     {
-        /** @var Generator $faker */
-        $faker = Faker::create();
+        $faker = app(\Faker\Generator::class);
 
 
         // 1. Créer 2 users provider
