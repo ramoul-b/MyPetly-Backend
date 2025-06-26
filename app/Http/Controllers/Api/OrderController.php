@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\OrderResource;
+use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Services\ApiService;
 use App\Services\OrderService;
 use App\Models\Order;
