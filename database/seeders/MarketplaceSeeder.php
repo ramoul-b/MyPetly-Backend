@@ -16,27 +16,30 @@ class MarketplaceSeeder extends Seeder
     {
         $faker = app(\Faker\Generator::class);
 
-
-        // 1. Créer 2 users provider
+        // 1. Créer 2 users provider (firstOrCreate évite duplication)
         $providers = [];
         for ($i = 1; $i <= 2; $i++) {
-            $providers[] = User::create([
-                'name' => "Provider $i",
-                'email' => "provider$i@test.com",
-                'password' => Hash::make('password'),
-                'status' => 'active'
-            ]);
+            $providers[] = User::firstOrCreate(
+                ['email' => "provider$i@test.com"],
+                [
+                    'name' => "Provider $i",
+                    'password' => Hash::make('password'),
+                    'status' => 'active'
+                ]
+            );
         }
 
         // 2. Créer 1 store par provider
         $stores = [];
         foreach ($providers as $i => $provider) {
-            $stores[] = Store::create([
-                'name' => "Boutique " . ($i + 1),
-                'description' => "La boutique de Provider " . ($i + 1),
-                'user_id' => $provider->id,
-                'status' => 'active'
-            ]);
+            $stores[] = Store::firstOrCreate(
+                ['user_id' => $provider->id],
+                [
+                    'name' => "Boutique " . ($i + 1),
+                    'description' => "La boutique de Provider " . ($i + 1),
+                    'status' => 'active'
+                ]
+            );
         }
 
         // 3. Créer 6 produits par store
@@ -46,9 +49,9 @@ class MarketplaceSeeder extends Seeder
                 $products[] = Product::create([
                     'store_id' => $store->id,
                     'name' => [
-                        'en' => $faker->word . ' EN',
-                        'fr' => $faker->word . ' FR',
-                        'it' => $faker->word . ' IT'
+                        'en' => $faker->unique()->word . ' EN',
+                        'fr' => $faker->unique()->word . ' FR',
+                        'it' => $faker->unique()->word . ' IT'
                     ],
                     'description' => [
                         'en' => $faker->sentence,
@@ -63,14 +66,16 @@ class MarketplaceSeeder extends Seeder
         }
 
         // 4. Créer 1 user client
-        $client = User::create([
-            'name' => 'Client Test',
-            'email' => 'client@test.com',
-            'password' => Hash::make('password'),
-            'status' => 'active'
-        ]);
+        $client = User::firstOrCreate(
+            ['email' => 'client@test.com'],
+            [
+                'name' => 'Client Test',
+                'password' => Hash::make('password'),
+                'status' => 'active'
+            ]
+        );
 
-        // 5. Créer 1 commande (avec 3 produits, sur 2 stores)
+        // 5. Créer 1 commande (avec 3 produits)
         $order = Order::create([
             'user_id' => $client->id,
             'store_id' => $stores[0]->id,
