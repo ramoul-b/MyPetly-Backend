@@ -13,7 +13,7 @@ class StorePolicy
             return true;
         }
 
-        if ($user->can('view_own_store') && optional($store->provider)->user_id === $user->id) {
+        if ($user->can('view_own_store') && $store->user_id === $user->id) {
             return true;
         }
 
@@ -31,7 +31,7 @@ class StorePolicy
             return true;
         }
 
-        if ($user->can('edit_own_store') && optional($store->provider)->user_id === $user->id) {
+        if ($user->can('edit_own_store') && $store->user_id === $user->id) {
             return true;
         }
 
@@ -44,7 +44,7 @@ class StorePolicy
             return true;
         }
 
-        if ($user->can('delete_own_store') && optional($store->provider)->user_id === $user->id) {
+        if ($user->can('delete_own_store') && $store->user_id === $user->id) {
             return true;
         }
 

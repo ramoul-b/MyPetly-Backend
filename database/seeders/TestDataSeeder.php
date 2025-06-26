@@ -58,7 +58,7 @@ class TestDataSeeder extends Seeder
 
             // Create store
             $store = Store::factory()->create([
-                'provider_id' => $provider->id,
+                'user_id' => $providerUser->id,
                 'name' => ['en' => "Store {$i}", 'fr' => "Magasin {$i}"],
             ]);
             $stores[] = $store;

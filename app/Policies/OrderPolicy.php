@@ -21,7 +21,7 @@ class OrderPolicy
             if ($order->user_id === $user->id) {
                 return true;
             }
-            return $order->store && $order->store->provider && $order->store->provider->user_id === $user->id;
+            return $order->store && $order->store->user_id === $user->id;
         }
 
         return false;

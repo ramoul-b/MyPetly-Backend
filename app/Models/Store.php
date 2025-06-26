@@ -11,19 +11,20 @@ class Store extends Model
     use HasFactory, HasTranslations;
 
     protected $fillable = [
-        'provider_id',
+        'user_id',
         'name',
         'description',
         'address',
         'phone',
         'email',
+        'status',
     ];
 
     public $translatable = ['name', 'description'];
 
-    public function provider()
+    public function user()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(User::class);
     }
 
     public function products()
