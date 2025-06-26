@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             StoreSeeder::class,
             ProductSeeder::class,
             TestDataSeeder::class,
+            MarketplaceSeeder::class
+
 
         ]);
         User::factory()->create([
