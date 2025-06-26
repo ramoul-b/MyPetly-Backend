@@ -79,6 +79,7 @@ class TestDataSeeder extends Seeder
                     'price' => random_int(5, 100),
                     'stock' => 20,
                     'image' => null,
+                    'status' => 'active',
                 ]);
             }
         }
