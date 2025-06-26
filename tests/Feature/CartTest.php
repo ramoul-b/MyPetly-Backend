@@ -30,15 +30,16 @@ class CartTest extends TestCase
         $this->actingAs($user);
 
         $this->service->addToCart(['product_id' => $product->id, 'quantity' => 1]);
+        $cartId = $this->service->getUserCart()->id;
         $this->assertDatabaseHas('cart_items', [
-            'user_id' => $user->id,
+            'cart_id' => $cartId,
             'product_id' => $product->id,
             'quantity' => 1,
         ]);
 
         $this->service->addToCart(['product_id' => $product->id, 'quantity' => 3]);
         $this->assertDatabaseHas('cart_items', [
-            'user_id' => $user->id,
+            'cart_id' => $cartId,
             'product_id' => $product->id,
             'quantity' => 3,
         ]);
