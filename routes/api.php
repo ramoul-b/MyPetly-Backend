@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\{
     OrderController,
     OrderItemController,
     CartController,
+    CheckoutController,
+    ShippingStatusController,
     PaymentController,
     StripeWebhookController
 };
@@ -196,11 +198,15 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::prefix('cart')->group(function () {
-            Route::post('/add', [CartController::class, 'add']);
-            Route::delete('/remove/{item}', [CartController::class, 'remove']);
-            Route::put('/update/{item}', [CartController::class, 'update']);
             Route::get('/', [CartController::class, 'index']);
+            Route::post('/', [CartController::class, 'store']);
+            Route::delete('/', [CartController::class, 'clear']);
+            Route::delete('/{id}', [CartController::class, 'destroy']);
         });
+
+        Route::post('/checkout', [CheckoutController::class, 'checkout']);
+        Route::patch('/orders/{order}/shipping-status', [ShippingStatusController::class, 'update']);
+
         /*
         |--------------------------------------------------------------------------
         |  Payment
