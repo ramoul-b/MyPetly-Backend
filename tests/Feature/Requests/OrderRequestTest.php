@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Requests;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Product;
