@@ -10,6 +10,7 @@ use App\Models\Store;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Provider;
 
 class MarketplaceSeeder extends Seeder
 {
@@ -17,15 +18,17 @@ class MarketplaceSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // 1. Créer 2 users provider
+        // 1. Créer 2 users provider et leurs providers associés
         $providers = [];
         for ($i = 1; $i <= 2; $i++) {
-            $providers[] = User::create([
+            $user = User::create([
                 'name' => "Provider $i",
                 'email' => "provider$i@test.com",
                 'password' => Hash::make('password'),
                 'status' => 'active'
             ]);
+
+            $providers[] = Provider::factory()->create(['user_id' => $user->id]);
         }
 
         // 2. Créer 1 store par provider
@@ -34,8 +37,7 @@ class MarketplaceSeeder extends Seeder
             $stores[] = Store::create([
                 'name' => "Boutique " . ($i + 1),
                 'description' => "La boutique de Provider " . ($i + 1),
-                'user_id' => $provider->id,
-                'status' => 'active'
+                'provider_id' => $provider->id,
             ]);
         }
 
@@ -75,10 +77,7 @@ class MarketplaceSeeder extends Seeder
             'user_id' => $client->id,
             'store_id' => $stores[0]->id,
             'total' => 0,
-            'payment_status' => 'paid',
-            'shipping_status' => 'pending',
-            'shipping_address' => '123 Rue Test',
-            'billing_address' => '123 Rue Test'
+            'status' => 'pending',
         ]);
 
         $selected = [$products[0], $products[1], $products[6]];
@@ -90,7 +89,7 @@ class MarketplaceSeeder extends Seeder
                 'order_id' => $order->id,
                 'product_id' => $product->id,
                 'quantity' => $qty,
-                'unit_price' => $product->price
+                'price' => $product->price
             ]);
             $total += $product->price * $qty;
         }
