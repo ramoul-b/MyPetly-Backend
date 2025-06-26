@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -82,5 +83,13 @@ class OrderService
         }
 
         abort(403, 'Unauthorized');
+    }
+
+    public function updateShippingStatus(Order $order, string $status): Order
+    {
+        $order->shipping_status = $status;
+        $order->save();
+
+        return $order;
     }
 }

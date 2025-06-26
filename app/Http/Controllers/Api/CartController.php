@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 /**
  * @OA\Tag(name="Cart", description="Gestion du panier")
  */
@@ -75,7 +76,6 @@ class CartController extends Controller
         $this->authorize('delete', $item);
         $this->cartService->remove($item);
         return ApiService::response(['message' => 'Deleted'], 200);
-    }
 
     /**
      * @OA\Delete(
@@ -91,5 +91,6 @@ class CartController extends Controller
         $this->authorize('delete', CartItem::class);
         $this->cartService->clear();
         return ApiService::response(['message' => 'Cleared'], 200);
+
     }
 }
