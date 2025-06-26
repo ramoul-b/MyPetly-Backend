@@ -2875,6 +2875,109 @@
                 ]
             }
         },
+        "/cart": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Liste des items du panier",
+                "operationId": "a290eb330c4b625ab436b6e37cd1beda",
+                "responses": {
+                    "200": {
+                        "description": "Liste du panier"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Ajouter au panier",
+                "operationId": "b8e2209c6d9b86c119511ccd4efb0332",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ajouté"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Vider le panier",
+                "operationId": "b2d116fa21a2a3a089c348d222b6d5d2",
+                "responses": {
+                    "200": {
+                        "description": "Panier vidé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cart/{id}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Retirer un item",
+                "operationId": "58ab10008fcbd7f18c621b7d7291411b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/categories": {
             "get": {
                 "tags": [
@@ -3168,6 +3271,42 @@
                     },
                     "500": {
                         "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/checkout": {
+            "post": {
+                "tags": [
+                    "Checkout"
+                ],
+                "summary": "Créer une commande depuis le panier",
+                "operationId": "87ea2f92b129c0e056ff0a62b26eba39",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "shipping_address": {
+                                        "type": "string"
+                                    },
+                                    "billing_address": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Commande créée"
                     }
                 },
                 "security": [
@@ -5500,6 +5639,52 @@
                 ]
             }
         },
+        "/orders/{order}/shipping-status": {
+            "patch": {
+                "tags": [
+                    "Shipping"
+                ],
+                "summary": "Mettre à jour le statut d'expédition",
+                "operationId": "b3d37c22d9b912d5dcbe6ed5422e09b0",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "shipping_status"
+                                ],
+                                "properties": {
+                                    "shipping_status": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut mis à jour"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/stores": {
             "get": {
                 "tags": [
@@ -6588,12 +6773,24 @@
     },
     "tags": [
         {
+            "name": "Cart",
+            "description": "Gestion du panier"
+        },
+        {
+            "name": "Checkout",
+            "description": "Finaliser la commande"
+        },
+        {
             "name": "Products",
             "description": "Gestion des produits"
         },
         {
             "name": "Providers",
             "description": "Gestion des prestataires de services"
+        },
+        {
+            "name": "Shipping",
+            "description": "Mise à jour du statut d'expédition"
         },
         {
             "name": "Stores",

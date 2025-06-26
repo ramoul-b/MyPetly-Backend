@@ -77,6 +77,8 @@ class CartController extends Controller
         $this->cartService->remove($item);
         return ApiService::response(['message' => 'Deleted'], 200);
 
+    }
+
     /**
      * @OA\Delete(
      *     path="/cart",
