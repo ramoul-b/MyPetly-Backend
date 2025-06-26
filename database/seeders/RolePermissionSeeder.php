@@ -80,7 +80,7 @@ class RolePermissionSeeder extends Seeder
                 self::permissionsByAction(['view_own', 'edit_own'], ['booking']),
                 self::permissionsByAction(['view_own'], ['review']),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['store', 'product']),
-                self::permissionsByAction(['view_own'], ['order'])
+                self::permissionsByAction(['view_own', 'edit_own'], ['order'])
             ),
 
             'user' => array_merge(
