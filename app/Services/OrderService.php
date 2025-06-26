@@ -83,4 +83,12 @@ class OrderService
 
         abort(403, 'Unauthorized');
     }
+
+    public function updateShippingStatus(Order $order, string $status): Order
+    {
+        $order->shipping_status = $status;
+        $order->save();
+
+        return $order;
+    }
 }
