@@ -20,7 +20,7 @@ class StoreService
     public function create(array $data): Store
     {
         $store = new Store();
-        $store->provider_id = $data['provider_id'];
+        $store->user_id = $data['user_id'];
         $store->setTranslations('name', $data['name']);
         if (isset($data['description'])) {
             $store->setTranslations('description', $data['description']);
@@ -28,14 +28,15 @@ class StoreService
         $store->address = $data['address'] ?? null;
         $store->phone   = $data['phone'] ?? null;
         $store->email   = $data['email'] ?? null;
+        $store->status  = $data['status'] ?? 'active';
         $store->save();
         return $store;
     }
 
     public function update(Store $store, array $data): Store
     {
-        if (isset($data['provider_id'])) {
-            $store->provider_id = $data['provider_id'];
+        if (isset($data['user_id'])) {
+            $store->user_id = $data['user_id'];
         }
         if (isset($data['name'])) {
             $store->setTranslations('name', $data['name']);
@@ -51,6 +52,9 @@ class StoreService
         }
         if (isset($data['email'])) {
             $store->email = $data['email'];
+        }
+        if (isset($data['status'])) {
+            $store->status = $data['status'];
         }
         $store->save();
         return $store;

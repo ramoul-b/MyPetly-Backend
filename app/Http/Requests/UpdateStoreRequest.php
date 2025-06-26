@@ -16,7 +16,7 @@ class UpdateStoreRequest extends FormRequest
         $storeId = $this->route('store');
 
         return [
-            'provider_id'   => 'sometimes|exists:providers,id|unique:stores,provider_id,'.$storeId,
+            'user_id'       => 'sometimes|exists:users,id|unique:stores,user_id,'.$storeId,
             'name'          => 'sometimes|array',
             'name.*'        => 'sometimes|string|max:255',
             'description'   => 'nullable|array',
@@ -24,6 +24,7 @@ class UpdateStoreRequest extends FormRequest
             'address'       => 'sometimes|string|max:255',
             'phone'         => 'sometimes|string|max:20',
             'email'         => 'sometimes|email',
+            'status'        => 'sometimes|string',
         ];
     }
 }
