@@ -97,6 +97,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [OrderController::class, 'show']);
             Route::get('/{order}/items', [OrderItemController::class, 'index']);
         });
+        Route::post('/checkout', [OrderController::class, 'checkout']);
 
         Route::get('order-items/{id}', [OrderItemController::class, 'show']);
 

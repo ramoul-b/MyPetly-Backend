@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -82,5 +83,57 @@ class OrderService
         }
 
         abort(403, 'Unauthorized');
+    }
+
+    /**
+     * Finalise the current user's cart into orders by store.
+     */
+    public function checkout(): \Illuminate\Support\Collection
+    {
+        return DB::transaction(function () {
+            $userId = Auth::id();
+            $cartItems = CartItem::with('product')->where('user_id', $userId)->get();
+
+            $grouped = $cartItems->groupBy(fn ($item) => $item->product?->store_id);
+            $orders = collect();
+
+            foreach ($grouped as $storeId => $items) {
+                $order = new Order();
+                $order->user_id = $userId;
+                $order->store_id = $storeId;
+                $order->total = 0;
+                $order->status = 'pending';
+                $order->payment_status = 'paid';
+                $order->shipping_status = 'pending';
+                $order->save();
+
+                $total = 0;
+
+                foreach ($items as $cartItem) {
+                    $product = $cartItem->product;
+                    if (!$product) {
+                        continue;
+                    }
+
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'quantity' => $cartItem->quantity,
+                        'unit_price' => $product->price,
+                    ]);
+
+                    $product->decrement('stock', $cartItem->quantity);
+                    $total += $product->price * $cartItem->quantity;
+                }
+
+                $order->total = $total;
+                $order->save();
+                $orders->push($order);
+            }
+
+            CartItem::where('user_id', $userId)->delete();
+
+            return $orders->load(['items.product', 'store']);
+        });
     }
 }

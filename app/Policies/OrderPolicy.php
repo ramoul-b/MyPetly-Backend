@@ -26,4 +26,9 @@ class OrderPolicy
 
         return false;
     }
+
+    public function create(User $user): bool
+    {
+        return $user->can('create_order');
+    }
 }
