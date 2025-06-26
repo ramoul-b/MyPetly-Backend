@@ -17,20 +17,15 @@ class ProviderPolicyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Crée les permissions nécessaires
-        Permission::create(['name' => 'view_any_provider']);
-        Permission::create(['name' => 'edit_any_provider']);
-        Permission::create(['name' => 'delete_any_provider']);
-        Permission::create(['name' => 'create_provider']);
-        Permission::create(['name' => 'view_own_provider']);
-        Permission::create(['name' => 'edit_own_provider']);
-        Permission::create(['name' => 'delete_own_provider']);
+        // Create permissions used in the policy
+        Permission::create(['name' => 'view-providers']);
+        Permission::create(['name' => 'approve-providers']);
     }
 
     public function test_admin_permissions()
     {
         $admin = User::factory()->create();
-        $admin->givePermissionTo(['view_any_provider', 'edit_any_provider', 'delete_any_provider', 'create_provider']);
+        $admin->givePermissionTo(['view-providers', 'approve-providers']);
         $provider = Provider::factory()->create();
 
         $policy = new ProviderPolicy();
@@ -43,14 +38,13 @@ class ProviderPolicyTest extends TestCase
     public function test_owner_permissions()
     {
         $owner = User::factory()->create();
-        $owner->givePermissionTo(['view_own_provider', 'edit_own_provider', 'delete_own_provider', 'create_provider']);
         $provider = Provider::factory()->create(['user_id' => $owner->id]);
-        $anotherProvider = Provider::factory()->create(['user_id' => 999]); // autre owner
+        $anotherProvider = Provider::factory()->create(['user_id' => User::factory()->create()->id]); // autre owner
 
         $policy = new ProviderPolicy();
         $this->assertTrue($policy->view($owner, $provider));
         $this->assertFalse($policy->view($owner, $anotherProvider));
-        $this->assertTrue($policy->create($owner));
+        $this->assertFalse($policy->create($owner));
         $this->assertTrue($policy->update($owner, $provider));
         $this->assertFalse($policy->update($owner, $anotherProvider));
         $this->assertTrue($policy->delete($owner, $provider));
