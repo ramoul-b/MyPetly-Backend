@@ -57,7 +57,9 @@ class CartService
 
     public function checkout(): \App\Models\Order
     {
-        $items = CartItem::where('user_id', Auth::id())
+        $cart = $this->getUserCart();
+
+        $items = $cart->items()
             ->with('product')
             ->get();
 
