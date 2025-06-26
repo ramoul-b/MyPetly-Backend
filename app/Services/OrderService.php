@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +45,35 @@ class OrderService
 
             return $order;
         });
+    }
+
+    public function checkout(): Order
+    {
+        $cartItems = CartItem::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            throw new \Exception('Cart is empty');
+        }
+
+        $items = [];
+        foreach ($cartItems as $cartItem) {
+            $items[] = [
+                'product_id' => $cartItem->product_id,
+                'quantity' => $cartItem->quantity,
+                'unit_price' => $cartItem->product->price,
+            ];
+        }
+
+        $order = $this->create([
+            'items' => $items,
+            'payment_status' => 'paid',
+        ]);
+
+        CartItem::where('user_id', Auth::id())->delete();
+
+        return $order;
     }
 
     public function list(): \Illuminate\Database\Eloquent\Collection
