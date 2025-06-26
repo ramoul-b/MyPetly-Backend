@@ -97,6 +97,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', [OrderController::class, 'index']);
             Route::get('/{id}', [OrderController::class, 'show']);
             Route::get('/{order}/items', [OrderItemController::class, 'index']);
+            Route::patch('/{order}/status', [OrderController::class, 'updateStatus']);
         });
         Route::post('/checkout', [OrderController::class, 'checkout']);
 

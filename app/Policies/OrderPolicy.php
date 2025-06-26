@@ -27,8 +27,12 @@ class OrderPolicy
         return false;
     }
 
-    public function create(User $user): bool
+    public function update(User $user, Order $order): bool
     {
-        return $user->can('create_order');
+        if ($user->can('edit_any_order')) {
+            return true;
+        }
+
+        return $order->store && $order->store->user_id === $user->id;
     }
 }
