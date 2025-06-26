@@ -14,6 +14,7 @@ class ProductService
         $product->price = $data['price'];
         $product->stock = $data['stock'];
         $product->image = $data['image'] ?? null;
+        $product->status = $data['status'] ?? 'active';
         $product->setTranslations('name', $data['name']);
         $product->setTranslations('description', $data['description'] ?? []);
         $product->save();
@@ -29,6 +30,9 @@ class ProductService
         $product->price = $data['price'];
         $product->stock = $data['stock'];
         $product->image = $data['image'] ?? null;
+        if (isset($data['status'])) {
+            $product->status = $data['status'];
+        }
         $product->setTranslations('name', $data['name']);
         $product->setTranslations('description', $data['description'] ?? []);
         $product->save();

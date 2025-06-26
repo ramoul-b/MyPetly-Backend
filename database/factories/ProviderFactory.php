@@ -18,7 +18,6 @@ class ProviderFactory extends Factory
             'email'     => $this->faker->unique()->companyEmail,
             'phone'     => $this->faker->phoneNumber,
             'address'   => $this->faker->address,
-            'status'    => $this->faker->randomElement(['active', 'inactive']),
             // ajoute d’autres champs selon ta table, exemple :
             // 'description' => $this->faker->sentence,
         ];

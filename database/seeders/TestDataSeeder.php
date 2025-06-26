@@ -58,7 +58,7 @@ class TestDataSeeder extends Seeder
 
             // Create store
             $store = Store::factory()->create([
-                'provider_id' => $provider->id,
+                'user_id' => $providerUser->id,
                 'name' => ['en' => "Store {$i}", 'fr' => "Magasin {$i}"],
             ]);
             $stores[] = $store;
@@ -79,6 +79,7 @@ class TestDataSeeder extends Seeder
                     'price' => random_int(5, 100),
                     'stock' => 20,
                     'image' => null,
+                    'status' => 'active',
                 ]);
             }
         }
@@ -91,6 +92,10 @@ class TestDataSeeder extends Seeder
                 'store_id' => $store->id,
                 'total' => 0,
                 'status' => 'pending',
+                'payment_status' => 'pending',
+                'shipping_status' => 'pending',
+                'shipping_address' => '123 Test St',
+                'billing_address' => '123 Test St',
             ]);
 
             $total = 0;
@@ -99,7 +104,7 @@ class TestDataSeeder extends Seeder
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => 1,
-                    'price' => $product->price,
+                    'unit_price' => $product->price,
                 ]);
                 $total += $product->price;
             }

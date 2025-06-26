@@ -14,7 +14,7 @@ class StoreStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provider_id'        => 'required|exists:providers,id|unique:stores,provider_id',
+            'user_id'            => 'required|exists:users,id|unique:stores,user_id',
             'name'               => 'required|array',
             'name.*'             => 'required|string|max:255',
             'description'        => 'nullable|array',
@@ -22,6 +22,7 @@ class StoreStoreRequest extends FormRequest
             'address'            => 'nullable|string|max:255',
             'phone'              => 'nullable|string|max:20',
             'email'              => 'nullable|email',
+            'status'             => 'nullable|string',
         ];
     }
 }

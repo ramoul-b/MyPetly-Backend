@@ -17,6 +17,10 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained()->onDelete('cascade');
             $table->decimal('total', 10, 2);
             $table->string('status')->default('pending'); // ex: pending, paid, cancelled
+            $table->string('payment_status')->default('pending');
+            $table->string('shipping_status')->default('pending');
+            $table->string('shipping_address')->nullable();
+            $table->string('billing_address')->nullable();
             $table->timestamps();
         });
     }

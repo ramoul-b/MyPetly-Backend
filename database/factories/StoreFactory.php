@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Store;
-use App\Models\Provider;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StoreFactory extends Factory
@@ -13,7 +13,7 @@ class StoreFactory extends Factory
     public function definition()
     {
         return [
-            'provider_id' => Provider::factory(),
+            'user_id' => User::factory(),
             'name'        => [
                 'en' => $this->faker->company,
                 'fr' => $this->faker->company,
@@ -25,6 +25,7 @@ class StoreFactory extends Factory
             'address'     => $this->faker->address,
             'phone'       => $this->faker->phoneNumber,
             'email'       => $this->faker->unique()->companyEmail,
+            'status'      => 'active',
         ];
     }
 }

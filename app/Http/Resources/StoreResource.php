@@ -11,12 +11,13 @@ class StoreResource extends JsonResource
     {
         return [
             'id'          => $this->id,
-            'provider_id' => $this->provider_id,
+            'user_id'     => $this->user_id,
             'name'        => $this->getTranslations('name'),
             'description' => $this->getTranslations('description'),
             'address'     => $this->address,
             'phone'       => $this->phone,
             'email'       => $this->email,
+            'status'      => $this->status,
             'created_at'  => $this->created_at->format('Y-m-d H:i'),
             'updated_at'  => $this->updated_at->format('Y-m-d H:i'),
         ];

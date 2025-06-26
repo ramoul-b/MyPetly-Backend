@@ -19,6 +19,7 @@ class Product extends Model
         'price',
         'stock',
         'image',
+        'status',
     ];
 
     public $translatable = ['name', 'description'];
