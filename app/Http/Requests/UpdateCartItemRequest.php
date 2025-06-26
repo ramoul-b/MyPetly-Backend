@@ -11,6 +11,7 @@ class UpdateCartItemRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // Authorization is handled in the controller or via policies
         return true;
     }
 
