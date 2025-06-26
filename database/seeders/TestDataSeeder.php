@@ -91,6 +91,10 @@ class TestDataSeeder extends Seeder
                 'store_id' => $store->id,
                 'total' => 0,
                 'status' => 'pending',
+                'payment_status' => 'pending',
+                'shipping_status' => 'pending',
+                'shipping_address' => '123 Test St',
+                'billing_address' => '123 Test St',
             ]);
 
             $total = 0;
@@ -99,7 +103,7 @@ class TestDataSeeder extends Seeder
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => 1,
-                    'price' => $product->price,
+                    'unit_price' => $product->price,
                 ]);
                 $total += $product->price;
             }
