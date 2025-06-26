@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Services\OrderService;
 use Illuminate\Support\Facades\Auth;
 
 class CartService
@@ -52,5 +53,32 @@ class CartService
         $cart = $this->getUserCart();
 
         return $cart->items()->with('product')->get();
+    }
+
+    public function checkout(): \App\Models\Order
+    {
+        $items = CartItem::where('user_id', Auth::id())
+            ->with('product')
+            ->get();
+
+        if ($items->isEmpty()) {
+            throw new \RuntimeException('Cart is empty');
+        }
+
+        $orderService = app(OrderService::class);
+
+        $orderData = [
+            'items' => $items->map(fn($item) => [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->product->price,
+            ])->toArray(),
+        ];
+
+        $order = $orderService->create($orderData);
+
+        $this->clear();
+
+        return $order;
     }
 }

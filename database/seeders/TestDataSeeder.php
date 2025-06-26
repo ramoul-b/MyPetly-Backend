@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\CartItem;
 
 class TestDataSeeder extends Seeder
 {
@@ -111,6 +112,16 @@ class TestDataSeeder extends Seeder
 
             $order->total = $total;
             $order->save();
+        }
+
+        // Add demo cart items for the client
+        $productsForCart = $stores[0]->products()->take(2)->get();
+        foreach ($productsForCart as $product) {
+            CartItem::create([
+                'user_id' => $client->id,
+                'product_id' => $product->id,
+                'quantity' => 1,
+            ]);
         }
     }
 }
