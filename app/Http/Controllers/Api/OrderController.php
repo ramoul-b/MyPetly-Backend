@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Services\ApiService;
@@ -36,12 +37,12 @@ class OrderController extends Controller
         }
     }
 
-    public function updateStatus(UpdateOrderStatusRequest $request, Order $order): JsonResponse
+    public function checkout(CheckoutRequest $request): JsonResponse
     {
         try {
-            $this->authorize('update', $order);
-            $order = $this->orderService->updateShippingStatus($order, $request->shipping_status);
-            return ApiService::response(new OrderResource($order), 200);
+            $this->authorize('create', new Order());
+            $order = $this->orderService->checkout($request->validated());
+            return ApiService::response(new OrderResource($order), 201);
         } catch (\Throwable $e) {
             return ApiService::response($e->getMessage(), 500);
         }
