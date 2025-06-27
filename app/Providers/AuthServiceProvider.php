@@ -14,6 +14,7 @@ use App\Models\ProviderService;
 use App\Models\Store;
 use App\Models\Order;
 use App\Models\CartItem;
+use App\Models\Product;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +33,7 @@ use App\Policies\StorePolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\CartItemPolicy;
+use App\Policies\ProductPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -52,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         Review::class          => ReviewPolicy::class,
         ProviderService::class => ProviderServicePolicy::class,
         Store::class           => StorePolicy::class,
+        Product::class         => ProductPolicy::class,
         Order::class           => OrderPolicy::class,
         CartItem::class        => CartItemPolicy::class,
         User::class            => UserPolicy::class,

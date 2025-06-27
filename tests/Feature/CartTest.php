@@ -75,7 +75,10 @@ class CartTest extends TestCase
             $this->service->addToCart(['product_id' => $product->id, 'quantity' => 2]);
         }
 
-        $order = $this->service->checkout();
+        $order = $this->service->checkout('addr1', 'addr2');
+
+        $this->assertEquals('addr1', $order->shipping_address);
+        $this->assertEquals('addr2', $order->billing_address);
 
         $this->assertDatabaseCount('cart_items', 0);
         $this->assertEquals(1, Order::count());
