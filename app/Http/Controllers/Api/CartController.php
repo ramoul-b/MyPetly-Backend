@@ -31,7 +31,7 @@ class CartController extends Controller
     public function index(): JsonResponse
     {
         $this->authorize('viewAny', CartItem::class);
-        $items = CartItem::with('product')->where('user_id', Auth::id())->get();
+        $items = $this->cartService->listItems();
         return ApiService::response(CartResource::collection($items), 200);
     }
 

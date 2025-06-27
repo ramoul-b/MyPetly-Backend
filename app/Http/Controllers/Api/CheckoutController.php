@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Services\ApiService;
 use App\Services\CartService;
-use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 /**
@@ -18,7 +15,7 @@ use Illuminate\Http\Request;
  */
 class CheckoutController extends Controller
 {
-    public function __construct(private OrderService $orderService, private CartService $cartService) {}
+    public function __construct(private CartService $cartService) {}
 
     /**
      * @OA\Post(
@@ -37,23 +34,14 @@ class CheckoutController extends Controller
     {
         $this->authorize('create', Order::class);
 
-        $cartItems = CartItem::with('product')->where('user_id', Auth::id())->get();
-        if ($cartItems->isEmpty()) {
-            return ApiService::response('Cart is empty', 400);
+        try {
+            $order = $this->cartService->checkout(
+                $request->input('shipping_address'),
+                $request->input('billing_address')
+            );
+        } catch (\RuntimeException $e) {
+            return ApiService::response($e->getMessage(), 400);
         }
-
-        $data = [
-            'items' => $cartItems->map(fn($i) => [
-                'product_id' => $i->product_id,
-                'quantity' => $i->quantity,
-                'unit_price' => $i->product->price,
-            ])->toArray(),
-            'shipping_address' => $request->input('shipping_address'),
-            'billing_address' => $request->input('billing_address'),
-        ];
-
-        $order = $this->orderService->create($data);
-        $this->cartService->clear();
 
         return ApiService::response(new OrderResource($order), 201);
     }

@@ -14,7 +14,7 @@ class CartItemPolicy
 
     public function view(User $user, CartItem $item): bool
     {
-        return $item->user_id === $user->id;
+        return optional($item->cart)->user_id === $user->id;
     }
 
     public function create(User $user): bool
@@ -24,11 +24,11 @@ class CartItemPolicy
 
     public function update(User $user, CartItem $item): bool
     {
-        return $item->user_id === $user->id;
+        return optional($item->cart)->user_id === $user->id;
     }
 
     public function delete(User $user, CartItem $item): bool
     {
-        return $item->user_id === $user->id;
+        return optional($item->cart)->user_id === $user->id;
     }
 }
