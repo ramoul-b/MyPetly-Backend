@@ -103,7 +103,9 @@ class AuthController extends Controller
  public function register(StoreUserRequest $request, UserService $userService)
  {
      try {
-         $user = $userService->createUser($request->validated());
+        $user = $userService->createUser($request->validated());
+        // Attribuer le rôle "user" par défaut lors de l'inscription
+        $user->assignRole('user');
  
          // Générer un token
          $token = $user->createToken('mypetly')->plainTextToken;
