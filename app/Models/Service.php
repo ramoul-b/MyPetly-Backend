@@ -12,7 +12,16 @@ class Service extends Model
 {
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['name', 'description', 'price', 'active', 'provider_id', 'category_id'];
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'active',
+        'icon',
+        'color',
+        'provider_id',
+        'category_id',
+    ];
     public $translatable = ['name', 'description'];
 
     public function category()
