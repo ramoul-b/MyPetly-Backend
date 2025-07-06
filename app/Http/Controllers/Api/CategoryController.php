@@ -9,6 +9,7 @@ use App\Http\Resources\CategoryResource;
 use App\Services\ApiService;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class CategoryController extends Controller
 {
@@ -43,6 +44,8 @@ class CategoryController extends Controller
             $this->authorize('view', new Category());
             $categories = Category::all();
             return ApiService::response(CategoryResource::collection($categories), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération des catégories.', 'error' => $e->getMessage()], 500);
         }
@@ -77,6 +80,8 @@ class CategoryController extends Controller
             $this->authorize('create', new Category());
             $category = Category::create($request->validated());
             return ApiService::response(new CategoryResource($category), 201);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la création de la catégorie.', 'error' => $e->getMessage()], 500);
         }
@@ -115,6 +120,8 @@ class CategoryController extends Controller
         try {
             $this->authorize('view', $category);
             return ApiService::response(new CategoryResource($category), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la récupération de la catégorie.', 'error' => $e->getMessage()], 500);
         }
@@ -145,6 +152,8 @@ class CategoryController extends Controller
             $this->authorize('update', $category);
             $category->update($request->validated());
             return ApiService::response(new CategoryResource($category), 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la mise à jour de la catégorie.', 'error' => $e->getMessage()], 500);
         }
@@ -169,6 +178,8 @@ class CategoryController extends Controller
             $this->authorize('delete', $category);
             $category->delete();
             return ApiService::response(['message' => 'Catégorie supprimée avec succès.'], 200);
+        } catch (AuthorizationException $e) {
+            return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Erreur lors de la suppression de la catégorie.', 'error' => $e->getMessage()], 500);
         }
