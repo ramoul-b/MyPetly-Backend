@@ -21,6 +21,8 @@ class StoreServiceRequest extends FormRequest
         'name.*'       => 'required|string|max:255', // Chaque langue doit être une string
         'description'  => 'nullable|array',
         'description.*'=> 'nullable|string',
+        'icon'         => 'nullable|string|max:255',
+        'color'        => 'nullable|string|max:7',
         'price'        => 'required|numeric|min:0',
         'active'       => 'boolean',
     ];

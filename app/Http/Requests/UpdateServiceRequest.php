@@ -20,6 +20,8 @@ class UpdateServiceRequest extends FormRequest
         'name.*'       => 'sometimes|string|max:255',
         'description'  => 'nullable|array',
         'description.*'=> 'nullable|string',
+        'icon'         => 'sometimes|nullable|string|max:255',
+        'color'        => 'sometimes|nullable|string|max:7',
         'price'        => 'sometimes|numeric|min:0',
         'active'       => 'sometimes|boolean',
     ];

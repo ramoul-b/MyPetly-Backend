@@ -24,6 +24,8 @@ class ServiceService
         $service->provider_id = $data['provider_id'];
         $service->price = $data['price'];
         $service->active = $data['active'] ?? true;
+        $service->icon = $data['icon'] ?? null;
+        $service->color = $data['color'] ?? null;
 
         // Gérer les traductions
         $service->setTranslations('name', $data['name']);
@@ -46,6 +48,12 @@ class ServiceService
         }
         if (isset($data['active'])) {
             $service->active = $data['active'];
+        }
+        if (isset($data['icon'])) {
+            $service->icon = $data['icon'];
+        }
+        if (array_key_exists('color', $data)) {
+            $service->color = $data['color'];
         }
 
         // Mise à jour des traductions
