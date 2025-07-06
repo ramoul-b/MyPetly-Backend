@@ -15,6 +15,7 @@ class ServiceResource extends JsonResource
             'description'  => $this->getTranslations('description'),
             'price'        => $this->price,
             'active'       => (bool) $this->active,
+            'icon'         => $this->icon,
 
             'category'     => $this->whenLoaded('category', function () {
                 return $this->category ? [
