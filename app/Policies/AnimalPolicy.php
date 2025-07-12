@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Animal;
+use App\Models\Booking;
 
 class AnimalPolicy
 {
@@ -12,7 +13,16 @@ class AnimalPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_animal') || $user->can('view_own_animal');
+        if ($user->can('view_any_animal')) {
+            return true;
+        }
+
+        if ($user->hasRole('provider')) {
+            $providerId = optional($user->provider)->id;
+            return Booking::where('provider_id', $providerId)->exists();
+        }
+
+        return $user->can('view_own_animal');
     }
 
     /**
@@ -22,6 +32,13 @@ class AnimalPolicy
     {
         if ($user->can('view_any_animal')) {
             return true;
+        }
+
+        if ($user->hasRole('provider')) {
+            $providerId = optional($user->provider)->id;
+            return Booking::where('provider_id', $providerId)
+                ->where('animal_id', $animal->id)
+                ->exists();
         }
 
         if ($user->can('view_own_animal') && $animal->user_id === $user->id) {
