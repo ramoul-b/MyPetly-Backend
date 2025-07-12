@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Animal;
+use App\Models\Booking;
 
 class Animal extends Model
 {
@@ -24,10 +24,10 @@ class Animal extends Model
         return $this->hasOne(Collar::class);
     }
 
-    public function animals()
-{
-    return $this->hasMany(Animal::class);
-}
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
 }
 

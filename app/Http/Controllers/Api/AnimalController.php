@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateAnimalRequest;
 use App\Http\Resources\AnimalResource;
 use App\Services\AnimalService;
 use App\Models\Animal;
+use App\Models\Booking;
 use App\Services\ApiService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UploadAnimalImageRequest;   
@@ -59,11 +60,15 @@ class AnimalController extends Controller
     {
         try {
             $this->authorize('viewAny', Animal::class);
-            if (auth()->user()->can('view_any_animal')) {
-
+            $user = auth()->user();
+            if ($user->can('view_any_animal')) {
                 $animals = Animal::all();
+            } elseif ($user->hasRole('provider')) {
+                $providerId = optional($user->provider)->id;
+                $animalIds = Booking::where('provider_id', $providerId)->pluck('animal_id');
+                $animals = Animal::whereIn('id', $animalIds)->get();
             } else {
-                $animals = auth()->user()->animals ?? collect();
+                $animals = $user->animals ?? collect();
             }
     
             return ApiService::response(AnimalResource::collection($animals), 200);

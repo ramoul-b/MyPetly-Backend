@@ -74,7 +74,7 @@ class RolePermissionSeeder extends Seeder
 
             'provider' => array_merge(
                 self::permissionsByAction(['view_own', 'edit_own'], ['provider']),
-                self::permissionsByAction(['view_any'], ['service', 'animal', 'category', 'collar', 'review']),
+                self::permissionsByAction(['view_any'], ['service', 'category', 'collar', 'review']),
                 self::permissionsByAction(['attach_service_to_provider', 'manage_provider_services', 'manage_payments'], []),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['provider_service']),
                 self::permissionsByAction(['view_own', 'edit_own'], ['booking']),
