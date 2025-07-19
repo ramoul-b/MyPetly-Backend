@@ -17,6 +17,7 @@ class Provider extends Model
         'name',
         'email',
         'phone',
+        'tax_code',
         'address',
         'description',
         'photo',

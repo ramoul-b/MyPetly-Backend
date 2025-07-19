@@ -15,6 +15,7 @@ class ProviderResource extends JsonResource
             'name'          => $this->getTranslations('name'),
             'email'         => $this->email,
             'phone'         => $this->phone,
+            'tax_code'      => $this->tax_code,
             'address'       => $this->address,
             'description'   => $this->getTranslations('description'),
             'photo'         => $this->photo,

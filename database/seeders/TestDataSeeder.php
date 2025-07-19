@@ -55,6 +55,7 @@ class TestDataSeeder extends Seeder
             $provider = Provider::factory()->create([
                 'user_id' => $providerUser->id,
                 'name' => ['en' => "Provider {$i}", 'fr' => "Fournisseur {$i}"],
+                'tax_code' => 'TX' . str_pad($i, 4, '0', STR_PAD_LEFT),
             ]);
 
             // Create store

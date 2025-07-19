@@ -18,6 +18,7 @@ class StoreProviderRequest extends FormRequest
             'name.*'          => 'required|string|max:255',
             'email'           => 'required|email|unique:providers,email',
             'phone'           => 'nullable|string|max:20',
+            'tax_code'        => 'nullable|string|max:50',
             'address'         => 'nullable|string|max:255',
             'description'     => 'nullable|array',
             'description.*'   => 'nullable|string',
