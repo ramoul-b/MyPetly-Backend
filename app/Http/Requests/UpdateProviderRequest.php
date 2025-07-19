@@ -18,6 +18,7 @@ class UpdateProviderRequest extends FormRequest
             'name.*'          => 'sometimes|string|max:255',
             'email'           => 'sometimes|email|unique:providers,email,' . $this->provider,
             'phone'           => 'nullable|string|max:20',
+            'tax_code'        => 'nullable|string|max:50',
             'address'         => 'nullable|string|max:255',
             'description'     => 'nullable|array',
             'description.*'   => 'nullable|string',

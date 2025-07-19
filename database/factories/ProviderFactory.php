@@ -17,6 +17,7 @@ class ProviderFactory extends Factory
             'name'      => $this->faker->company,
             'email'     => $this->faker->unique()->companyEmail,
             'phone'     => $this->faker->phoneNumber,
+            'tax_code'  => $this->faker->bothify('??######'),
             'address'   => $this->faker->address,
             // ajoute d’autres champs selon ta table, exemple :
             // 'description' => $this->faker->sentence,

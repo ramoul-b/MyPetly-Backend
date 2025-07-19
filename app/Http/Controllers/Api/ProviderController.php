@@ -56,6 +56,7 @@ class ProviderController extends Controller
      *         ),
      *         @OA\Property(property="email", type="string", example="john@example.com"),
      *         @OA\Property(property="phone", type="string", example="+123456789"),
+     *         @OA\Property(property="tax_code", type="string", example="TX123456"),
      *         @OA\Property(property="address", type="string", example="123 Street, City"),
      *         @OA\Property(property="specialization", type="object",
      *             example={"fr": "Vétérinaire", "en": "Veterinarian", "es": "Veterinario"}
@@ -138,6 +139,7 @@ class ProviderController extends Controller
      *         ),
      *         @OA\Property(property="email", type="string", example="johnupdated@example.com"),
      *         @OA\Property(property="phone", type="string", example="+987654321"),
+     *         @OA\Property(property="tax_code", type="string", example="TX123456"),
      *         @OA\Property(property="address", type="string", example="456 Avenue, City"),
      *         @OA\Property(property="specialization", type="object",
      *             example={"fr": "Grooming", "en": "Grooming", "es": "Peluquería"}

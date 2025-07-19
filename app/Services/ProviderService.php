@@ -22,6 +22,7 @@ class ProviderService
         $provider = new Provider();
         $provider->email = $data['email'];
         $provider->phone = $data['phone'] ?? null;
+        $provider->tax_code = $data['tax_code'] ?? null;
         $provider->address = $data['address'] ?? null;
         $provider->rating = $data['rating'] ?? 0;
 
@@ -40,6 +41,9 @@ class ProviderService
         }
         if (isset($data['phone'])) {
             $provider->phone = $data['phone'];
+        }
+        if (isset($data['tax_code'])) {
+            $provider->tax_code = $data['tax_code'];
         }
         if (isset($data['address'])) {
             $provider->address = $data['address'];
