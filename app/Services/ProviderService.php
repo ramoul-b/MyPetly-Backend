@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProviderService
 {
@@ -19,12 +21,17 @@ class ProviderService
 
     public function create(array $data): Provider
     {
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            $data['photo'] = $data['photo']->store('providers', 'public');
+        }
+
         $provider = new Provider();
-        $provider->email = $data['email'];
-        $provider->phone = $data['phone'] ?? null;
+        $provider->email  = $data['email'];
+        $provider->phone  = $data['phone'] ?? null;
         $provider->tax_code = $data['tax_code'] ?? null;
         $provider->address = $data['address'] ?? null;
         $provider->rating = $data['rating'] ?? 0;
+        $provider->photo  = $data['photo'] ?? null;
 
         // ✅ Utilisation de setTranslations() pour gérer les champs multilingues
         $provider->setTranslations('name', $data['name']);
@@ -36,6 +43,13 @@ class ProviderService
 
     public function update(Provider $provider, array $data): Provider
     {
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            if ($provider->photo && Storage::disk('public')->exists($provider->photo)) {
+                Storage::disk('public')->delete($provider->photo);
+            }
+            $provider->photo = $data['photo']->store('providers', 'public');
+        }
+
         if (isset($data['email'])) {
             $provider->email = $data['email'];
         }
@@ -74,5 +88,22 @@ class ProviderService
     public function delete(Provider $provider): void
     {
         $provider->delete();
+    }
+
+    public function updatePhoto(int $id, string $path): ?Provider
+    {
+        $provider = Provider::find($id);
+        if (!$provider) {
+            return null;
+        }
+
+        if ($provider->photo && Storage::disk('public')->exists($provider->photo)) {
+            Storage::disk('public')->delete($provider->photo);
+        }
+
+        $provider->photo = $path;
+        $provider->save();
+
+        return $provider;
     }
 }
