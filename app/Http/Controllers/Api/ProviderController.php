@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
+use App\Http\Requests\UploadProviderPhotoRequest;
 use App\Http\Resources\ProviderResource;
 use App\Services\ProviderService;
 use App\Models\Provider;
@@ -122,6 +123,65 @@ class ProviderController extends Controller
             return ApiService::response(new ProviderResource($provider));
         } catch (\Exception $e) {
             return ApiService::response(['message' => 'Provider introuvable'], 404);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/providers/{id}/photo",
+     *     tags={"Providers"},
+     *     summary="Upload provider photo",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(@OA\Property(property="photo", type="string", format="binary"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Image enregistrée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Image uploaded."),
+     *             @OA\Property(property="photo_url", type="string", example="https://api.mypetly.com/storage/providers/1.jpg")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Prestataire introuvable",
+     *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Provider not found."))
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur de validation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Validation error."),
+     *             @OA\Property(property="errors", type="object", example={"photo": {"The photo field is required."}})
+     *         )
+     *     )
+     * )
+     */
+    public function uploadPhoto(UploadProviderPhotoRequest $request, $id): JsonResponse
+    {
+        try {
+            $path     = $request->file('photo')->store('providers', 'public');
+            $provider = $this->providerService->updatePhoto((int) $id, $path);
+
+            if (!$provider) {
+                return ApiService::response(['message' => __('messages.resource_not_found')], 404);
+            }
+
+            return ApiService::response([
+                'message'   => __('messages.photo_uploaded'),
+                'photo_url' => asset('storage/' . $path),
+            ], 200);
+        } catch (\Exception $e) {
+            return ApiService::response([
+                'message' => __('messages.operation_failed'),
+                'error'   => $e->getMessage(),
+            ], 500);
         }
     }
 
