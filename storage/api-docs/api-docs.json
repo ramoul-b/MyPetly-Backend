@@ -4272,6 +4272,10 @@
                                         "type": "string",
                                         "example": "+123456789"
                                     },
+                                    "tax_code": {
+                                        "type": "string",
+                                        "example": "TX123456"
+                                    },
                                     "address": {
                                         "type": "string",
                                         "example": "123 Street, City"
@@ -4384,6 +4388,10 @@
                                         "type": "string",
                                         "example": "+987654321"
                                     },
+                                    "tax_code": {
+                                        "type": "string",
+                                        "example": "TX123456"
+                                    },
                                     "address": {
                                         "type": "string",
                                         "example": "456 Avenue, City"
@@ -4486,6 +4494,108 @@
                     },
                     "500": {
                         "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/providers/{id}/photo": {
+            "post": {
+                "tags": [
+                    "Providers"
+                ],
+                "summary": "Upload provider photo",
+                "operationId": "4b1e06e54032f14c2f5b51f6c7773db8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image enregistrée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Image uploaded."
+                                        },
+                                        "photo_url": {
+                                            "type": "string",
+                                            "example": "https://api.mypetly.com/storage/providers/1.jpg"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Prestataire introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Provider not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "photo": [
+                                                    "The photo field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
