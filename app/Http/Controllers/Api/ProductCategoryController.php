@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductCategoryRequest;
 use App\Http\Requests\UpdateProductCategoryRequest;
 use App\Http\Resources\ProductCategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\ProductCategory;
 use App\Services\ApiService;
 use App\Services\ProductCategoryService;
@@ -104,6 +105,21 @@ class ProductCategoryController extends Controller
     public function show(ProductCategory $productCategory): JsonResponse
     {
         return ApiService::response(new ProductCategoryResource($productCategory), 200);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/product-categories/{id}/products",
+     *     tags={"Product Categories"},
+     *     summary="Obtenir les produits d'une catégorie",
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Liste des produits récupérée avec succès")
+     * )
+     */
+    public function products(ProductCategory $productCategory): JsonResponse
+    {
+        $products = $productCategory->products()->with(['category', 'store'])->get();
+        return ApiService::response(ProductResource::collection($products), 200);
     }
 
     /**
