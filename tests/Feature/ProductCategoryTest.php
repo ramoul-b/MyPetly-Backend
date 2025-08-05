@@ -18,7 +18,6 @@ class ProductCategoryTest extends TestCase
         'create_product_category',
         'edit_any_product_category',
         'delete_any_product_category',
-        'manage product categories',
     ];
 
     protected function setUp(): void
@@ -80,13 +79,12 @@ class ProductCategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_update_product_category_requires_manage_permission(): void
+    public function test_update_product_category_requires_edit_permission(): void
     {
         $user = User::factory()->create();
         $user->givePermissionTo([
             'view_any_product_category',
             'create_product_category',
-            'edit_any_product_category',
             'delete_any_product_category',
         ]);
         Sanctum::actingAs($user);

@@ -11,7 +11,7 @@ class UpdateProductCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()?->can('manage product categories') ?? false;
+        return auth()->user()?->can('edit_any_product_category') ?? false;
     }
 
     /**
