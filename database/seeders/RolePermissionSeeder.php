@@ -28,7 +28,8 @@ class RolePermissionSeeder extends Seeder
         $modules = [
             'user', 'role', 'permission', 'animal', 'provider',
             'service', 'provider_service', 'booking', 'category',
-            'collar', 'review', 'payment', 'store', 'product', 'order', 'order_item'
+            'collar', 'review', 'payment', 'product_category', 'store',
+            'product', 'order', 'order_item'
         ];
 
         // 3. Actions CRUD par module
@@ -74,7 +75,7 @@ class RolePermissionSeeder extends Seeder
 
             'provider' => array_merge(
                 self::permissionsByAction(['view_own', 'edit_own'], ['provider']),
-                self::permissionsByAction(['view_any'], ['service', 'category', 'collar', 'review']),
+                self::permissionsByAction(['view_any'], ['service', 'category', 'product_category', 'collar', 'review']),
                 self::permissionsByAction(['attach_service_to_provider', 'manage_provider_services', 'manage_payments'], []),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['provider_service']),
                 self::permissionsByAction(['view_own', 'edit_own'], ['booking']),
@@ -86,7 +87,7 @@ class RolePermissionSeeder extends Seeder
             'user' => array_merge(
                 self::permissionsByAction(['view_own', 'edit_own'], ['user']),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['animal']),
-                self::permissionsByAction(['view_any'], ['service', 'category', 'review', 'collar']),
+                self::permissionsByAction(['view_any'], ['service', 'category', 'product_category', 'review', 'collar']),
                 self::permissionsByAction(['view_own', 'create', 'edit_own', 'delete_own'], ['booking', 'review']),
                 self::permissionsByAction(['manage_payments'], [])
             ),
