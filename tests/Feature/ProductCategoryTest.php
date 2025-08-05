@@ -99,5 +99,27 @@ class ProductCategoryTest extends TestCase
             'name' => ['en' => 'Updated'],
         ])->assertStatus(403);
     }
+
+    public function test_public_can_view_product_categories_without_token(): void
+    {
+        $category = ProductCategory::create([
+            'name' => ['en' => 'Food'],
+        ]);
+
+        $this->getJson('/api/v1/product-categories')
+            ->assertStatus(200)
+            ->assertJsonFragment(['id' => $category->id]);
+    }
+
+    public function test_public_can_view_single_product_category_without_token(): void
+    {
+        $category = ProductCategory::create([
+            'name' => ['en' => 'Food'],
+        ]);
+
+        $this->getJson("/api/v1/product-categories/{$category->id}")
+            ->assertStatus(200)
+            ->assertJsonPath('id', $category->id);
+    }
 }
 
