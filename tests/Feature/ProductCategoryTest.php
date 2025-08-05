@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ProductCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -17,6 +18,7 @@ class ProductCategoryTest extends TestCase
         'create_product_category',
         'edit_any_product_category',
         'delete_any_product_category',
+        'manage product categories',
     ];
 
     protected function setUp(): void
@@ -63,6 +65,39 @@ class ProductCategoryTest extends TestCase
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('product_categories', ['id' => $categoryId]);
+    }
+
+    public function test_store_product_category_validation_error(): void
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo($this->permissions);
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson('/api/v1/product-categories', [
+            'name' => 'invalid',
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    public function test_update_product_category_requires_manage_permission(): void
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo([
+            'view_any_product_category',
+            'create_product_category',
+            'edit_any_product_category',
+            'delete_any_product_category',
+        ]);
+        Sanctum::actingAs($user);
+
+        $category = ProductCategory::create([
+            'name' => ['en' => 'Food'],
+        ]);
+
+        $this->putJson("/api/v1/product-categories/{$category->id}", [
+            'name' => ['en' => 'Updated'],
+        ])->assertStatus(403);
     }
 }
 
