@@ -41,6 +41,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
     Route::post('/resend-verification-email', [AuthController::class, 'resendVerificationEmail']);
 
+    // Product Categories - Public
+    Route::apiResource('product-categories', ProductCategoryController::class)->only(['index', 'show']);
+
     /*
     |--------------------------------------------------------------------------
     | Protected Routes - Requires auth
@@ -96,7 +99,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('stores', StoreController::class);
         Route::apiResource('products', ProductController::class);
-        Route::apiResource('product-categories', ProductCategoryController::class);
+        Route::apiResource('product-categories', ProductCategoryController::class)->except(['index', 'show']);
 
         Route::prefix('orders')->group(function () {
             Route::get('/', [OrderController::class, 'index']);
