@@ -42,7 +42,7 @@ class ProductCategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $this->authorize('view', new ProductCategory());
+        $this->authorize('viewAny', ProductCategory::class);
         $categories = ProductCategory::all();
         return ApiService::response(ProductCategoryResource::collection($categories), 200);
     }
