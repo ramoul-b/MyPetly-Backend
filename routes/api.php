@@ -43,6 +43,7 @@ Route::prefix('v1')->group(function () {
 
     // Product Categories - Public
     Route::apiResource('product-categories', ProductCategoryController::class)->only(['index', 'show']);
+    Route::get('product-categories/{productCategory}/products', [ProductCategoryController::class, 'products']);
 
     /*
     |--------------------------------------------------------------------------
