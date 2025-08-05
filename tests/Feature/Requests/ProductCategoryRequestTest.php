@@ -4,43 +4,59 @@ namespace Tests\Feature\Requests;
 
 use App\Http\Requests\StoreProductCategoryRequest;
 use App\Http\Requests\UpdateProductCategoryRequest;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
+
 use Tests\TestCase;
 
 class ProductCategoryRequestTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_store_product_category_request_passes_validation_when_authorized(): void
+    protected function setUp(): void
     {
-        $data = [
-            'name' => ['en' => 'Food'],
-            'description' => ['en' => 'Desc'],
-            'icon' => 'icon',
-            'color' => '#abcdef',
-        ];
+        parent::setUp();
+        Permission::create(['name' => 'manage product categories']);
+    }
+
+    public function test_store_product_category_request_authorizes_when_user_has_permission(): void
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage product categories');
+        $this->actingAs($user);
 
         $request = new StoreProductCategoryRequest();
 
         $this->assertTrue($request->authorize());
+
+        $data = [
+            'name' => ['en' => 'Category'],
+            'description' => ['en' => 'Desc'],
+        ];
+
         $validator = Validator::make($data, $request->rules());
         $this->assertTrue($validator->passes());
     }
 
-    public function test_update_product_category_request_passes_validation_when_authorized(): void
+    public function test_update_product_category_request_authorizes_when_user_has_permission(): void
     {
-        $data = [
-            'name' => ['en' => 'Food'],
-            'description' => ['en' => 'Desc'],
-            'icon' => 'icon',
-            'color' => '#abcdef',
-        ];
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage product categories');
+        $this->actingAs($user);
 
         $request = new UpdateProductCategoryRequest();
 
         $this->assertTrue($request->authorize());
+
+        $data = [
+            'name' => ['en' => 'Category'],
+            'description' => ['en' => 'Desc'],
+        ];
+
         $validator = Validator::make($data, $request->rules());
         $this->assertTrue($validator->passes());
     }
 }
+
