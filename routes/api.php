@@ -25,7 +25,7 @@ use App\Http\Controllers\Api\{
     PaymentController,
     StripeWebhookController
 };
-use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\Api\ProductCategoryController;
 
 
 Route::prefix('v1')->group(function () {
