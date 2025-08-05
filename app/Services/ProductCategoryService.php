@@ -11,6 +11,8 @@ class ProductCategoryService
         $category = new ProductCategory();
         $category->setTranslations('name', $data['name']);
         $category->setTranslations('description', $data['description'] ?? []);
+        $category->icon = $data['icon'] ?? null;
+        $category->color = $data['color'] ?? null;
         $category->save();
         return $category;
     }
@@ -19,6 +21,12 @@ class ProductCategoryService
     {
         $category->setTranslations('name', $data['name']);
         $category->setTranslations('description', $data['description'] ?? []);
+        if (array_key_exists('icon', $data)) {
+            $category->icon = $data['icon'];
+        }
+        if (array_key_exists('color', $data)) {
+            $category->color = $data['color'];
+        }
         $category->save();
         return $category;
     }

@@ -26,6 +26,8 @@ class MarketplaceSeeder extends Seeder
                     'fr' => 'Produits alimentaires',
                     'it' => 'Prodotti alimentari',
                 ],
+                'icon' => 'restaurant',
+                'color' => '#FFA500',
             ],
             [
                 'name' => ['en' => 'Accessories', 'fr' => 'Accessoires', 'it' => 'Accessori'],
@@ -34,6 +36,8 @@ class MarketplaceSeeder extends Seeder
                     'fr' => 'Accessoires pour animaux',
                     'it' => 'Accessori per animali',
                 ],
+                'icon' => 'shopping-bag',
+                'color' => '#795548',
             ],
         ];
 

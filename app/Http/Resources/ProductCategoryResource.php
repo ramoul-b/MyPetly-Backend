@@ -18,8 +18,10 @@ class ProductCategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->getTranslations('name'),
             'description' => $this->getTranslations('description'),
+            'icon' => $this->icon,
+            'color' => $this->color,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
-    }    
+    }
 }

@@ -11,7 +11,7 @@ class ProductCategory extends Model
 {
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'icon', 'color'];
 
     public $translatable = ['name', 'description'];
 
