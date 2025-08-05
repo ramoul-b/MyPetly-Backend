@@ -40,6 +40,32 @@ class ProductCategoryRequestTest extends TestCase
         $this->assertTrue($validator->passes());
     }
 
+    public function test_store_product_category_request_fails_authorization_without_permission(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $request = new StoreProductCategoryRequest();
+
+        $this->assertFalse($request->authorize());
+    }
+
+    public function test_store_product_category_request_fails_validation(): void
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage product categories');
+        $this->actingAs($user);
+
+        $request = new StoreProductCategoryRequest();
+
+        $data = [
+            'name' => 'invalid',
+        ];
+
+        $validator = Validator::make($data, $request->rules());
+        $this->assertTrue($validator->fails());
+    }
+
     public function test_update_product_category_request_authorizes_when_user_has_permission(): void
     {
         $user = User::factory()->create();
@@ -57,6 +83,32 @@ class ProductCategoryRequestTest extends TestCase
 
         $validator = Validator::make($data, $request->rules());
         $this->assertTrue($validator->passes());
+    }
+
+    public function test_update_product_category_request_fails_authorization_without_permission(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $request = new UpdateProductCategoryRequest();
+
+        $this->assertFalse($request->authorize());
+    }
+
+    public function test_update_product_category_request_fails_validation(): void
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage product categories');
+        $this->actingAs($user);
+
+        $request = new UpdateProductCategoryRequest();
+
+        $data = [
+            'name' => 'invalid',
+        ];
+
+        $validator = Validator::make($data, $request->rules());
+        $this->assertTrue($validator->fails());
     }
 }
 
