@@ -4042,6 +4042,323 @@
                 ]
             }
         },
+        "/product-categories": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Obtenir toutes les catégories de produit",
+                "description": "Récupère la liste de toutes les catégories de produit",
+                "operationId": "b3cd63439503cea15326dce5e6a395df",
+                "responses": {
+                    "200": {
+                        "description": "Liste des catégories de produit récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Accessoires",
+                                                    "en": "Accessories",
+                                                    "es": "Accesorios"
+                                                }
+                                            },
+                                            "description": {
+                                                "type": "object",
+                                                "example": {
+                                                    "fr": "Description",
+                                                    "en": "Description"
+                                                }
+                                            },
+                                            "icon": {
+                                                "type": "string",
+                                                "example": "icon.png"
+                                            },
+                                            "color": {
+                                                "type": "string",
+                                                "example": "#ffcc00"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 10:30"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 11:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Créer une catégorie de produit",
+                "description": "Ajoute une nouvelle catégorie de produit avec support multilingue",
+                "operationId": "162ca272fa2f4e3b44f5d7405acb2399",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Accessoires",
+                                            "en": "Accessories",
+                                            "es": "Accesorios"
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Pour animaux",
+                                            "en": "For pets"
+                                        }
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "icon.png"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#ffcc00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Catégorie de produit créée avec succès"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/product-categories/{id}": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Obtenir les détails d'une catégorie de produit",
+                "description": "Récupère les détails d'une catégorie de produit spécifique",
+                "operationId": "a047dd44ff307b4ced5ad9c8e0cc2746",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails récupérés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Accessoires",
+                                                "en": "Accessories",
+                                                "es": "Accesorios"
+                                            }
+                                        },
+                                        "description": {
+                                            "type": "object",
+                                            "example": {
+                                                "fr": "Description",
+                                                "en": "Description"
+                                            }
+                                        },
+                                        "icon": {
+                                            "type": "string",
+                                            "example": "icon.png"
+                                        },
+                                        "color": {
+                                            "type": "string",
+                                            "example": "#ffcc00"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-19 10:30"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-19 11:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Catégorie de produit non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Met à jour une catégorie de produit existante",
+                "operationId": "1e998f56c4062f5e0bc019ed04fdae6d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Accessoires modifiés",
+                                            "en": "Updated accessories"
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Description mise à jour",
+                                            "en": "Updated description"
+                                        }
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "new-icon.png"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#00FF00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Catégorie de produit mise à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Catégorie de produit introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Supprimer une catégorie de produit",
+                "description": "Supprime une catégorie de produit par ID",
+                "operationId": "01262f4241c6fda582df5f5e488d39da",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catégorie de produit supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Catégorie de produit non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/products": {
             "get": {
                 "tags": [
@@ -6941,6 +7258,10 @@
         {
             "name": "Permissions",
             "description": "Permissions"
+        },
+        {
+            "name": "Product Categories",
+            "description": "Product Categories"
         },
         {
             "name": "Provider Services",
