@@ -26,6 +26,8 @@ class UpdateProductCategoryRequest extends FormRequest
             'name.*' => 'required|string|max:255',
             'description' => 'nullable|array',
             'description.*' => 'nullable|string',
+            'icon' => 'nullable|string|max:255',
+            'color' => ['nullable','string','regex:/^#?[0-9A-Fa-f]{6}$/'],
         ];
-    }    
+    }
 }

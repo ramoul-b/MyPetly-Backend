@@ -20,6 +20,8 @@ class ProductRequestTest extends TestCase
         $category = ProductCategory::create([
             'name' => ['en' => 'Cat'],
             'description' => ['en' => 'Desc'],
+            'icon' => 'icon',
+            'color' => '#ffffff',
         ]);
 
         $data = [
@@ -45,6 +47,8 @@ class ProductRequestTest extends TestCase
         $category = ProductCategory::create([
             'name' => ['en' => 'Cat'],
             'description' => ['en' => 'Desc'],
+            'icon' => 'icon',
+            'color' => '#ffffff',
         ]);
 
         $data = [
