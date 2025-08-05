@@ -18,13 +18,14 @@ class ProductCategoryRequestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Permission::create(['name' => 'manage product categories']);
+        Permission::create(['name' => 'create_product_category']);
+        Permission::create(['name' => 'edit_any_product_category']);
     }
 
     public function test_store_product_category_request_authorizes_when_user_has_permission(): void
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('manage product categories');
+        $user->givePermissionTo('create_product_category');
         $this->actingAs($user);
 
         $request = new StoreProductCategoryRequest();
@@ -53,7 +54,7 @@ class ProductCategoryRequestTest extends TestCase
     public function test_store_product_category_request_fails_validation(): void
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('manage product categories');
+        $user->givePermissionTo('create_product_category');
         $this->actingAs($user);
 
         $request = new StoreProductCategoryRequest();
@@ -69,7 +70,7 @@ class ProductCategoryRequestTest extends TestCase
     public function test_update_product_category_request_authorizes_when_user_has_permission(): void
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('manage product categories');
+        $user->givePermissionTo('edit_any_product_category');
         $this->actingAs($user);
 
         $request = new UpdateProductCategoryRequest();
@@ -98,7 +99,7 @@ class ProductCategoryRequestTest extends TestCase
     public function test_update_product_category_request_fails_validation(): void
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('manage product categories');
+        $user->givePermissionTo('edit_any_product_category');
         $this->actingAs($user);
 
         $request = new UpdateProductCategoryRequest();

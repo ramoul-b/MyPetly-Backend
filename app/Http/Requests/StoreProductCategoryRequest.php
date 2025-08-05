@@ -11,7 +11,7 @@ class StoreProductCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()?->can('manage product categories') ?? false;
+        return auth()->user()?->can('create_product_category') ?? false;
     }
 
     /**
