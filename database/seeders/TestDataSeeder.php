@@ -21,10 +21,14 @@ class TestDataSeeder extends Seeder
             [
                 'name' => ['en' => 'Food', 'fr' => 'Nourriture'],
                 'description' => ['en' => 'Food products', 'fr' => 'Produits alimentaires'],
+                'icon' => 'restaurant',
+                'color' => '#FFA500',
             ],
             [
                 'name' => ['en' => 'Accessories', 'fr' => 'Accessoires'],
                 'description' => ['en' => 'Pet accessories', 'fr' => 'Accessoires pour animaux'],
+                'icon' => 'shopping-bag',
+                'color' => '#795548',
             ],
         ];
 

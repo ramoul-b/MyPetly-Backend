@@ -20,6 +20,8 @@ class ProductCategoryFactory extends Factory
                 'en' => $this->faker->sentence,
                 'fr' => $this->faker->sentence,
             ]),
+            'icon' => $this->faker->word,
+            'color' => $this->faker->hexColor,
         ];
     }
 }

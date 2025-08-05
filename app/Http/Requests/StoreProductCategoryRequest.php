@@ -11,7 +11,7 @@ class StoreProductCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,6 +26,8 @@ class StoreProductCategoryRequest extends FormRequest
             'name.*' => 'required|string|max:255',
             'description' => 'nullable|array',
             'description.*' => 'nullable|string',
+            'icon' => 'nullable|string|max:255',
+            'color' => ['nullable','string','regex:/^#?[0-9A-Fa-f]{6}$/'],
         ];
-    }    
+    }
 }
