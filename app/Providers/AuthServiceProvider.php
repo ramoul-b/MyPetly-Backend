@@ -9,6 +9,7 @@ use App\Models\Provider;
 use App\Models\Booking;
 use App\Models\Collar;
 use App\Models\Category;
+use App\Models\ProductCategory;
 use App\Models\Review;
 use App\Models\ProviderService;
 use App\Models\Store;
@@ -25,6 +26,7 @@ use App\Policies\ProviderPolicy;
 use App\Policies\BookingPolicy;
 use App\Policies\CollarPolicy;
 use App\Policies\CategoryPolicy;
+use App\Policies\ProductCategoryPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\ReviewPolicy;
@@ -49,6 +51,7 @@ class AuthServiceProvider extends ServiceProvider
         Booking::class         => BookingPolicy::class,
         Collar::class          => CollarPolicy::class,
         Category::class        => CategoryPolicy::class,
+        ProductCategory::class => ProductCategoryPolicy::class,
         Role::class            => RolePolicy::class,
         Permission::class      => PermissionPolicy::class,
         Review::class          => ReviewPolicy::class,
