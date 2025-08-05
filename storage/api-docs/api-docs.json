@@ -4359,6 +4359,30 @@
                 ]
             }
         },
+        "/product-categories/{id}/products": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Obtenir les produits d'une catégorie",
+                "operationId": "af6a865b5b39d8e2d61d422b13ff73e3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des produits récupérée avec succès"
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
                 "tags": [
