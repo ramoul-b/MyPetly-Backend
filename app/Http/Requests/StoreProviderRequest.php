@@ -14,6 +14,7 @@ class StoreProviderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id'         => 'required|exists:users,id|unique:providers,user_id',
             'name'            => 'required|array',
             'name.*'          => 'required|string|max:255',
             'email'           => 'required|email|unique:providers,email',

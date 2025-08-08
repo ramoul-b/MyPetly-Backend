@@ -26,6 +26,7 @@ class ProviderService
         }
 
         $provider = new Provider();
+        $provider->user_id = $data['user_id'];
         $provider->email  = $data['email'];
         $provider->phone  = $data['phone'] ?? null;
         $provider->tax_code = $data['tax_code'] ?? null;
