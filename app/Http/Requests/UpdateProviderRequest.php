@@ -14,6 +14,7 @@ class UpdateProviderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id'        => 'sometimes|exists:users,id|unique:providers,user_id,' . $this->provider,
             'name'            => 'sometimes|array',
             'name.*'          => 'sometimes|string|max:255',
             'email'           => 'sometimes|email|unique:providers,email,' . $this->provider,

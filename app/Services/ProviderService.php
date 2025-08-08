@@ -54,6 +54,9 @@ class ProviderService
         if (isset($data['email'])) {
             $provider->email = $data['email'];
         }
+        if (isset($data['user_id'])) {
+            $provider->user_id = $data['user_id'];
+        }
         if (isset($data['phone'])) {
             $provider->phone = $data['phone'];
         }
