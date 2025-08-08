@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CartResource;
+use App\Http\Resources\CartItemResource;
 use App\Services\CartService;
 use App\Models\CartItem;
 use App\Services\ApiService;
@@ -32,7 +32,7 @@ class CartController extends Controller
     {
         $this->authorize('viewAny', CartItem::class);
         $items = $this->cartService->listItems();
-        return ApiService::response(CartResource::collection($items), 200);
+        return ApiService::response(CartItemResource::collection($items), 200);
     }
 
     /**
@@ -57,7 +57,7 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
         $item = $this->cartService->addToCart($data);
-        return ApiService::response(new CartResource($item), 201);
+        return ApiService::response(new CartItemResource($item->load('product')), 201);
     }
 
     /**
