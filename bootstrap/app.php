@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\HandleCors;
+use App\Http\Middleware\ForceJsonResponse;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -27,6 +28,8 @@ return Application::configure(
             'locale' => \App\Http\Middleware\SetLocale::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
+
+        $middleware->appendToGroup('api', ForceJsonResponse::class);
 
         // Exemple si tu veux ajouter d’autres alias :
         // $middleware->alias([
