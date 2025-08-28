@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\{
     StripeWebhookController
 };
 use App\Http\Controllers\Api\ProductCategoryController;
+use App\Http\Controllers\Api\StoreCategoryController;
 
 
 Route::prefix('v1')->group(function () {
@@ -103,6 +104,14 @@ Route::prefix('v1')->group(function () {
         Route::get('products/my/low-stock', [ProductController::class, 'getMyLowStockProducts']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('product-categories', ProductCategoryController::class)->except(['index', 'show']);
+
+        Route::prefix('store/categories')->group(function () {
+            Route::get('my', [StoreCategoryController::class, 'my']);
+            Route::get('{id}', [StoreCategoryController::class, 'show']);
+            Route::post('/', [StoreCategoryController::class, 'store']);
+            Route::put('{id}', [StoreCategoryController::class, 'update']);
+            Route::delete('{id}', [StoreCategoryController::class, 'destroy']);
+        });
 
         Route::prefix('orders')->group(function () {
             Route::get('/', [OrderController::class, 'index']);
