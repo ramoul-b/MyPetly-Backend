@@ -25,6 +25,32 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/products/by-user/{userId}",
+     *     tags={"Products"},
+     *     summary="Liste des produits par utilisateur",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="userId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Liste des produits récupérée"),
+     *     @OA\Response(response=404, description="Aucun produit trouvé"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function getByUserId(int $userId): JsonResponse
+    {
+        try {
+            $this->authorize('view', new Product());
+            $products = $this->productService->getByUserId($userId);
+            if ($products->isEmpty()) {
+                return ApiService::response('Products not found', 404);
+            }
+            return ApiService::response(ProductResource::collection($products), 200);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
      *     path="/products",
      *     tags={"Products"},
      *     summary="Liste des produits",

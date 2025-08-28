@@ -4383,6 +4383,41 @@
                 }
             }
         },
+        "/products/by-user/{userId}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Liste des produits par utilisateur",
+                "operationId": "53fea2bd4b9ea568fd12db4ee39ee15d",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des produits récupérée"
+                    },
+                    "404": {
+                        "description": "Aucun produit trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/products": {
             "get": {
                 "tags": [

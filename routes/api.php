@@ -99,6 +99,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('stores', StoreController::class);
+        Route::get('products/by-user/{userId}', [ProductController::class, 'getByUserId']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('product-categories', ProductCategoryController::class)->except(['index', 'show']);
 
