@@ -4418,6 +4418,46 @@
                 ]
             }
         },
+        "/products/my/low-stock": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Liste des produits avec stock faible pour le fournisseur courant",
+                "operationId": "2f5a24cdabc14800d4688da6f4cff879",
+                "parameters": [
+                    {
+                        "name": "threshold",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste récupérée"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/products": {
             "get": {
                 "tags": [
@@ -6204,7 +6244,7 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "provider_id": {
+                                    "user_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
@@ -6219,6 +6259,22 @@
                                         "example": {
                                             "fr": "Description"
                                         }
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "10 Rue Exemple, Paris"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+33 6 12 34 56 78"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "shop1@example.com"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "active"
                                     }
                                 },
                                 "type": "object"
@@ -6294,6 +6350,52 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Nouvelle boutique",
+                                            "en": "New shop"
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Description",
+                                            "en": "Description"
+                                        }
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "10 Rue Exemple, Paris"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+33 6 12 34 56 78"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "shop1@example.com"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "active"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Boutique mise à jour"

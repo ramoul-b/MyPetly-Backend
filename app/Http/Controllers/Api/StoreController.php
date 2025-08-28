@@ -51,9 +51,13 @@ class StoreController extends Controller
      *     summary="Créer une boutique",
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(
-     *         @OA\Property(property="provider_id", type="integer", example=1),
+     *         @OA\Property(property="user_id", type="integer", example=1),
      *         @OA\Property(property="name", type="object", example={"fr":"Ma boutique"}),
-     *         @OA\Property(property="description", type="object", example={"fr":"Description"})
+     *         @OA\Property(property="description", type="object", example={"fr":"Description"}),
+     *         @OA\Property(property="address", type="string", example="10 Rue Exemple, Paris"),
+     *         @OA\Property(property="phone", type="string", example="+33 6 12 34 56 78"),
+     *         @OA\Property(property="email", type="string", example="shop1@example.com"),
+     *         @OA\Property(property="status", type="string", example="active")
      *     )),
      *     @OA\Response(response=201, description="Boutique créée"),
      *     @OA\Response(response=422, description="Données invalides"),
@@ -101,6 +105,15 @@ class StoreController extends Controller
      *     summary="Mettre à jour une boutique",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(required=false, @OA\JsonContent(
+     *         @OA\Property(property="user_id", type="integer", example=1),
+     *         @OA\Property(property="name", type="object", example={"fr":"Nouvelle boutique", "en":"New shop"}),
+     *         @OA\Property(property="description", type="object", example={"fr":"Description", "en":"Description"}),
+     *         @OA\Property(property="address", type="string", example="10 Rue Exemple, Paris"),
+     *         @OA\Property(property="phone", type="string", example="+33 6 12 34 56 78"),
+     *         @OA\Property(property="email", type="string", example="shop1@example.com"),
+     *         @OA\Property(property="status", type="string", example="active")
+     *     )),
      *     @OA\Response(response=200, description="Boutique mise à jour"),
      *     @OA\Response(response=404, description="Introuvable"),
      *     @OA\Response(response=422, description="Données invalides"),
