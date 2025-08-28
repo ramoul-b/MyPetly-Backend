@@ -10,6 +10,7 @@ use App\Services\ApiService;
 use App\Services\OrderService;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -43,6 +44,21 @@ class OrderController extends Controller
             $this->authorize('create', new Order());
             $order = $this->orderService->checkout($request->validated());
             return ApiService::response(new OrderResource($order), 201);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
+
+    public function stats(Request $request): JsonResponse
+    {
+        try {
+            $this->authorize('view', new Order());
+            $stats = $this->orderService->statsForProvider(
+                $request->user(),
+                $request->query('date_from'),
+                $request->query('date_to')
+            );
+            return ApiService::response($stats, 200);
         } catch (\Throwable $e) {
             return ApiService::response($e->getMessage(), 500);
         }
