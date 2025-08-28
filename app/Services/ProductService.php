@@ -51,5 +51,15 @@ class ProductService
             ->whereHas('store', fn($query) => $query->where('user_id', $userId))
             ->get();
     }
+
+    public function getLowStockByUser(int $userId, int $threshold = 10, int $limit = 10): Collection
+    {
+        return Product::with('category')
+            ->whereHas('store', fn($query) => $query->where('user_id', $userId))
+            ->where('stock', '<', $threshold)
+            ->orderBy('stock')
+            ->limit($limit)
+            ->get();
+    }
 }
 

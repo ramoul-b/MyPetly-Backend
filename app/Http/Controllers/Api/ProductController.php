@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Services\ApiService;
 use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Tag(name="Products", description="Gestion des produits")
@@ -44,6 +45,45 @@ class ProductController extends Controller
                 return ApiService::response('Products not found', 404);
             }
             return ApiService::response(ProductResource::collection($products), 200);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/products/my/low-stock",
+     *     tags={"Products"},
+     *     summary="Liste des produits avec stock faible pour le fournisseur courant",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="threshold", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="Liste récupérée"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function getMyLowStockProducts(Request $request): JsonResponse
+    {
+        try {
+            $this->authorize('view', new Product());
+            $threshold = (int) $request->query('threshold', 10);
+            $limit = (int) $request->query('limit', 10);
+            $userId = $request->user()->id;
+
+            $products = $this->productService->getLowStockByUser($userId, $threshold, $limit);
+
+            $data = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'title' => $product->getTranslation('name', app()->getLocale()),
+                    'sku' => $product->sku ?? null,
+                    'stock' => $product->stock,
+                    'parentId' => optional($product->category)->id,
+                    'parentTitle' => optional($product->category)->getTranslation('name', app()->getLocale()),
+                ];
+            });
+
+            return ApiService::response($data, 200);
         } catch (\Throwable $e) {
             return ApiService::response($e->getMessage(), 500);
         }
