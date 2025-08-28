@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\User;
+
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -166,5 +167,29 @@ class OrderService
         $order->save();
 
         return $order;
+    }
+
+    public function statsForProvider(User $provider, ?string $dateFrom, ?string $dateTo): array
+    {
+        $query = Order::query()->whereHas('store', function ($q) use ($provider) {
+            $q->where('user_id', $provider->id);
+        });
+
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        $totalRevenue = (clone $query)->sum('total');
+        $orderCount = (clone $query)->count();
+        $avgOrderValue = $orderCount > 0 ? $totalRevenue / $orderCount : 0;
+
+        return [
+            'total_revenue' => $totalRevenue,
+            'order_count' => $orderCount,
+            'avg_order_value' => $avgOrderValue,
+        ];
     }
 }

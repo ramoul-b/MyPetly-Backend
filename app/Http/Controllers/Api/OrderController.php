@@ -82,4 +82,19 @@ class OrderController extends Controller
             return ApiService::response($e->getMessage(), 500);
         }
     }
+
+    public function stats(Request $request): JsonResponse
+    {
+        try {
+            $this->authorize('view', new Order());
+            $stats = $this->orderService->statsForProvider(
+                $request->user(),
+                $request->query('date_from'),
+                $request->query('date_to')
+            );
+            return ApiService::response($stats, 200);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
 }
