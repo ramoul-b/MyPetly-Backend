@@ -6,8 +6,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\CartItem;
+use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class OrderService
 {
@@ -93,6 +96,49 @@ class OrderService
         }
 
         return collect();
+    }
+
+    public function listForProvider(User $provider, array $filters): LengthAwarePaginator
+    {
+        $query = Order::with(['items', 'store']);
+
+        $query->whereHas('store', function ($q) use ($provider) {
+            $column = Schema::hasColumn('stores', 'provider_id') ? 'provider_id' : 'user_id';
+            $q->where($column, $provider->id);
+        });
+
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['date_from'])) {
+            $query->whereDate('created_at', '>=', $filters['date_from']);
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query->whereDate('created_at', '<=', $filters['date_to']);
+        }
+
+        if (!empty($filters['items_count'])) {
+            $query->withCount('items');
+        }
+
+        if (!empty($filters['sort'])) {
+            $direction = 'asc';
+            $field = $filters['sort'];
+            if (str_starts_with($field, '-')) {
+                $direction = 'desc';
+                $field = substr($field, 1);
+            }
+            if ($field === 'date') {
+                $query->orderBy('created_at', $direction);
+            }
+        }
+
+        $limit = isset($filters['limit']) ? (int) $filters['limit'] : 15;
+        $page = isset($filters['page']) ? (int) $filters['page'] : 1;
+
+        return $query->paginate($limit, ['*'], 'page', $page);
     }
 
     public function find(int $id): Order
