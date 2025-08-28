@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Collection;
 
 class ProductService
 {
@@ -42,6 +43,13 @@ class ProductService
     public function delete(Product $product): void
     {
         $product->delete();
+    }
+
+    public function getByUserId(int $userId): Collection
+    {
+        return Product::with(['category', 'store'])
+            ->whereHas('store', fn($query) => $query->where('user_id', $userId))
+            ->get();
     }
 }
 
