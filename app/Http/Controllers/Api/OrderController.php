@@ -77,6 +77,40 @@ class OrderController extends Controller
      *     @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
+    public function my(Request $request): JsonResponse
+    {
+        try {
+            $this->authorize('view', new Order());
+            $filters = $request->only([
+                'status',
+                'date_from',
+                'date_to',
+                'sort',
+                'limit',
+                'page',
+                'items_count',
+            ]);
+
+            $result = $this->orderService->listForProvider($request->user(), $filters);
+
+            if ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
+                return ApiService::response([
+                    'data' => OrderResource::collection($result->items()),
+                    'meta' => [
+                        'page' => $result->currentPage(),
+                        'per_page' => $result->perPage(),
+                        'total' => $result->total(),
+                        'total_pages' => $result->lastPage(),
+                    ],
+                ], 200);
+            }
+
+            return ApiService::response(OrderResource::collection($result), 200);
+        } catch (\Throwable $e) {
+            return ApiService::response($e->getMessage(), 500);
+        }
+    }
+
     public function show(int $id): JsonResponse
     {
         try {
@@ -157,6 +191,7 @@ class OrderController extends Controller
      *    @OA\Response(response=500, description="Erreur interne du serveur")
      * )
      */
+
     public function stats(Request $request): JsonResponse
     {
         try {
