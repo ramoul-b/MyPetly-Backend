@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\User;
 
+
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
