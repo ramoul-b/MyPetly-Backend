@@ -3803,6 +3803,266 @@
                 }
             }
         },
+        "/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Lister les commandes",
+                "operationId": "8f3183bfa0ecb8a2c864cbf972b8061d",
+                "responses": {
+                    "200": {
+                        "description": "Liste des commandes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "pending"
+                                            },
+                                            "total": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 99.99
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-19 10:30:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Afficher une commande",
+                "operationId": "c1fc79bdfb52afe45e1d77aa456f07c0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la commande",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        },
+                                        "total": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 99.99
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-19 10:30:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/checkout": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Créer une commande",
+                "operationId": "241082ece1f9ff15e753ff58da2b8366",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "shipping_address": {
+                                        "type": "string",
+                                        "example": "1 rue de Paris"
+                                    },
+                                    "billing_address": {
+                                        "type": "string",
+                                        "example": "1 rue de Paris"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Commande créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        },
+                                        "total": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 99.99
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/my/stats": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Statistiques des commandes du fournisseur",
+                "operationId": "6bc64c4345983e11920a77a19ea60e0a",
+                "parameters": [
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Statistiques calculées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_revenue": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 1500.5
+                                        },
+                                        "order_count": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "avg_order_value": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 150.05
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/orders/{order}/items": {
             "get": {
                 "tags": [
@@ -6211,6 +6471,229 @@
                 ]
             }
         },
+        "/store/categories/my": {
+            "get": {
+                "tags": [
+                    "Store Categories"
+                ],
+                "summary": "Liste des catégories de la boutique de l'utilisateur",
+                "operationId": "91284480fafdbe1611a5309993cc1077",
+                "parameters": [
+                    {
+                        "name": "flat",
+                        "in": "query",
+                        "description": "Retourner la liste à plat",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste récupérée"
+                    },
+                    "404": {
+                        "description": "Boutique introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la récupération"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/store/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Store Categories"
+                ],
+                "summary": "Afficher une catégorie",
+                "operationId": "f68aa00f8234730b0c57d9e840ccfb0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catégorie trouvée"
+                    },
+                    "404": {
+                        "description": "Introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la récupération"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Store Categories"
+                ],
+                "summary": "Mettre à jour une catégorie",
+                "operationId": "160c432bef579a78f8da50da2501b485",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Catégorie"
+                                        }
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "categorie"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Catégorie mise à jour"
+                    },
+                    "404": {
+                        "description": "Introuvable"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la mise à jour"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Store Categories"
+                ],
+                "summary": "Supprimer une catégorie",
+                "operationId": "ab39c5c66729d355007cbf5c83a58369",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catégorie supprimée"
+                    },
+                    "404": {
+                        "description": "Introuvable"
+                    },
+                    "409": {
+                        "description": "La catégorie possède des sous-catégories"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/store/categories": {
+            "post": {
+                "tags": [
+                    "Store Categories"
+                ],
+                "summary": "Créer une catégorie",
+                "operationId": "2e05ef141cb7d8b335ffa4c745cb4d0f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "object",
+                                        "example": {
+                                            "fr": "Catégorie"
+                                        }
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "categorie"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Catégorie créée"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "404": {
+                        "description": "Boutique introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la création"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/stores": {
             "get": {
                 "tags": [
@@ -7369,6 +7852,10 @@
             "description": "Finaliser la commande"
         },
         {
+            "name": "Orders",
+            "description": "Gestion des commandes"
+        },
+        {
             "name": "Products",
             "description": "Gestion des produits"
         },
@@ -7379,6 +7866,10 @@
         {
             "name": "Shipping",
             "description": "Mise à jour du statut d'expédition"
+        },
+        {
+            "name": "Store Categories",
+            "description": "Gestion des catégories de boutique"
         },
         {
             "name": "Stores",
@@ -7407,10 +7898,6 @@
         {
             "name": "Collars",
             "description": "Collars"
-        },
-        {
-            "name": "Orders",
-            "description": "Orders"
         },
         {
             "name": "Paiement",
