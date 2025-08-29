@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Store;
 use App\Models\StoreCategory;
+use App\Http\Resources\StoreCategoryResource;
 use App\Services\ApiService;
 use App\Services\StoreCategoryService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -32,7 +33,7 @@ class StoreCategoryController extends Controller
             $flat = $request->boolean('flat', true);
             $categories = $this->service->listForStore($store, $flat);
 
-            return ApiService::response($categories, 200);
+            return ApiService::response(StoreCategoryResource::collection($categories), 200);
         } catch (AuthorizationException $e) {
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
@@ -50,7 +51,7 @@ class StoreCategoryController extends Controller
 
             $this->authorize('view', $category);
 
-            return ApiService::response($category, 200);
+            return ApiService::response(new StoreCategoryResource($category), 200);
         } catch (AuthorizationException $e) {
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
@@ -87,7 +88,7 @@ class StoreCategoryController extends Controller
 
             $category = StoreCategory::create($data);
 
-            return ApiService::response($category, 201);
+            return ApiService::response(new StoreCategoryResource($category), 201);
         } catch (AuthorizationException $e) {
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
@@ -123,7 +124,7 @@ class StoreCategoryController extends Controller
 
             $category->update($data);
 
-            return ApiService::response($category, 200);
+            return ApiService::response(new StoreCategoryResource($category), 200);
         } catch (AuthorizationException $e) {
             return ApiService::response(['message' => __('messages.unauthorized')], 403);
         } catch (\Exception $e) {
