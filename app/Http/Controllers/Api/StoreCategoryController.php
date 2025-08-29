@@ -14,12 +14,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+/**
+ * @OA\Tag(name="Store Categories", description="Gestion des catégories de boutique")
+ */
 class StoreCategoryController extends Controller
 {
     public function __construct(private StoreCategoryService $service)
     {
     }
 
+    /**
+     * @OA\Get(
+     *     path="/store/categories/my",
+     *     tags={"Store Categories"},
+     *     summary="Liste des catégories de la boutique de l'utilisateur",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="flat", in="query", required=false, @OA\Schema(type="boolean"), description="Retourner la liste à plat"),
+     *     @OA\Response(response=200, description="Liste récupérée"),
+     *     @OA\Response(response=404, description="Boutique introuvable"),
+     *     @OA\Response(response=500, description="Erreur lors de la récupération")
+     * )
+     */
     public function my(Request $request): JsonResponse
     {
         try {
@@ -41,6 +56,18 @@ class StoreCategoryController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/store/categories/{id}",
+     *     tags={"Store Categories"},
+     *     summary="Afficher une catégorie",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Catégorie trouvée"),
+     *     @OA\Response(response=404, description="Introuvable"),
+     *     @OA\Response(response=500, description="Erreur lors de la récupération")
+     * )
+     */
     public function show(int $id): JsonResponse
     {
         try {
@@ -59,6 +86,23 @@ class StoreCategoryController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/store/categories",
+     *     tags={"Store Categories"},
+     *     summary="Créer une catégorie",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(
+     *         @OA\Property(property="name", type="object", example={"fr":"Catégorie"}),
+     *         @OA\Property(property="slug", type="string", example="categorie"),
+     *         @OA\Property(property="parent_id", type="integer", example=1)
+     *     )),
+     *     @OA\Response(response=201, description="Catégorie créée"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=404, description="Boutique introuvable"),
+     *     @OA\Response(response=500, description="Erreur lors de la création")
+     * )
+     */
     public function store(Request $request): JsonResponse
     {
         try {
@@ -96,6 +140,24 @@ class StoreCategoryController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/store/categories/{id}",
+     *     tags={"Store Categories"},
+     *     summary="Mettre à jour une catégorie",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(required=false, @OA\JsonContent(
+     *         @OA\Property(property="name", type="object", example={"fr":"Catégorie"}),
+     *         @OA\Property(property="slug", type="string", example="categorie"),
+     *         @OA\Property(property="parent_id", type="integer", example=1)
+     *     )),
+     *     @OA\Response(response=200, description="Catégorie mise à jour"),
+     *     @OA\Response(response=404, description="Introuvable"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur lors de la mise à jour")
+     * )
+     */
     public function update(Request $request, int $id): JsonResponse
     {
         try {
@@ -132,6 +194,19 @@ class StoreCategoryController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/store/categories/{id}",
+     *     tags={"Store Categories"},
+     *     summary="Supprimer une catégorie",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Catégorie supprimée"),
+     *     @OA\Response(response=404, description="Introuvable"),
+     *     @OA\Response(response=409, description="La catégorie possède des sous-catégories"),
+     *     @OA\Response(response=500, description="Erreur lors de la suppression")
+     * )
+     */
     public function destroy(int $id): JsonResponse
     {
         try {
