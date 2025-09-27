@@ -92,8 +92,17 @@ class User extends Authenticatable
         return User::find($id);
     }
     public function animals()
-{
-    return $this->hasMany(Animal::class);
-}
+    {
+        return $this->hasMany(Animal::class);
+    }
 
+    public function createdCoupons()
+    {
+        return $this->hasMany(Coupon::class, 'created_by');
+    }
+
+    public function inventoryMovements()
+    {
+        return $this->hasMany(InventoryMovement::class);
+    }
 }
