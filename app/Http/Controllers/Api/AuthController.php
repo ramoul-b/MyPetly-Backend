@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\ApiService;
 use App\Services\UserService;
+use Illuminate\Support\Carbon;
 
 
 /**
@@ -59,7 +59,7 @@ class AuthController extends Controller
  *                 @OA\Property(property="password", type="string", format="password", example="password123"),
  *                 @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
  *                 @OA\Property(property="photo", type="string", format="binary", description="User profile photo")
- *             )
+ *             ),
  *         )
  *     ),
  *     @OA\Response(
@@ -67,6 +67,9 @@ class AuthController extends Controller
  *         description="User registered successfully",
  *         @OA\JsonContent(
  *             @OA\Property(property="access_token", type="string", example="generated-access-token"),
+ *             @OA\Property(property="token_type", type="string", example="Bearer"),
+ *             @OA\Property(property="expires_at", type="string", format="date-time", example="2025-01-20T22:00:00Z"),
+ *             @OA\Property(property="expires_in", type="integer", example=3600),
  *             @OA\Property(
  *                 property="user",
  *                 type="object",
@@ -103,17 +106,17 @@ class AuthController extends Controller
  public function register(StoreUserRequest $request, UserService $userService)
  {
      try {
-        $user = $userService->createUser($request->validated());
-        // Attribuer le rôle "user" par défaut lors de l'inscription
-        $user->assignRole('user');
- 
-         // Générer un token
-         $token = $user->createToken('mypetly')->plainTextToken;
- 
-         return ApiService::response([
-             'access_token' => $token,
+         $user = $userService->createUser($request->validated());
+
+         // Attribuer le rôle "user" par défaut lors de l'inscription
+         $user->assignRole('user');
+         $user->load(['roles', 'permissions']);
+
+         $tokenPayload = $this->issueToken($user);
+
+         return ApiService::response(array_merge($tokenPayload, [
              'user' => new UserResource($user),
-         ], 201);
+         ]), 201);
      } catch (\Exception $e) {
          return ApiService::response([
              'message' => __('messages.operation_failed'),
@@ -141,6 +144,9 @@ class AuthController extends Controller
  *         description="User authenticated successfully",
  *         @OA\JsonContent(
  *             @OA\Property(property="access_token", type="string", example="generated-access-token"),
+ *             @OA\Property(property="token_type", type="string", example="Bearer"),
+ *             @OA\Property(property="expires_at", type="string", format="date-time", example="2025-01-20T22:00:00Z"),
+ *             @OA\Property(property="expires_in", type="integer", example=3600),
  *             @OA\Property(
  *                 property="user",
  *                 type="object",
@@ -196,21 +202,20 @@ class AuthController extends Controller
 
         // Vérifier les identifiants
         $user = User::where('email', $request->email)->first();
-        $user->load(['roles', 'permissions']);
-        
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ApiService::response([
                 'message' => __('messages.invalid_credentials'),
             ], 401);
         }
 
-        // Générer un token
-        $token = $user->createToken('mypetly')->plainTextToken;
+        $user->load(['roles', 'permissions']);
 
-        return ApiService::response([
-            'access_token' => $token,
-            'user'         => new UserResource($user),
-        ], 200);
+        $tokenPayload = $this->issueToken($user);
+
+        return ApiService::response(array_merge($tokenPayload, [
+            'user' => new UserResource($user),
+        ]), 200);
 
     } catch (\Exception $e) {
         return ApiService::response([
@@ -219,8 +224,6 @@ class AuthController extends Controller
         ], 500);
     }
 }
-
-
 
     /**
  * @OA\Post(
@@ -349,6 +352,9 @@ public function userProfile(Request $request)
  *         description="New access token generated successfully.",
  *         @OA\JsonContent(
  *             @OA\Property(property="access_token", type="string", example="new-generated-token"),
+ *             @OA\Property(property="token_type", type="string", example="Bearer"),
+ *             @OA\Property(property="expires_at", type="string", format="date-time", example="2025-01-20T22:00:00Z"),
+ *             @OA\Property(property="expires_in", type="integer", example=3600),
  *             @OA\Property(
  *                 property="user",
  *                 type="object",
@@ -358,6 +364,11 @@ public function userProfile(Request $request)
  *                 @OA\Property(property="email_verified_at", type="string", format="datetime", example="null"),
  *                 @OA\Property(property="created_at", type="string", format="datetime", example="2025-01-20T20:00:00Z"),
  *                 @OA\Property(property="updated_at", type="string", format="datetime", example="2025-01-20T20:00:00Z")
+ *             ),
+ *             @OA\Property(
+ *                 property="permissions",
+ *                 type="array",
+ *                 @OA\Items(type="string", example="orders.view")
  *             )
  *         )
  *     ),
@@ -388,21 +399,15 @@ public function refreshToken(Request $request)
             ], 401);
         }
 
-        // 1. révoquer l’ancien token
-        $request->user()->currentAccessToken()->delete();
-
-        // 2. créer le nouveau
-        $newToken = $user->createToken('mypetly')->plainTextToken;
-
-        // 3. charger rôles + permissions
         $user->load(['roles', 'permissions']);
+
+        $tokenPayload = $this->issueToken($user);
         $flatPerms = $user->getAllPermissions()->pluck('name');
 
-        return ApiService::response([
-            'access_token' => $newToken,
-            'user'         => new UserResource($user),
-            'permissions'  => $flatPerms,
-        ], 200);
+        return ApiService::response(array_merge($tokenPayload, [
+            'user'        => new UserResource($user),
+            'permissions' => $flatPerms,
+        ]), 200);
 
     } catch (\Throwable $e) {
         return ApiService::response([
@@ -793,9 +798,49 @@ public function resendVerificationEmail(Request $request)
     }
 }
 
+    /**
+     * Révoque les anciens tokens et génère un nouveau token avec sa date d'expiration.
+     */
+    protected function issueToken(User $user): array
+    {
+        $user->tokens()->delete();
 
+        $expiresAt = $this->resolveExpiration();
 
+        $newToken = $user->createToken('mypetly', ['*'], $expiresAt);
 
+        return [
+            'access_token' => $newToken->plainTextToken,
+            'token_type'   => 'Bearer',
+            'expires_at'   => $expiresAt?->toIso8601String(),
+            'expires_in'   => $this->secondsUntilExpiration($expiresAt),
+        ];
+    }
+
+    protected function resolveExpiration(): ?Carbon
+    {
+        $expiration = config('sanctum.expiration');
+
+        if (is_null($expiration)) {
+            return null;
+        }
+
+        $minutes = (int) $expiration;
+
+        if ($minutes <= 0) {
+            return null;
+        }
+
+        return now()->addMinutes($minutes);
+    }
+
+    protected function secondsUntilExpiration(?Carbon $expiresAt): ?int
+    {
+        if (!$expiresAt) {
+            return null;
+        }
+
+        return max(0, now()->diffInSeconds($expiresAt));
+    }
 
 }
-
