@@ -16,6 +16,9 @@ use App\Models\Store;
 use App\Models\Order;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\Coupon;
+use App\Models\InventoryMovement;
+use App\Models\StoreSetting;
 use App\Models\AdminDashboard;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -37,6 +40,9 @@ use App\Policies\OrderPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\CartItemPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\CouponPolicy;
+use App\Policies\InventoryMovementPolicy;
+use App\Policies\StoreSettingPolicy;
 use App\Policies\AdminDashboardPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -63,6 +69,9 @@ class AuthServiceProvider extends ServiceProvider
         Order::class           => OrderPolicy::class,
         CartItem::class        => CartItemPolicy::class,
         User::class            => UserPolicy::class,
+        Coupon::class          => CouponPolicy::class,
+        InventoryMovement::class => InventoryMovementPolicy::class,
+        StoreSetting::class    => StoreSettingPolicy::class,
         AdminDashboard::class  => AdminDashboardPolicy::class,
     ];
 

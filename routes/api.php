@@ -24,6 +24,9 @@ use App\Http\Controllers\Api\{
     ShippingStatusController,
     PaymentController,
     StripeWebhookController,
+    CouponController,
+    InventoryController,
+    StoreSettingController
     AdminDashboardController
 };
 use App\Http\Controllers\Api\ProductCategoryController;
@@ -103,10 +106,13 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('stores', StoreController::class);
+        Route::apiResource('store-settings', StoreSettingController::class);
         Route::get('products/by-user/{userId}', [ProductController::class, 'getByUserId']);
         Route::get('products/my/low-stock', [ProductController::class, 'getMyLowStockProducts']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('product-categories', ProductCategoryController::class)->except(['index', 'show']);
+        Route::apiResource('coupons', CouponController::class);
+        Route::apiResource('inventory-movements', InventoryController::class);
 
         Route::prefix('store/categories')->group(function () {
             Route::get('my', [StoreCategoryController::class, 'my']);

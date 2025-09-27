@@ -33,5 +33,15 @@ class Product extends Model
     {
         return $this->belongsTo(Store::class);
     }
+
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
+    public function inventoryMovements()
+    {
+        return $this->hasMany(InventoryMovement::class);
+    }
 }
 

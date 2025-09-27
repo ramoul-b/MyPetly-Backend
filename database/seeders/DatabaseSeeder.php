@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             StoreSeeder::class,
             ProductSeeder::class,
+            CouponSeeder::class,
+            InventoryMovementSeeder::class,
+            StoreSettingSeeder::class,
             TestDataSeeder::class,
             MarketplaceSeeder::class
 

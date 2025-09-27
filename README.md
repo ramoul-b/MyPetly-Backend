@@ -83,3 +83,31 @@ creating a new token on the user and deleting the old one.
 
 After updating the Sanctum configuration, run `php artisan config:clear`
 when deploying to ensure the new settings are applied.
+
+## Marketplace APIs
+
+The marketplace module exposes dedicated endpoints for coupons, inventory tracking and store configuration. All routes are available under the `/api/v1` prefix and protected by the `auth:sanctum` and `locale` middlewares unless stated otherwise.
+
+### Coupons
+
+- `GET /api/v1/coupons` — List coupons with optional filters (`store_id`, `code`, `is_active`).
+- `POST /api/v1/coupons` — Create a coupon linked to a store and optionally to a product.
+- `GET /api/v1/coupons/{id}` — Retrieve coupon details.
+- `PUT /api/v1/coupons/{id}` — Update coupon metadata or activation settings.
+- `DELETE /api/v1/coupons/{id}` — Remove a coupon.
+
+### Inventory Movements
+
+- `GET /api/v1/inventory-movements` — Paginated history of stock adjustments per store/product.
+- `POST /api/v1/inventory-movements` — Register an incoming or outgoing stock movement and update product stock.
+- `GET /api/v1/inventory-movements/{id}` — Inspect a specific movement.
+- `PUT /api/v1/inventory-movements/{id}` — Amend the movement (type, quantity, notes) while keeping stock consistent.
+- `DELETE /api/v1/inventory-movements/{id}` — Roll back the movement and restore product stock.
+
+### Store Settings
+
+- `GET /api/v1/store-settings` — List settings for all stores.
+- `POST /api/v1/store-settings` — Create configuration for a store (currency, timezone, notifications, etc.).
+- `GET /api/v1/store-settings/{id}` — Display a store setting with its related store.
+- `PUT /api/v1/store-settings/{id}` — Update configuration values such as locale or low stock threshold.
+- `DELETE /api/v1/store-settings/{id}` — Remove the configuration record.
