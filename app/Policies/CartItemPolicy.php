@@ -31,4 +31,9 @@ class CartItemPolicy
     {
         return optional($item->cart)->user_id === $user->id;
     }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->id !== null;
+    }
 }

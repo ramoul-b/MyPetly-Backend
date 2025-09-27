@@ -27,9 +27,11 @@ use App\Http\Controllers\Api\{
     CouponController,
     InventoryController,
     StoreSettingController
+    AdminDashboardController
 };
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\StoreCategoryController;
+use App\Models\AdminDashboard;
 
 
 Route::prefix('v1')->group(function () {
@@ -99,6 +101,7 @@ Route::prefix('v1')->group(function () {
         */
         Route::get('providers/by-user/{userId}', [ProviderController::class, 'getByUserId']);
         Route::post('providers/{id}/photo', [ProviderController::class, 'uploadPhoto']);
+        Route::patch('providers/{provider}/status', [ProviderController::class, 'updateStatus']);
         Route::apiResource('providers', ProviderController::class);
         Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);
@@ -246,6 +249,12 @@ Route::prefix('v1')->group(function () {
 
 
         Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+        Route::prefix('admin/dashboard')
+            ->middleware(['can:view,' . AdminDashboard::class])
+            ->group(function () {
+                Route::get('/stats', [AdminDashboardController::class, 'stats']);
+            });
 
 
     });

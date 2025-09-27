@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\ProviderStatusEnum;
 use App\Models\Provider;
+use App\Notifications\ProviderApprovedNotification;
+use App\Notifications\ProviderRejectedNotification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -33,6 +36,7 @@ class ProviderService
         $provider->address = $data['address'] ?? null;
         $provider->rating = $data['rating'] ?? 0;
         $provider->photo  = $data['photo'] ?? null;
+        $provider->status = $data['status'] ?? ProviderStatusEnum::PENDING;
 
         // ✅ Utilisation de setTranslations() pour gérer les champs multilingues
         $provider->setTranslations('name', $data['name']);
@@ -69,6 +73,14 @@ class ProviderService
         if (isset($data['rating'])) {
             $provider->rating = $data['rating'];
         }
+        if (isset($data['status'])) {
+            $provider->status = $data['status'] instanceof ProviderStatusEnum
+                ? $data['status']
+                : ProviderStatusEnum::from($data['status']);
+        }
+        if (array_key_exists('validated_at', $data)) {
+            $provider->validated_at = $data['validated_at'];
+        }
 
         // ✅ Mettre à jour les champs multilingues
         if (isset($data['name'])) {
@@ -92,6 +104,25 @@ class ProviderService
     public function delete(Provider $provider): void
     {
         $provider->delete();
+    }
+
+    public function updateStatus(Provider $provider, ProviderStatusEnum $status): Provider
+    {
+        $provider->status = $status;
+        $provider->validated_at = $status === ProviderStatusEnum::APPROVED ? now() : null;
+        $provider->save();
+
+        $provider->loadMissing('user');
+
+        if ($provider->user) {
+            match ($status) {
+                ProviderStatusEnum::APPROVED => $provider->user->notify(new ProviderApprovedNotification($provider)),
+                ProviderStatusEnum::REJECTED => $provider->user->notify(new ProviderRejectedNotification($provider)),
+                default => null,
+            };
+        }
+
+        return $provider;
     }
 
     public function updatePhoto(int $id, string $path): ?Provider

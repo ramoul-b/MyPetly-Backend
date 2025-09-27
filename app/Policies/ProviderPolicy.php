@@ -50,4 +50,9 @@ class ProviderPolicy
 
         return false;
     }
+
+    public function updateStatus(User $user, Provider $provider): bool
+    {
+        return $user->can('approve-providers');
+    }
 }

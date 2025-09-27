@@ -19,6 +19,7 @@ use App\Models\Product;
 use App\Models\Coupon;
 use App\Models\InventoryMovement;
 use App\Models\StoreSetting;
+use App\Models\AdminDashboard;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
@@ -42,6 +43,7 @@ use App\Policies\ProductPolicy;
 use App\Policies\CouponPolicy;
 use App\Policies\InventoryMovementPolicy;
 use App\Policies\StoreSettingPolicy;
+use App\Policies\AdminDashboardPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -70,6 +72,7 @@ class AuthServiceProvider extends ServiceProvider
         Coupon::class          => CouponPolicy::class,
         InventoryMovement::class => InventoryMovementPolicy::class,
         StoreSetting::class    => StoreSettingPolicy::class,
+        AdminDashboard::class  => AdminDashboardPolicy::class,
     ];
 
     public function boot(): void
