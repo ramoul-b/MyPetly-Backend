@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Enums\ProviderStatusEnum;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
+use App\Http\Requests\UpdateProviderStatusRequest;
 use App\Http\Requests\UploadProviderPhotoRequest;
 use App\Http\Resources\ProviderResource;
 use App\Services\ProviderService;
 use App\Models\Provider;
 use App\Services\ApiService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -181,6 +184,45 @@ class ProviderController extends Controller
             return ApiService::response([
                 'message' => __('messages.operation_failed'),
                 'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/providers/{id}/status",
+     *     tags={"Providers"},
+     *     summary="Approuver ou rejeter un prestataire",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", enum={"pending","approved","rejected"}, example="approved")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Statut mis à jour avec succès"),
+     *     @OA\Response(response=403, description="Action non autorisée"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur interne du serveur")
+     * )
+     */
+    public function updateStatus(UpdateProviderStatusRequest $request, Provider $provider): JsonResponse
+    {
+        try {
+            $this->authorize('updateStatus', $provider);
+
+            $status = ProviderStatusEnum::from($request->validated()['status']);
+            $provider = $this->providerService->updateStatus($provider, $status);
+
+            return ApiService::response(new ProviderResource($provider));
+        } catch (AuthorizationException $exception) {
+            throw $exception;
+        } catch (\Throwable $e) {
+            return ApiService::response([
+                'message' => 'Erreur lors de la mise à jour du statut du prestataire.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

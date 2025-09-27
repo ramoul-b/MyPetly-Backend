@@ -96,6 +96,7 @@ Route::prefix('v1')->group(function () {
         */
         Route::get('providers/by-user/{userId}', [ProviderController::class, 'getByUserId']);
         Route::post('providers/{id}/photo', [ProviderController::class, 'uploadPhoto']);
+        Route::patch('providers/{provider}/status', [ProviderController::class, 'updateStatus']);
         Route::apiResource('providers', ProviderController::class);
         Route::apiResource('services', ServiceController::class);
         Route::apiResource('categories', CategoryController::class);

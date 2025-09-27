@@ -33,6 +33,7 @@ class ProviderPolicyTest extends TestCase
         $this->assertTrue($policy->create($admin));
         $this->assertTrue($policy->update($admin, $provider));
         $this->assertTrue($policy->delete($admin, $provider));
+        $this->assertTrue($policy->updateStatus($admin, $provider));
     }
 
     public function test_owner_permissions()
@@ -49,6 +50,7 @@ class ProviderPolicyTest extends TestCase
         $this->assertFalse($policy->update($owner, $anotherProvider));
         $this->assertTrue($policy->delete($owner, $provider));
         $this->assertFalse($policy->delete($owner, $anotherProvider));
+        $this->assertFalse($policy->updateStatus($owner, $provider));
     }
 
     public function test_guest_permissions()
@@ -61,5 +63,6 @@ class ProviderPolicyTest extends TestCase
         $this->assertFalse($policy->create($guest));
         $this->assertFalse($policy->update($guest, $provider));
         $this->assertFalse($policy->delete($guest, $provider));
+        $this->assertFalse($policy->updateStatus($guest, $provider));
     }
 }

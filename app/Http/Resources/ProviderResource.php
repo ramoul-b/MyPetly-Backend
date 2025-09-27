@@ -25,6 +25,8 @@ class ProviderResource extends JsonResource
             'experience'    => $this->experience,
             'personal_info' => $this->personal_info,
             'rating'        => $this->rating,
+            'status'        => $this->status?->value,
+            'validated_at'  => $this->validated_at?->format('Y-m-d H:i'),
             'services'      => ServiceResource::collection($this->whenLoaded('services')),
             'created_at'    => $this->created_at->format('Y-m-d H:i'),
             'updated_at'    => $this->updated_at->format('Y-m-d H:i'),

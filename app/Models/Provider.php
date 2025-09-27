@@ -4,8 +4,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Enums\ProviderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class Provider extends Model
@@ -27,8 +28,16 @@ class Provider extends Model
         'experience',
         'personal_info',
         'rating',
+        'status',
+        'validated_at',
     ];
+
     public $translatable = ['name', 'description','specialization'];
+
+    protected $casts = [
+        'status' => ProviderStatusEnum::class,
+        'validated_at' => 'datetime',
+    ];
 
 
     public function services()
