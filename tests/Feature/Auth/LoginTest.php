@@ -2,28 +2,31 @@
 
 namespace Tests\Feature\Auth;
 
-// tests/Feature/Auth/RefreshTokenTest.php
-
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class RefreshTokenTest extends TestCase
+class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_refresh_token_rotates_and_sets_expiration()
+    public function test_login_rotates_existing_tokens_and_returns_expiration(): void
     {
-        config(['sanctum.expiration' => 60]);
+        config(['sanctum.expiration' => 45]);
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => Hash::make('secret123'),
+        ]);
 
-        $previousToken = $user->createToken('access')->plainTextToken;
+        $staleToken = $user->createToken('stale')->plainTextToken;
 
-        $response = $this->withToken($previousToken)
-            ->postJson('/api/v1/refresh-token');
+        $response = $this->postJson('/api/v1/login', [
+            'email' => $user->email,
+            'password' => 'secret123',
+        ]);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -36,12 +39,11 @@ class RefreshTokenTest extends TestCase
                     'roles',
                     'permissions',
                 ],
-                'permissions',
             ]);
 
         $data = $response->json();
 
-        $this->assertNotEquals($previousToken, $data['access_token']);
+        $this->assertNotEquals($staleToken, $data['access_token']);
         $this->assertSame('Bearer', $data['token_type']);
         $this->assertGreaterThan(0, $data['expires_in']);
 
