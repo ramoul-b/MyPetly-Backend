@@ -90,7 +90,7 @@ class CartController extends Controller
      */
     public function clear(): JsonResponse
     {
-        $this->authorize('delete', CartItem::class);
+        $this->authorize('deleteAny', CartItem::class);
         $this->cartService->clear();
         return ApiService::response(['message' => 'Cleared'], 200);
 
