@@ -23,10 +23,12 @@ use App\Http\Controllers\Api\{
     CheckoutController,
     ShippingStatusController,
     PaymentController,
-    StripeWebhookController
+    StripeWebhookController,
+    AdminDashboardController
 };
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\StoreCategoryController;
+use App\Models\AdminDashboard;
 
 
 Route::prefix('v1')->group(function () {
@@ -240,6 +242,12 @@ Route::prefix('v1')->group(function () {
 
 
         Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+        Route::prefix('admin/dashboard')
+            ->middleware(['can:view,' . AdminDashboard::class])
+            ->group(function () {
+                Route::get('/stats', [AdminDashboardController::class, 'stats']);
+            });
 
 
     });
