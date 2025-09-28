@@ -64,7 +64,7 @@ class AdminDashboardController extends Controller
     public function stats(Request $request): JsonResponse
     {
         try {
-            $this->authorize('view', AdminDashboard::class);
+            $this->authorize('viewAny', AdminDashboard::class);
 
             $filters = $request->only(['date_from', 'date_to']);
             $stats = $this->dashboardService->getStats($filters);

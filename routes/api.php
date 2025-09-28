@@ -251,7 +251,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
         Route::prefix('admin/dashboard')
-            ->middleware(['can:view,' . AdminDashboard::class])
+            ->middleware(['can:viewAny,' . AdminDashboard::class])
             ->group(function () {
                 Route::get('/stats', [AdminDashboardController::class, 'stats']);
             });
