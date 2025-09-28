@@ -8,7 +8,7 @@ class AdminDashboardPolicy
 {
     public function viewAny(User $user): bool
     {
-        if ($user->hasAnyRole(['admin', 'super-admin'])) {
+        if ($user->hasAnyRole(['admin', 'super_admin', 'super-admin'])) {
             return true;
         }
 
