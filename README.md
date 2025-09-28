@@ -75,14 +75,17 @@ Déploiement GitHub Actions testé
 
 ## Authentication
 
-This project uses Laravel Sanctum for API authentication. By default,
-personal access tokens do not expire because the `config/sanctum.php`
-`expiration` option is set to `null`. Tokens remain valid until they are
-explicitly revoked. You may refresh a client's authentication token by
-creating a new token on the user and deleting the old one.
+This project uses Laravel Sanctum for API authentication. By default, the
+`SANCTUM_TOKEN_EXPIRATION` environment variable is set to `60 * 24`
+minutes (24 hours), which feeds the `config/sanctum.php` `expiration`
+option. Tokens automatically inherit this duration unless you override
+the variable. Each time a user authenticates or refreshes their session,
+previous personal access tokens are revoked before issuing a new one so
+that only the latest credential remains valid.
 
-After updating the Sanctum configuration, run `php artisan config:clear`
-when deploying to ensure the new settings are applied.
+If you change the token expiration or other Sanctum settings, run
+`php artisan config:clear` during deployment to apply the updated
+configuration.
 
 ## Marketplace APIs
 
@@ -111,3 +114,11 @@ The marketplace module exposes dedicated endpoints for coupons, inventory tracki
 - `GET /api/v1/store-settings/{id}` — Display a store setting with its related store.
 - `PUT /api/v1/store-settings/{id}` — Update configuration values such as locale or low stock threshold.
 - `DELETE /api/v1/store-settings/{id}` — Remove the configuration record.
+
+### Administrative & Approval Workflows
+
+- `PATCH /api/v1/providers/{provider}/status` — Update a provider's review
+  status. Requires the `approve-providers` permission.
+- `GET /api/v1/admin/dashboard/stats` — Retrieve aggregated metrics for the
+  admin dashboard. Accessible to users with the `view_admin_dashboard`
+  permission or the `admin`/`super-admin` roles.
