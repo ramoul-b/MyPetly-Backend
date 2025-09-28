@@ -26,8 +26,8 @@ use App\Http\Controllers\Api\{
     StripeWebhookController,
     CouponController,
     InventoryController,
-    StoreSettingController
-    AdminDashboardController
+    StoreSettingController,
+    AdminDashboardController,
 };
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\StoreCategoryController;
