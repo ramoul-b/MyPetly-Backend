@@ -6,7 +6,7 @@ use App\Models\User;
 
 class AdminDashboardPolicy
 {
-    public function view(User $user): bool
+    public function viewAny(User $user): bool
     {
         if ($user->hasAnyRole(['admin', 'super-admin'])) {
             return true;
