@@ -77,7 +77,10 @@ class CartTest extends TestCase
             $this->service->addToCart(['product_id' => $product->id, 'quantity' => 2]);
         }
 
-        $order = $this->service->checkout('addr1', 'addr2');
+        $order = $this->service->checkout([
+            'shipping_address' => 'addr1',
+            'billing_address' => 'addr2',
+        ]);
 
         $this->assertEquals('addr1', $order->shipping_address);
         $this->assertEquals('addr2', $order->billing_address);

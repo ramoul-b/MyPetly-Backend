@@ -52,7 +52,7 @@ class OrderService
         });
     }
 
-    public function checkout(): Order
+    public function checkout(array $data = []): Order
     {
         $cartItems = CartItem::with('product')
             ->where('user_id', Auth::id())
@@ -71,10 +71,13 @@ class OrderService
             ];
         }
 
-        $order = $this->create([
+        $orderData = array_merge($data, [
             'items' => $items,
-            'payment_status' => 'paid',
         ]);
+
+        $orderData['payment_status'] = $orderData['payment_status'] ?? 'paid';
+
+        $order = $this->create($orderData);
 
         CartItem::where('user_id', Auth::id())->delete();
 

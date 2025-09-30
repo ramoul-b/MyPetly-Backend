@@ -35,10 +35,10 @@ class CheckoutController extends Controller
         $this->authorize('create', Order::class);
 
         try {
-            $order = $this->cartService->checkout(
-                $request->input('shipping_address'),
-                $request->input('billing_address')
-            );
+            $order = $this->cartService->checkout($request->only([
+                'shipping_address',
+                'billing_address',
+            ]));
         } catch (\RuntimeException $e) {
             return ApiService::response($e->getMessage(), 400);
         }
