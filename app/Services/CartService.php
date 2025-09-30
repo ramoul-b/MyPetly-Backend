@@ -55,7 +55,7 @@ class CartService
         return $cart->items()->with('product')->get();
     }
 
-    public function checkout(?string $shippingAddress = null, ?string $billingAddress = null): \App\Models\Order
+    public function checkout(array $data = []): \App\Models\Order
     {
         $cart = $this->getUserCart();
 
@@ -69,15 +69,13 @@ class CartService
 
         $orderService = app(OrderService::class);
 
-        $orderData = [
+        $orderData = array_merge($data, [
             'items' => $items->map(fn($item) => [
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
                 'unit_price' => $item->product->price,
             ])->toArray(),
-            'shipping_address' => $shippingAddress,
-            'billing_address' => $billingAddress,
-        ];
+        ]);
 
         $order = $orderService->create($orderData);
 
