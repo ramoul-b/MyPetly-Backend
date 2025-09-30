@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\User;
-
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -54,8 +54,10 @@ class OrderService
 
     public function checkout(array $data = []): Order
     {
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+
         $cartItems = CartItem::with('product')
-            ->where('user_id', Auth::id())
+            ->where('cart_id', $cart->id)
             ->get();
 
         if ($cartItems->isEmpty()) {
@@ -79,7 +81,7 @@ class OrderService
 
         $order = $this->create($orderData);
 
-        CartItem::where('user_id', Auth::id())->delete();
+        CartItem::where('cart_id', $cart->id)->delete();
 
         return $order;
     }
